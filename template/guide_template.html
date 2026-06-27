@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+{{ font_css | safe }}
+{{ css | safe }}
+</style>
+</head>
+<body>
+
+<div class="page-cover" style="page:cover;background:var(--color-brunswick);width:8.5in;height:11in;display:flex;flex-direction:column;padding:0.75in 0.875in;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;">
+    {% include 'assets/topo-lines.svg' %}
+  </div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
+    <div style="margin-bottom:48px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 160 120">
+        <text text-anchor="middle" x="80" y="42" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">ADV</text>
+        <text text-anchor="middle" x="80" y="80" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">NTR</text>
+        <text text-anchor="middle" x="80" y="112" font-family="'Titan One',Impact,sans-serif" font-size="28" fill="#DDAD8A" letter-spacing="8">ROAD</text>
+      </svg>
+    </div>
+
+    <div style="flex:1;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.55);margin-bottom:16px;">{{ guide.region }}</div>
+      <h1 style="font-family:var(--font-display);font-size:52px;font-weight:700;color:var(--color-champagne);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;">{{ guide.title }}</h1>
+      <p style="font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--color-buff);line-height:1.4;max-width:44ch;">{{ guide.subtitle }}</p>
+    </div>
+
+    {% if guide.cover_map_uri %}
+    <div style="width:100%;height:280px;overflow:hidden;border-radius:4px;margin-bottom:32px;">
+      <img src="{{ guide.cover_map_uri }}" style="width:100%;height:100%;object-fit:cover;object-position:center;">
+    </div>
+    {% else %}
+    <div style="width:100%;height:280px;border:1px solid rgba(249,228,197,0.18);border-radius:4px;margin-bottom:32px;display:flex;align-items:center;justify-content:center;color:rgba(249,228,197,0.42);font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;">Cover Map Placeholder</div>
+    {% endif %}
+
+    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);border-top:1px solid rgba(249,228,197,0.12);padding-top:16px;">{{ guide.edition }} · {{ guide.url }}</div>
+  </div>
+</div>
+
+<div class="page-toc section" style="min-height:100vh;padding:var(--pad-page);">
+  <div style="margin-bottom:var(--stack-xl);padding-bottom:var(--space-6);border-bottom:var(--rule-accent);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="220" height="38" viewBox="0 0 280 48">
+      <text x="0" y="38" font-family="'Playfair Display',Georgia,serif" font-weight="700" font-size="32" fill="#1B4436">ADVNTR</text>
+      <text x="194" y="38" font-family="'Playfair Display',Georgia,serif" font-style="italic" font-size="32" fill="#DDAD8A">Road</text>
+    </svg>
+  </div>
+  <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:var(--space-6);">Contents</div>
+  {% for section in guide.sections %}
+  <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-3) 0;border-bottom:var(--rule-subtle);">
+    <span style="font-family:var(--font-display);font-size:16px;color:var(--text-primary);">{{ section.title }}</span>
+    <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.10em;color:var(--text-secondary);">{{ "%02d"|format(loop.index) }}</span>
+  </div>
+  {% endfor %}
+</div>
+
+{% for section in guide.sections %}
+<div class="section" id="section-{{ loop.index }}">
+  <div class="section-header">
+    <div class="section-header__eyebrow">SECTION {{ "%02d"|format(loop.index) }} - {{ section.eyebrow | upper }}</div>
+    <h2 class="section-header__title">{{ section.title }}</h2>
+    {% if section.subhead %}<p class="section-header__subhead">{{ section.subhead }}</p>{% endif %}
+  </div>
+
+  {% if section.prose_html %}
+  <div class="section-prose">{{ section.prose_html | safe }}</div>
+  {% endif %}
+
+  {% if section.map_key and guide.maps[section.map_key] is defined %}
+  {% set m = guide.maps[section.map_key] %}
+  <div class="map-container">
+    {% if m.image_uri %}
+    <img src="{{ m.image_uri }}" style="display:block;width:100%;height:auto;">
+    {% else %}
+    <div class="map-placeholder">{{ section.eyebrow }} Map Placeholder</div>
+    {% endif %}
+    {% if m.overlay_svg %}
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;" viewBox="0 0 {{ m.size.split('x')[0] }} {{ m.size.split('x')[1] }}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      {{ m.overlay_svg | safe }}
+    </svg>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if section.show_campgrounds %}
+  {% for camp in guide.campgrounds %}
+  <article class="camp-card {% if camp.featured %}camp-card--featured{% endif %}">
+    <div class="camp-card__region">{{ camp.region }}</div>
+    <h3 class="camp-card__name">{{ camp.name }}</h3>
+    {% if camp.badges %}
+    <div class="camp-card__badges">
+      {% for badge in camp.badges %}
+      <span class="badge badge--{{ badge }}">{{ badge | replace("-", " ") | title }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <hr class="camp-card__divider">
+    <p class="camp-card__description">{{ camp.editorial }}</p>
+    <div class="camp-card__meta">
+      <div><span class="camp-card__meta-label">Reservations</span><span class="camp-card__meta-value">{{ camp.reservations.method }}</span></div>
+      <div><span class="camp-card__meta-label">Hookups</span><span class="camp-card__meta-value">{{ camp.hookups | title }}</span></div>
+      <div><span class="camp-card__meta-label">Max Length</span><span class="camp-card__meta-value">{{ camp.max_length }}</span></div>
+      <div><span class="camp-card__meta-label">Pets</span><span class="camp-card__meta-value">{{ "Yes" if camp.pets.allowed else "No" }}</span></div>
+      <div><span class="camp-card__meta-label">Verified</span><span class="camp-card__meta-value">{{ camp.verified_date }}</span></div>
+    </div>
+    {% if camp.tags %}
+    <div class="camp-card__tags">
+      {% for tag in camp.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </article>
+  {% endfor %}
+  {% endif %}
+
+  {% if section.show_businesses %}
+  {% for biz in guide.businesses %}
+  <div class="business-card">
+    <div>
+      <div class="business-card__name">{{ biz.name }}</div>
+      <div class="business-card__type">{{ biz.type }}</div>
+      <p class="business-card__description">{{ biz.editorial }}</p>
+    </div>
+    <div class="business-card__meta">{% if biz.phone %}<div>{{ biz.phone }}</div>{% endif %}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endfor %}
+
+<div class="page-back-cover" style="page:back-cover;background:var(--color-brunswick);width:8.5in;height:11in;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;">
+    {% include 'assets/topo-lines.svg' %}
+  </div>
+  <div style="position:relative;z-index:1;text-align:center;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" style="margin-bottom:48px;">
+      <text text-anchor="middle" x="80" y="42" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">ADV</text>
+      <text text-anchor="middle" x="80" y="80" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">NTR</text>
+      <text text-anchor="middle" x="80" y="112" font-family="'Titan One',Impact,sans-serif" font-size="28" fill="#DDAD8A" letter-spacing="8">ROAD</text>
+    </svg>
+    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);">{{ guide.url }} · {{ guide.edition }}</div>
+  </div>
+</div>
+
+</body>
+</html>

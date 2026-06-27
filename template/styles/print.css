@@ -1,0 +1,36 @@
+.camp-card,
+.business-card,
+.gateway-card,
+.section-header,
+.pull-quote,
+.map-container,
+.activity-block,
+.checklist-group,
+.guide-hero,
+.topo-divider {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.section-header,
+h1, h2, h3 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.section {
+  page-break-before: always;
+  break-before: always;
+}
+
+.page-cover,
+.page-toc {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+
+.map-container img,
+.map-container svg {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

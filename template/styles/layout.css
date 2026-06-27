@@ -1,0 +1,57 @@
+@page {
+  size: letter;
+  margin: 0.75in 0.875in;
+  background: #F9E4C5;
+}
+
+@page cover {
+  margin: 0;
+  background: #1B4436;
+}
+
+@page back-cover {
+  margin: 0;
+  background: #1B4436;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-bold);
+}
+
+p { margin: 0; line-height: var(--leading-body); }
+
+hr {
+  border: none;
+  border-top: var(--rule-accent);
+  margin: var(--space-8) 0;
+}
+
+.section {
+  page-break-before: always;
+  break-before: always;
+}
+
+.section-prose {
+  max-width: var(--measure-prose);
+  margin-bottom: var(--stack-lg);
+}
+
+.section-prose p { margin-bottom: var(--space-4); }
+.section-prose h2, .section-prose h3 { margin: var(--space-6) 0 var(--space-3); }
+.section-prose ul, .section-prose ol { margin: 0 0 var(--space-4) var(--space-5); padding: 0; }
+.section-prose li { margin-bottom: var(--space-2); }

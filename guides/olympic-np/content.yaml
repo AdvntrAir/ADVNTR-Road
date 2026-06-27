@@ -1,0 +1,285 @@
+guide:
+  id: "olympic-np"
+  title: "Olympic National Park"
+  subtitle: "Coast, Rain Forest, and the Mountains in Between"
+  edition: "2026 Field Edition"
+  region: "Pacific Northwest"
+  url: "road.advntr.io/olympic"
+  published: "June 2026"
+  cover_map: "assets/cover-map.png"
+
+  stats:
+    - "OLYMPIC PENINSULA, WA"
+    - "~922,000 ACRES"
+    - "3 DISTINCT ECOSYSTEMS"
+    - "UPDATED JUNE 2026"
+
+  map_bounds:
+    north: 48.1500
+    south: 47.5000
+    east: -123.2000
+    west: -124.7500
+
+  sections:
+    - id: orientation
+      file: "01-orientation"
+      eyebrow: "Orientation"
+      title: "Where You Are"
+      subhead: "Three ecosystems, one peninsula, zero easy answers."
+      map_key: orientation
+
+    - id: getting-there
+      file: "02-getting-there"
+      eyebrow: "Getting There"
+      title: "The Drive In"
+      subhead: "Gateway towns, access roads, and what to know before you arrive."
+      map_key: gateway_towns
+
+    - id: where-to-camp
+      file: "03-where-to-camp"
+      eyebrow: "Where to Camp"
+      title: "Where You Sleep Matters"
+      subhead: "From rain forest riverbanks to coastal bluffs."
+      map_key: campground_reference
+      show_campgrounds: true
+
+    - id: what-to-do
+      file: "04-what-to-do"
+      eyebrow: "What to Do"
+      title: "The Work of Being Here"
+      subhead: "Trails, water, and the things worth slowing down for."
+
+    - id: eat-resupply
+      file: "05-eat-resupply"
+      eyebrow: "Eat + Resupply"
+      title: "Feeding Yourself"
+      subhead: "Where to eat, what to stock, and when to do it."
+      show_businesses: true
+
+    - id: coastal
+      file: "06-coastal"
+      eyebrow: "The Coast"
+      title: "The Edge of the Continent"
+      subhead: "Kalaloch, Rialto, Ruby Beach, and how to read the tides."
+      map_key: coastal_logistics
+
+    - id: field-notes
+      file: "07-field-notes"
+      eyebrow: "Field Notes"
+      title: "What You Actually Need to Know"
+      subhead: "Cell service, permits, fees, bear boxes, and seasonal realities."
+
+    - id: checklist
+      file: "08-checklist"
+      eyebrow: "Planning Checklist"
+      title: "Before You Leave"
+      subhead: "The things people forget and wish they hadn't."
+
+    - id: before-you-go
+      file: "09-before-you-go"
+      eyebrow: "Before You Go"
+      title: "A Final Word"
+      subhead: ""
+
+  campgrounds:
+    - id: hoh_rain_forest
+      name: "Hoh Rain Forest Campground"
+      region: "HOH RAIN FOREST, OLYMPIC NP"
+      featured: true
+      lat: 47.8601
+      lng: -123.9340
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "Weeks in advance, May-Sep"
+        url: "https://www.recreation.gov/camping/campgrounds/232464"
+      hookups: "none"
+      max_length: "21ft"
+      pets:
+        allowed: true
+        restrictions: "On leash, paved/gravel areas only"
+      badges:
+        - consensus
+        - reservable
+      tags:
+        - "Fills Fast"
+        - "Rain Ready"
+      editorial: >
+        The Hoh sits inside one of the wettest temperate rain forests in North America,
+        and the campground earns every reputation attached to it. Sites along the river
+        hear the Hoh moving at night. Bring rain gear regardless of the forecast.
+      verified_date: "June 2026"
+      verified_source: "NPS / Recreation.gov"
+      website: "https://www.nps.gov/olym/planyourvisit/hoh-campground.htm"
+      maps_url: "https://maps.google.com/?q=47.8601,-123.9340"
+
+    - id: kalaloch
+      name: "Kalaloch Campground"
+      region: "SOUTH COAST, OLYMPIC NP"
+      featured: false
+      lat: 47.6079
+      lng: -124.3771
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "Summer weekends go early"
+        url: "https://www.recreation.gov/camping/campgrounds/232464"
+      hookups: "none"
+      max_length: "35ft"
+      pets:
+        allowed: true
+        restrictions: "On leash; check beach rules by area"
+      badges:
+        - consensus
+        - dog-friendly
+      tags:
+        - "Coastal Base"
+        - "No Hookups"
+      editorial: >
+        Kalaloch is the easiest coastal base camp in the park, with quick access to
+        beach walks and a practical location between Forks and the southern peninsula.
+        It is not secluded, but it earns its place through logistics and salt air.
+      verified_date: "June 2026"
+      verified_source: "NPS / Recreation.gov"
+      website: "https://www.nps.gov/olym/planyourvisit/kalaloch-campground.htm"
+      maps_url: "https://maps.google.com/?q=47.6079,-124.3771"
+
+  businesses:
+    - id: lake_crescent_lodge
+      name: "Lake Crescent Lodge"
+      type: "Lodge / Dining"
+      region: "LAKE CRESCENT, OLYMPIC NP"
+      lat: 48.0582
+      lng: -123.7898
+      badges:
+        - consensus
+      phone: "+1 360-928-3211"
+      website: "https://olympicnationalparks.com/lodging/lake-crescent-lodge/"
+      maps_url: "https://maps.google.com/?q=48.0582,-123.7898"
+      editorial: >
+        The lodge dining room is the kind of place that earns its reputation through
+        repetition: consistent, unhurried, and set against a lake that makes almost
+        any meal better. Reservations are worth making in advance for summer dinners.
+      verified_date: "June 2026"
+
+    - id: country_aire
+      name: "Country Aire Natural Foods"
+      type: "Grocery / Resupply"
+      region: "PORT ANGELES, WA"
+      lat: 48.1180
+      lng: -123.4308
+      badges:
+        - hidden-gem
+      phone: "+1 360-452-7175"
+      website: "https://www.countryairemarket.com/"
+      maps_url: "https://maps.google.com/?q=48.1180,-123.4308"
+      editorial: >
+        A practical Port Angeles stop for better provisions before the long push west.
+        Use it for trail snacks, fresh food, and the odds and ends that campground
+        stores rarely handle well.
+      verified_date: "June 2026"
+
+  maps:
+    orientation:
+      center_lat: 47.8500
+      center_lng: -124.0500
+      zoom: 9
+      size: "760x440"
+      bounds:
+        north: 48.15
+        south: 47.50
+        east: -123.20
+        west: -124.75
+      markers:
+        - label: "PORT ANGELES"
+          lat: 48.1001
+          lng: -123.4307
+          type: "gateway"
+        - label: "FORKS"
+          lat: 47.9468
+          lng: -124.3959
+          type: "gateway"
+        - label: "ABERDEEN"
+          lat: 46.9751
+          lng: -123.8150
+          type: "gateway"
+
+    gateway_towns:
+      center_lat: 47.8500
+      center_lng: -123.8500
+      zoom: 9
+      size: "760x420"
+      bounds:
+        north: 48.20
+        south: 46.90
+        east: -123.20
+        west: -124.80
+      markers:
+        - label: "PORT ANGELES"
+          lat: 48.1001
+          lng: -123.4307
+          type: "gateway"
+        - label: "FORKS"
+          lat: 47.9468
+          lng: -124.3959
+          type: "gateway"
+        - label: "ABERDEEN"
+          lat: 46.9751
+          lng: -123.8150
+          type: "gateway"
+
+    campground_reference:
+      center_lat: 47.8000
+      center_lng: -124.0000
+      zoom: 10
+      size: "760x480"
+      bounds:
+        north: 48.05
+        south: 47.55
+        east: -123.60
+        west: -124.55
+      markers:
+        - label: "HOH"
+          lat: 47.8601
+          lng: -123.9340
+          type: "campground"
+        - label: "KALALOCH"
+          lat: 47.6079
+          lng: -124.3771
+          type: "campground"
+        - label: "MORA"
+          lat: 47.9154
+          lng: -124.5969
+          type: "campground"
+        - label: "SOL DUC"
+          lat: 47.9715
+          lng: -123.8516
+          type: "campground"
+        - label: "HEART O' HILLS"
+          lat: 47.9790
+          lng: -123.4870
+          type: "campground"
+
+    coastal_logistics:
+      center_lat: 47.7000
+      center_lng: -124.4000
+      zoom: 11
+      size: "760x440"
+      bounds:
+        north: 47.90
+        south: 47.50
+        east: -124.20
+        west: -124.70
+      markers:
+        - label: "RUBY BEACH"
+          lat: 47.7107
+          lng: -124.4147
+          type: "trailhead"
+        - label: "KALALOCH"
+          lat: 47.6079
+          lng: -124.3771
+          type: "campground"
+        - label: "RIALTO"
+          lat: 47.9154
+          lng: -124.5969
+          type: "trailhead"
