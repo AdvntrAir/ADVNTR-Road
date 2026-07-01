@@ -101,7 +101,7 @@
 
 .poster-cover__brand,
 .poster-cover__meta,
-.poster-cover__word,
+.poster-cover__word-block,
 .poster-cover__subtitle,
 .poster-cover__footer,
 .poster-cover__barcode {
@@ -130,9 +130,13 @@
   color: rgba(249, 228, 197, 0.76);
 }
 
-.poster-cover__word {
+.poster-cover__word-block {
   left: 0.42in;
   top: 1.44in;
+}
+
+.poster-cover__word {
+  position: static;
   font-family: var(--font-body);
   font-size: 118px;
   font-weight: 900;
@@ -140,6 +144,15 @@
   letter-spacing: -0.075em;
   text-transform: uppercase;
   color: rgba(249, 228, 197, 0.43);
+}
+
+.poster-cover__designation {
+  margin-top: 0.06in;
+  font-family: var(--font-script);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(249, 228, 197, 0.86);
 }
 
 .poster-cover__subtitle {

@@ -15,7 +15,10 @@
   <img class="brand-logo brand-logo--cover" src="{{ guide.logos.white }}" alt="ADVNTR Road">
   <div class="poster-cover__brand">{{ guide.edition }}</div>
   <div class="poster-cover__meta">{{ guide.region }}<br>{{ guide.stats[1] if guide.stats }}<br>{{ guide.published }}</div>
-  <h1 class="poster-cover__word">{% for line in guide.cover_word %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</h1>
+  <div class="poster-cover__word-block">
+    <h1 class="poster-cover__word">{% for line in guide.cover_word %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</h1>
+    {% if guide.designation %}<div class="poster-cover__designation">{{ guide.designation }}</div>{% endif %}
+  </div>
   <p class="poster-cover__subtitle">{{ guide.subtitle }}</p>
   {% if guide.cover_footer %}<div class="poster-cover__footer">{{ guide.cover_footer }}</div>{% endif %}
   <div class="barcode poster-cover__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>

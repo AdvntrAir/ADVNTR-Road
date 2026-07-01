@@ -46,6 +46,7 @@
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
   --font-brand: 'Titan One', Impact, sans-serif;
+  --font-script: 'Meow Script', 'Brush Script MT', cursive;
   --text-xs: 10px; --text-sm: 12px; --text-base: 15px; --text-md: 16px;
   --text-lg: 18px; --text-xl: 20px; --text-2xl: 24px; --text-3xl: 28px;
   --text-4xl: 34px; --text-5xl: 42px; --text-6xl: 52px;

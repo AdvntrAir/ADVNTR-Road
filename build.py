@@ -136,6 +136,15 @@ FONTS = [
         "normal",
         "400",
     ),
+    (
+        [
+            DS_FONTS / "MeowScript-Regular.ttf",
+            ALT_FONTS_BASE / "Meow_Script/MeowScript-Regular.ttf",
+        ],
+        "Meow Script",
+        "normal",
+        "400",
+    ),
 ]
 
 MAP_STYLE = [
