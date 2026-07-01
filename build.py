@@ -199,10 +199,20 @@ def build_map_url(cfg):
     )
 
 
-def fetch_map_uri(cfg):
+def fetch_map_image(cfg, cache_path):
+    """Fetch map tile from Google, save to cache_path, return PNG bytes."""
     response = requests.get(build_map_url(cfg), timeout=20)
     response.raise_for_status()
-    return "data:image/png;base64," + base64.b64encode(response.content).decode("utf-8")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_bytes(response.content)
+    return response.content
+
+
+def map_image_uri(png_bytes, web_preview, rel_path):
+    """Return the right image reference for the build mode."""
+    if web_preview:
+        return str(rel_path)
+    return "data:image/png;base64," + base64.b64encode(png_bytes).decode("utf-8")
 
 
 def coord_to_pixel(lat, lng, bounds, img_w, img_h):
@@ -456,22 +466,34 @@ def build(guide_id, no_maps=False, html_only=False):
     css = read_css()
 
     maps = guide.get("maps", {})
-    if no_maps or not MAPS_KEY:
-        reason = "--no-maps" if no_maps else "GOOGLE_MAPS_API_KEY is not set"
-        print(f"Maps skipped ({reason}).")
-        for cfg in maps.values():
+    maps_dir = ROOT / "guides" / guide_id / "assets" / "maps"
+
+    for name, cfg in maps.items():
+        cache_path = maps_dir / f"{name}.png"
+        rel_path = f"guides/{guide_id}/assets/maps/{name}.png"
+        cfg["overlay_svg"] = build_overlay_svg(cfg)
+
+        # Use cached tile if available
+        if cache_path.exists():
+            png_bytes = cache_path.read_bytes()
+            cfg["image_uri"] = map_image_uri(png_bytes, html_only, rel_path)
+            print(f"Map '{name}': loaded from cache.")
+            continue
+
+        # No cache — fetch from API if key is available and --no-maps not set
+        if no_maps or not MAPS_KEY:
+            reason = "--no-maps" if no_maps else "GOOGLE_MAPS_API_KEY not set"
+            print(f"Map '{name}': skipped ({reason}). Run without --no-maps to cache.")
             cfg["image_uri"] = ""
-            cfg["overlay_svg"] = build_overlay_svg(cfg)
-    else:
-        for name, cfg in maps.items():
-            print(f"Fetching map: {name}")
+        else:
+            print(f"Map '{name}': fetching and caching...")
             try:
-                cfg["image_uri"] = fetch_map_uri(cfg)
-                cfg["overlay_svg"] = build_overlay_svg(cfg)
+                png_bytes = fetch_map_image(cfg, cache_path)
+                cfg["image_uri"] = map_image_uri(png_bytes, html_only, rel_path)
+                print(f"Map '{name}': cached to {cache_path}")
             except Exception as exc:
                 print(f"WARNING - Map '{name}' failed: {exc}")
                 cfg["image_uri"] = ""
-                cfg["overlay_svg"] = build_overlay_svg(cfg)
 
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
