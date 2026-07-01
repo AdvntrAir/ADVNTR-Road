@@ -37,15 +37,24 @@ jobs:
       - name: Build HTML previews
         run: |
           mkdir -p _site
+          failed=0
           for guide in guides/*/; do
             slug=$(basename "$guide")
             echo "Building $slug..."
-            python build.py --guide "$slug" --no-maps --html-only 2>&1 || true
+            if ! python build.py --guide "$slug" --no-maps --html-only; then
+              echo "::error::Build failed for guide '${slug}'"
+              failed=1
+              continue
+            fi
             if [ -f "output/${slug}.html" ]; then
               cp "output/${slug}.html" "_site/${slug}.html"
               echo "  -> _site/${slug}.html"
+            else
+              echo "::error::Build for '${slug}' reported success but produced no output/${slug}.html"
+              failed=1
             fi
           done
+          exit $failed
 
       - name: Copy assets for web preview
         run: |

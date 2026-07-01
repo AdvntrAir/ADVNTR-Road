@@ -5,6 +5,9 @@ series:
   - id: mount-rainier-np
     title: "Mount Rainier National Park"
     teaser: "The volcano that dominates the horizon from three states."
+  - id: olympic-np
+    title: "Olympic National Park"
+    teaser: "Coast, rain forest, and the mountains in between."
   - id: oregon-coast
     title: "Oregon Coast"
     teaser: "Three hundred miles of public coastline and working fishing towns."
