@@ -360,6 +360,32 @@ def load_guide(guide_id, web_preview=False):
             "green": str((LOGO_DIR / "advntr-road-green.png").resolve()),
         }
 
+    # Zones (guide.zones, e.g. 04a-04e prose files) are a separate authoring construct
+    # from top-level sections but render into the same numbered chapter sequence, per
+    # docs/Codex-new-guide-workflow.md: "01, 02, 03, 04A through 04x, then 05, 06, 07, 08".
+    # Splice them in after the 3rd section (where-to-sleep) and before the 4th (what-to-do).
+    sections = guide.get("sections", [])
+    zones = guide.get("zones", [])
+    if zones:
+        insert_at = min(3, len(sections))
+        sections = sections[:insert_at] + zones + sections[insert_at:]
+        guide["sections"] = sections
+
+    chapter_num = 0
+    zone_letter = 0
+    for i, section in enumerate(sections):
+        is_zone = bool(zones) and insert_at <= i < insert_at + len(zones)
+        if is_zone:
+            if zone_letter == 0:
+                chapter_num += 1
+            section["display_number"] = (
+                f"{chapter_num:02d}{chr(ord('A') + zone_letter)}" if len(zones) > 1 else f"{chapter_num:02d}"
+            )
+            zone_letter += 1
+        else:
+            chapter_num += 1
+            section["display_number"] = f"{chapter_num:02d}"
+
     for section in guide.get("sections", []):
         visual = section.get("visual", {})
         section["visual_word"] = visual.get("word", section["title"].split()[0]).upper()
