@@ -7,7 +7,10 @@ guide:
   url: "road.advntr.io/olympic-np"
   published: "June 2026"
   verified: "June 2026"
-  cover_photo: "assets/cover-photo.png"
+  cover_photo: "assets/cover-photo.jpg"
+  cover_word:
+    - "Olympic"
+  cover_footer: "Coast, rain forest, and alpine, all in one park"
 
   stats:
     - "OLYMPIC PENINSULA, WA"
@@ -27,6 +30,11 @@ guide:
       eyebrow: "Orientation"
       title: "Where You Are"
       subhead: "Three ecosystems, one peninsula, zero easy answers."
+      visual:
+        word: "Olympic"
+        theme: "photo"
+        image: "assets/hurricane-ridge-alpine.jpg"
+        label: "Field Orientation"
       map_key: "orientation"
 
     - id: "before-you-arrive"
@@ -34,6 +42,11 @@ guide:
       eyebrow: "Before You Arrive"
       title: "The Drive In"
       subhead: "Gateway towns, access roads, and what to handle before you arrive."
+      visual:
+        word: "Route"
+        theme: "blue"
+        image: "assets/lake-crescent.jpg"
+        label: "Before You Arrive"
       map_key: "gateway_towns"
       show_gateway_towns: true
 
@@ -42,6 +55,11 @@ guide:
       eyebrow: "Where to Sleep"
       title: "Where You Sleep Matters"
       subhead: "From rain forest riverbanks to coastal bluffs."
+      visual:
+        word: "Camp"
+        theme: "dark"
+        image: "assets/ruby-beach.jpg"
+        label: "Where To Sleep"
       map_key: "campground_reference"
       show_campgrounds: true
 
@@ -50,12 +68,22 @@ guide:
       eyebrow: "What to Do"
       title: "The Work of Being Here"
       subhead: "Trails, water, and the things worth slowing down for."
+      visual:
+        word: "Explore"
+        theme: "dark"
+        image: "assets/hall-of-mosses.jpg"
+        label: "What To Do"
 
     - id: "eat-resupply"
       file: "06-eat-resupply"
       eyebrow: "Eat + Resupply"
       title: "Feeding Yourself"
       subhead: "Where to eat, what to stock, and when to do it."
+      visual:
+        word: "Fuel"
+        theme: "blue"
+        image: "assets/lake-crescent.jpg"
+        label: "Eat + Resupply"
       show_businesses: true
 
     - id: "field-notes"
@@ -63,6 +91,11 @@ guide:
       eyebrow: "Field Notes"
       title: "What You Actually Need to Know"
       subhead: "Cell service, permits, fees, bear boxes, and seasonal realities."
+      visual:
+        word: "Notes"
+        theme: "dark"
+        image: "assets/hurricane-ridge-alpine.jpg"
+        label: "Field Notes"
       show_fees: true
       show_permits: true
 
@@ -71,6 +104,11 @@ guide:
       eyebrow: "Before You Leave"
       title: "Before You Leave Home"
       subhead: "The things people forget and wish they had not."
+      visual:
+        word: "Checklist"
+        theme: "blue"
+        image: "assets/rialto-driftwood.jpg"
+        label: "Before You Leave"
       show_checklist: true
       show_resources: true
 
@@ -80,6 +118,11 @@ guide:
       eyebrow: "The Alpine"
       title: "Hurricane Ridge & Deer Park"
       subhead: "Where the road climbs fast and the weather has the final vote."
+      visual:
+        word: "Hurricane Ridge"
+        theme: "photo"
+        image: "assets/hurricane-ridge-alpine.jpg"
+        label: "The Alpine"
       map_key: "alpine"
       highlights:
         - label: "Hurricane Ridge"
@@ -96,6 +139,11 @@ guide:
       eyebrow: "Lake + Valley"
       title: "Lake Crescent & Sol Duc Valley"
       subhead: "Deep water, old-growth shade, and a hot-springs detour with tradeoffs."
+      visual:
+        word: "Lake Crescent"
+        theme: "blue"
+        image: "assets/lake-crescent.jpg"
+        label: "Lake + Valley"
       map_key: "lake-crescent-sol-duc"
       highlights:
         - label: "Lake Crescent"
@@ -112,6 +160,11 @@ guide:
       eyebrow: "Rain Forest"
       title: "Hoh vs. Quinault"
       subhead: "Two green worlds, different logistics, and a lot of rain."
+      visual:
+        word: "Hoh"
+        theme: "dark"
+        image: "assets/hall-of-mosses.jpg"
+        label: "Rain Forest"
       map_key: "rainforest"
       highlights:
         - label: "Hoh Rain Forest"
@@ -129,6 +182,11 @@ guide:
       eyebrow: "Central Coast"
       title: "Kalaloch & Ruby Beach"
       subhead: "The simplest coastal base and the beach stops that justify the drive."
+      visual:
+        word: "Kalaloch"
+        theme: "photo"
+        image: "assets/ruby-beach.jpg"
+        label: "Central Coast"
       map_key: "coast-central"
       highlights:
         - label: "Kalaloch"
@@ -146,6 +204,11 @@ guide:
       eyebrow: "North Coast"
       title: "Mora, Rialto, Ozette & Shi Shi"
       subhead: "Bigger tide windows, slower roads, and the wildest edge of the trip."
+      visual:
+        word: "Rialto"
+        theme: "dark"
+        image: "assets/rialto-driftwood.jpg"
+        label: "North Coast"
       map_key: "coast-north"
       highlights:
         - label: "Rialto Beach"
@@ -166,6 +229,7 @@ guide:
       featured: true
       lat: 47.8601
       lng: -123.9340
+      image: "guides/olympic-np/assets/hoh-campground.jpg"
       open: "Year-round"
       reservations:
         method: "Recreation.gov"
@@ -197,6 +261,7 @@ guide:
       featured: true
       lat: 47.6079
       lng: -124.3771
+      image: "guides/olympic-np/assets/kalaloch-campground.jpg"
       open: "Year-round"
       reservations:
         method: "Recreation.gov"
