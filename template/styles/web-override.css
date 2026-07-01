@@ -1,0 +1,63 @@
+/* Web preview overrides — injected by CI, not included in PDF builds.
+   Goal: make the print HTML readable in a browser without restructuring it. */
+
+/* ── Page chrome ── */
+@page { size: auto; margin: 0; }
+
+body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background: var(--surface-page);
+}
+
+/* ── Fixed-size page blocks → fluid ── */
+.poster-cover,
+.visual-opener {
+  width: 100%;
+  height: auto;
+  min-height: 480px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.poster-cover__image,
+.poster-cover__wash,
+.visual-opener__image,
+.visual-opener__wash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Section spacing ── */
+.section {
+  margin-bottom: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--color-buff);
+}
+
+/* ── Cards ── */
+.camp-card,
+.business-card {
+  margin-bottom: 24px;
+}
+
+/* ── Maps ── */
+.map-panel img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+/* ── Back cover ── */
+.back-cover {
+  width: 100%;
+  min-height: 320px;
+  height: auto;
+}
+
+/* ── Print-only utilities → neutralize ── */
+.guide-title-string { display: none; }

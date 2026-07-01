@@ -35,12 +35,14 @@ jobs:
           mkdir -p design_system/assets/fonts
 
       - name: Build HTML previews
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           mkdir -p _site
           for guide in guides/*/; do
             slug=$(basename "$guide")
             echo "Building $slug..."
-            python build.py --guide "$slug" --no-maps --html-only 2>&1 || true
+            python build.py --guide "$slug" --html-only 2>&1 || true
             if [ -f "output/${slug}.html" ]; then
               cp "output/${slug}.html" "_site/${slug}.html"
               echo "  -> _site/${slug}.html"
@@ -61,14 +63,16 @@ jobs:
           mkdir -p _site/template/assets/logos
           cp template/assets/logos/*.png _site/template/assets/logos/ 2>/dev/null || true
 
-      - name: Inject web fonts into HTML previews
+      - name: Inject web fonts and override CSS into HTML previews
         run: |
           FONTS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">'
+          WEB_CSS='<link rel="stylesheet" href="web-override.css">'
           for f in _site/*.html; do
             [ -f "$f" ] || continue
-            # Replace the closing </head> with web fonts + </head>
-            sed -i "s|</head>|${FONTS}</head>|" "$f"
+            sed -i "s|</head>|${FONTS}${WEB_CSS}</head>|" "$f"
           done
+          # Copy the web override CSS to _site
+          cp template/styles/web-override.css _site/web-override.css
 
       - name: Build index page
         run: |
