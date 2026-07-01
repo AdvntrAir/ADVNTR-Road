@@ -374,7 +374,8 @@
   right: calc(var(--space-5) + var(--opener-safe-x));
   font-size: 86px;
   letter-spacing: 0;
-  color: rgba(249, 228, 197, 0.22);
+  color: rgba(249, 228, 197, 0.55);
+  text-shadow: 0 2px 18px rgba(11, 34, 40, 0.55);
   opacity: 1;
 }
 
@@ -484,7 +485,8 @@
   right: calc(var(--space-5) + var(--opener-safe-x));
   font-size: 86px;
   letter-spacing: 0;
-  color: rgba(249, 228, 197, 0.18);
+  color: rgba(249, 228, 197, 0.55);
+  text-shadow: 0 2px 18px rgba(15, 40, 52, 0.55);
   opacity: 1;
 }
 
@@ -558,7 +560,8 @@
   right: calc(var(--space-5) + var(--opener-safe-x));
   font-size: 86px;
   letter-spacing: 0;
-  color: rgba(249, 228, 197, 0.16);
+  color: rgba(249, 228, 197, 0.55);
+  text-shadow: 0 2px 18px rgba(20, 20, 20, 0.6);
   opacity: 1;
 }
 
