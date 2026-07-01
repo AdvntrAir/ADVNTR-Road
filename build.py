@@ -440,7 +440,7 @@ def write_pdf_with_chrome(html, pdf_path):
     return "chrome"
 
 
-def build(guide_id, no_maps=False):
+def build(guide_id, no_maps=False, html_only=False):
     guide = load_guide(guide_id)
     font_css = build_font_css()
     css = read_css()
@@ -472,20 +472,23 @@ def build(guide_id, no_maps=False):
 
     OUTPUT_DIR.mkdir(exist_ok=True)
     html_path = OUTPUT_DIR / f"{guide_id}.html"
-    pdf_path = OUTPUT_DIR / f"{guide_id}-2026.pdf"
     html_path.write_text(html, encoding="utf-8")
-    renderer = write_pdf(html, pdf_path)
     print(f"HTML written to {html_path}")
-    if renderer:
-        print(f"PDF written to {pdf_path} ({renderer})")
-    else:
-        print("PDF not written. HTML output is available for layout review.")
+
+    if not html_only:
+        pdf_path = OUTPUT_DIR / f"{guide_id}-2026.pdf"
+        renderer = write_pdf(html, pdf_path)
+        if renderer:
+            print(f"PDF written to {pdf_path} ({renderer})")
+        else:
+            print("PDF not written. HTML output is available for layout review.")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Build an ADVNTR Road guide PDF.")
     parser.add_argument("--guide", required=True)
     parser.add_argument("--no-maps", action="store_true")
+    parser.add_argument("--html-only", action="store_true", help="Write HTML but skip PDF render (for CI preview)")
     parser.add_argument("--font-test", action="store_true")
     args = parser.parse_args()
 
@@ -494,7 +497,7 @@ def main():
         css = read_css()
         render_font_test(font_css, css)
     else:
-        build(args.guide, no_maps=args.no_maps)
+        build(args.guide, no_maps=args.no_maps, html_only=args.html_only)
 
 
 if __name__ == "__main__":
