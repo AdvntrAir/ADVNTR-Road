@@ -29,11 +29,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Stub font directories (CI uses system fonts)
-        run: |
-          mkdir -p "design_system/fonts/Inter,Playfair_Display,Space_Mono,Titan_One"
-          mkdir -p design_system/assets/fonts
-
       - name: Build HTML previews
         run: |
           mkdir -p _site
@@ -51,6 +46,24 @@ jobs:
               echo "  -> _site/${slug}.html"
             else
               echo "::error::Build for '${slug}' reported success but produced no output/${slug}.html"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Build PDFs (smoke test)
+        run: |
+          failed=0
+          for guide in guides/*/; do
+            slug=$(basename "$guide")
+            echo "Building PDF for $slug..."
+            if ! python build.py --guide "$slug" --no-maps; then
+              echo "::error::PDF build failed for guide '${slug}'"
+              failed=1
+              continue
+            fi
+            if [ ! -f "output/${slug}-2026.pdf" ]; then
+              echo "::error::PDF build for '${slug}' produced no output/${slug}-2026.pdf (WeasyPrint and Chrome fallback both failed silently)"
               failed=1
             fi
           done
