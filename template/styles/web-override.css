@@ -16,19 +16,41 @@ body {
 .visual-opener {
   width: 100%;
   height: auto;
-  min-height: 480px;
+  min-height: 520px;
   position: relative;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
+/* Cover image: fills behind, doesn't drive layout height */
 .poster-cover__image,
+.visual-opener__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .poster-cover__wash,
-.visual-opener__image,
 .visual-opener__wash {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Cover text needs z-index to sit above the image */
+.poster-cover__brand,
+.poster-cover__meta,
+.poster-cover__word,
+.poster-cover__subtitle,
+.poster-cover__footer,
+.poster-cover__barcode,
+.visual-opener__content {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Section spacing ── */
