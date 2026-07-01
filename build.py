@@ -10,8 +10,10 @@ Usage:
 
 import argparse
 import base64
+import html
 import json
 import os
+import re
 import urllib.parse
 from pathlib import Path
 
@@ -30,6 +32,7 @@ ALT_FONTS_BASE = DESIGN_SYSTEM / "fonts"
 STATIC_FONTS_BASE = DESIGN_SYSTEM / "uploads" / "Inter,Playfair_Display,Space_Mono,Titan_One"
 TEMPLATE_DIR = ROOT / "template"
 OUTPUT_DIR = ROOT / "output"
+LOGO_DIR = TEMPLATE_DIR / "assets" / "logos"
 MAPS_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
@@ -96,6 +99,15 @@ FONTS = [
         "Inter",
         "normal",
         "700",
+    ),
+    (
+        [
+            STATIC_FONTS_BASE / "Inter/static/Inter_18pt-Black.ttf",
+            ALT_FONTS_BASE / "Inter/static/Inter_18pt-Black.ttf",
+        ],
+        "Inter",
+        "normal",
+        "900",
     ),
     (
         [
@@ -179,17 +191,11 @@ def read_css():
 
 def build_map_url(cfg):
     style_params = "".join("&style=" + urllib.parse.quote(json.dumps(style)) for style in MAP_STYLE)
-    marker_params = ""
-    marker_colors = {"campground": "0x1B4436", "gateway": "0xDDAD8A", "trailhead": "0x88A33B"}
-    for marker in cfg.get("markers", []):
-        color = marker_colors.get(marker["type"], "0x5B768C")
-        label = marker["label"][0]
-        marker_params += f'&markers=color:{color}|label:{label}|{marker["lat"]},{marker["lng"]}'
     return (
         "https://maps.googleapis.com/maps/api/staticmap"
         f'?center={cfg["center_lat"]},{cfg["center_lng"]}'
         f'&zoom={cfg["zoom"]}&size={cfg["size"]}&scale=2&maptype=terrain'
-        f"{style_params}{marker_params}&key={MAPS_KEY}"
+        f"{style_params}&key={MAPS_KEY}"
     )
 
 
@@ -210,27 +216,92 @@ def build_overlay_svg(cfg):
         return ""
     width, height = [int(value) for value in cfg["size"].split("x")]
     parts = []
+    def label_text(x, y, label, color, dx=0, dy=24, anchor="middle"):
+        lx = x + dx
+        ly = y + dy
+        return (
+            f'<text x="{lx}" y="{ly}" text-anchor="{anchor}" font-family="Space Mono,monospace" '
+            f'font-size="8.5" font-weight="700" letter-spacing="0.35" fill="none" '
+            f'stroke="#F9E4C5" stroke-width="2.2" stroke-linejoin="round">{label}</text>'
+            f'<text x="{lx}" y="{ly}" text-anchor="{anchor}" font-family="Space Mono,monospace" '
+            f'font-size="8.5" font-weight="700" letter-spacing="0.35" fill="{color}">{label}</text>'
+        )
+
     for marker in cfg.get("markers", []):
         x, y = coord_to_pixel(marker["lat"], marker["lng"], cfg["bounds"], width, height)
         label = marker["label"]
         marker_type = marker["type"]
+        dx = marker.get("dx", 0)
+        dy = marker.get("dy", 24)
+        anchor = marker.get("anchor", "middle")
         if marker_type == "campground":
             parts.append(
                 f'<circle cx="{x}" cy="{y}" r="9" fill="#1B4436" stroke="#F9E4C5" stroke-width="1.5"/>'
-                f'<text x="{x}" y="{y + 22}" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" letter-spacing="0.8" fill="#1B4436">{label}</text>'
+                + label_text(x, y, label, "#1B4436", dx, dy, anchor)
             )
         elif marker_type == "gateway":
             parts.append(
                 f'<rect x="{x - 8}" y="{y - 8}" width="16" height="16" fill="#DDAD8A" stroke="#1B4436" stroke-width="1.5"/>'
-                f'<text x="{x}" y="{y + 24}" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" letter-spacing="0.8" fill="#1B4436">{label}</text>'
+                + label_text(x, y, label, "#1B4436", dx, dy, anchor)
             )
         elif marker_type == "trailhead":
             points = f"{x},{y - 10} {x - 8},{y + 6} {x + 8},{y + 6}"
             parts.append(
                 f'<polygon points="{points}" fill="#88A33B" stroke="#F9E4C5" stroke-width="1.5"/>'
-                f'<text x="{x}" y="{y + 22}" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" letter-spacing="0.8" fill="#1B4436">{label}</text>'
+                + label_text(x, y, label, "#1B4436", dx, dy, anchor)
+            )
+        elif marker_type == "closure":
+            parts.append(
+                f'<rect x="{x - 9}" y="{y - 9}" width="18" height="18" transform="rotate(45 {x} {y})" fill="#8C3D2D" stroke="#F9E4C5" stroke-width="1.5"/>'
+                + label_text(x, y, label, "#8C3D2D", dx, dy, anchor)
             )
     return "\n".join(parts)
+
+
+def linkify_plain_urls(text):
+    def replace(match):
+        url = match.group(0)
+        trailing = ""
+        while url[-1] in ".,;)":
+            trailing = url[-1] + trailing
+            url = url[:-1]
+        return f"[{url}]({url}){trailing}"
+
+    return re.sub(r"(?<!href=\")(?<!\]\()https?://[^\s<]+", replace, text)
+
+
+def format_prose_markdown(text):
+    def replace_resource_link(match):
+        label = match.group(1).strip()
+        url = match.group(2).strip()
+        button_label = {
+            "URL": "Open Resource",
+            "Website": "Website",
+            "Booking URL": "Book",
+        }.get(label, label)
+        return (
+            f'\n<p class="resource-action-line">'
+            f'<a class="link-pill link-pill--resource" href="{html.escape(url, quote=True)}">'
+            f'{html.escape(button_label)}</a></p>\n'
+        )
+
+    text = re.sub(
+        r"(?m)^-\s+\*\*(URL|Website|Booking URL):\*\*\s+(https?://[^\s]+)\s*$",
+        replace_resource_link,
+        text,
+    )
+    text = linkify_plain_urls(text)
+
+    def replace_note(match):
+        body = html.escape(match.group(1).strip(), quote=False)
+        return (
+            '\n<aside class="advntr-road-note">'
+            '<div class="advntr-road-note__label">ADVNTR Road Note</div>'
+            f'<p>{body}</p>'
+            '</aside>\n'
+        )
+
+    return re.sub(r"(?m)^-\s+\*\*Editorial note:\*\*\s+(.+)$", replace_note, text)
 
 
 def load_guide(guide_id):
@@ -241,21 +312,59 @@ def load_guide(guide_id):
 
     content = yaml.safe_load(content_path.read_text(encoding="utf-8"))
     guide = content["guide"]
-    cover_map = guide.get("cover_map")
-    if cover_map:
-        guide["cover_map_uri"] = str((guide_dir / cover_map).resolve())
+
+    def asset_ref(value):
+        if not value:
+            return ""
+        if str(value).startswith(("http://", "https://", "/", "guides/")):
+            return value
+        return f"guides/{guide_id}/{value}"
+
+    cover_photo = guide.get("cover_photo")
+    if cover_photo:
+        guide["cover_photo_uri"] = str((guide_dir / cover_photo).resolve())
     else:
-        guide["cover_map_uri"] = ""
+        guide["cover_photo_uri"] = ""
+    guide_url = guide.get("url", "")
+    guide["url_href"] = guide_url if guide_url.startswith(("http://", "https://")) else f"https://{guide_url}"
+    if not guide.get("cover_word"):
+        title_words = guide["title"].replace("National Park", "").strip().split()
+        guide["cover_word"] = [title_words[0]] if title_words else [guide["title"]]
+        print(
+            f"WARNING - no cover_word set in content.yaml; defaulting to {guide['cover_word']!r}. "
+            "Add an explicit cover_word list for proper cover typography."
+        )
+    guide["logos"] = {
+        "rust": str((LOGO_DIR / "advntr-road-rust.png").resolve()),
+        "white": str((LOGO_DIR / "advntr-road-white.png").resolve()),
+        "green": str((LOGO_DIR / "advntr-road-green.png").resolve()),
+    }
 
     for section in guide.get("sections", []):
+        visual = section.get("visual", {})
+        section["visual_word"] = visual.get("word", section["title"].split()[0]).upper()
+        section["visual_theme"] = visual.get("theme", "cream")
+        section["visual_image"] = asset_ref(visual.get("image", ""))
+        section["visual_label"] = visual.get("label", section.get("eyebrow", "Field Guide"))
         prose_file = guide_dir / "prose" / f"{section['file']}.md"
         if prose_file.exists():
-            section["prose_html"] = markdown.markdown(
-                prose_file.read_text(encoding="utf-8"),
+            rendered = markdown.markdown(
+                format_prose_markdown(prose_file.read_text(encoding="utf-8")),
                 extensions=["extra", "tables", "smarty"],
             )
+            rendered = re.sub(r"(<li>)(\s*<p>)?\[ \]\s+", r'<li class="check-item">\2', rendered)
+            rendered = re.sub(r"<h([23])>(.*?)</h\1>", r"<h\1><span>\2</span></h\1>", rendered)
+            section["prose_html"] = rendered
         else:
             section["prose_html"] = ""
+
+    series_path = ROOT / "series.yaml"
+    other_guides = []
+    if series_path.exists():
+        series = yaml.safe_load(series_path.read_text(encoding="utf-8")) or {}
+        other_guides = [g for g in series.get("series", []) if g.get("id") != guide_id]
+    guide["other_guides"] = other_guides
+
     return guide
 
 

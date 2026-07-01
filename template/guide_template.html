@@ -9,84 +9,128 @@
 </head>
 <body>
 
-<div class="page-cover" style="page:cover;background:var(--color-brunswick);width:8.5in;height:11in;display:flex;flex-direction:column;padding:0.75in 0.875in;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;">
-    {% include 'assets/topo-lines.svg' %}
-  </div>
-  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
-    <div style="margin-bottom:48px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 160 120">
-        <text text-anchor="middle" x="80" y="42" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">ADV</text>
-        <text text-anchor="middle" x="80" y="80" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">NTR</text>
-        <text text-anchor="middle" x="80" y="112" font-family="'Titan One',Impact,sans-serif" font-size="28" fill="#DDAD8A" letter-spacing="8">ROAD</text>
-      </svg>
-    </div>
-
-    <div style="flex:1;">
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.55);margin-bottom:16px;">{{ guide.region }}</div>
-      <h1 style="font-family:var(--font-display);font-size:52px;font-weight:700;color:var(--color-champagne);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;">{{ guide.title }}</h1>
-      <p style="font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--color-buff);line-height:1.4;max-width:44ch;">{{ guide.subtitle }}</p>
-    </div>
-
-    {% if guide.cover_map_uri %}
-    <div style="width:100%;height:280px;overflow:hidden;border-radius:4px;margin-bottom:32px;">
-      <img src="{{ guide.cover_map_uri }}" style="width:100%;height:100%;object-fit:cover;object-position:center;">
-    </div>
-    {% else %}
-    <div style="width:100%;height:280px;border:1px solid rgba(249,228,197,0.18);border-radius:4px;margin-bottom:32px;display:flex;align-items:center;justify-content:center;color:rgba(249,228,197,0.42);font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;">Cover Map Placeholder</div>
-    {% endif %}
-
-    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);border-top:1px solid rgba(249,228,197,0.12);padding-top:16px;">{{ guide.edition }} · {{ guide.url }}</div>
-  </div>
+<div class="page-cover guide-title-string poster-cover grain" data-guide-title="{{ guide.title }}">
+  {% if guide.cover_photo_uri %}<img class="poster-cover__image" src="{{ guide.cover_photo_uri }}">{% endif %}
+  <div class="poster-cover__wash"></div>
+  <img class="brand-logo brand-logo--cover" src="{{ guide.logos.white }}" alt="ADVNTR Road">
+  <div class="poster-cover__brand">{{ guide.edition }}</div>
+  <div class="poster-cover__meta">{{ guide.region }}<br>{{ guide.stats[1] if guide.stats }}<br>{{ guide.published }}</div>
+  <h1 class="poster-cover__word">{% for line in guide.cover_word %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</h1>
+  <p class="poster-cover__subtitle">{{ guide.subtitle }}</p>
+  {% if guide.cover_footer %}<div class="poster-cover__footer">{{ guide.cover_footer }}</div>{% endif %}
+  <div class="barcode poster-cover__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </div>
 
-<div class="page-toc section" style="min-height:100vh;padding:var(--pad-page);">
-  <div style="margin-bottom:var(--stack-xl);padding-bottom:var(--space-6);border-bottom:var(--rule-accent);">
-    <svg xmlns="http://www.w3.org/2000/svg" width="220" height="38" viewBox="0 0 280 48">
-      <text x="0" y="38" font-family="'Playfair Display',Georgia,serif" font-weight="700" font-size="32" fill="#1B4436">ADVNTR</text>
-      <text x="194" y="38" font-family="'Playfair Display',Georgia,serif" font-style="italic" font-size="32" fill="#DDAD8A">Road</text>
-    </svg>
+<div class="page-toc section toc-page grain">
+  <div class="toc-page__masthead">
+    <img class="brand-logo brand-logo--toc" src="{{ guide.logos.green }}" alt="ADVNTR Road">
+    <div class="barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </div>
-  <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:var(--space-6);">Contents</div>
-  {% for section in guide.sections %}
-  <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-3) 0;border-bottom:var(--rule-subtle);">
-    <span style="font-family:var(--font-display);font-size:16px;color:var(--text-primary);">{{ section.title }}</span>
-    <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.10em;color:var(--text-secondary);">{{ "%02d"|format(loop.index) }}</span>
+  <div class="toc-page__label">Contents / {{ guide.edition }}</div>
+  <h2 class="toc-page__title">Use this like a field card.</h2>
+  <div class="toc-page__grid">
+    {% for section in guide.sections %}
+    <div class="toc-item">
+      <span class="toc-item__num">{{ "%02d"|format(loop.index) }}</span>
+      <span class="toc-item__title">{{ section.title }}</span>
+      <span class="toc-item__word">{{ section.visual_word }}</span>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 
 {% for section in guide.sections %}
-<div class="section" id="section-{{ loop.index }}">
-  <div class="section-header">
-    <div class="section-header__eyebrow">SECTION {{ "%02d"|format(loop.index) }} - {{ section.eyebrow | upper }}</div>
-    <h2 class="section-header__title">{{ section.title }}</h2>
-    {% if section.subhead %}<p class="section-header__subhead">{{ section.subhead }}</p>{% endif %}
+<div class="section section--{{ section.visual_theme }}" id="section-{{ loop.index }}">
+  <div class="visual-opener visual-opener--{{ section.visual_theme }} grain">
+    {% if section.visual_image %}<img class="visual-opener__image" src="{{ section.visual_image }}" alt="">{% endif %}
+    <div class="visual-opener__wash"></div>
+    <div class="visual-opener__label">Section {{ "%02d"|format(loop.index) }} / {{ section.visual_label }}</div>
+    {% if section.visual_theme in ["photo", "dark"] %}
+    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.white }}" alt="ADVNTR Road">
+    {% elif section.visual_theme == "blue" %}
+    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.rust }}" alt="ADVNTR Road">
+    {% else %}
+    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.green }}" alt="ADVNTR Road">
+    {% endif %}
+    <div class="visual-opener__word">{{ section.visual_word }}</div>
+    <div class="visual-opener__content">
+      <h2>{{ section.title }}</h2>
+      {% if section.subhead %}<p>{{ section.subhead }}</p>{% endif %}
+    </div>
+    <div class="visual-opener__data">
+      <span>{{ guide.region }}</span>
+      <span>{{ section.eyebrow }}</span>
+      <span>{{ guide.published }}</span>
+    </div>
+    <div class="barcode visual-opener__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </div>
+
+  {% if section.map_key and guide.maps[section.map_key] is defined %}
+  {% set m = guide.maps[section.map_key] %}
+  <div class="map-panel">
+    <div class="map-panel__header">
+      <div>
+        <div class="map-panel__kicker">{{ section.eyebrow }} / Map Reference</div>
+        <h3>{{ section.map_title | default(section.title ~ " Map") }}</h3>
+        {% if section.map_deck %}<p>{{ section.map_deck }}</p>{% endif %}
+      </div>
+      {% if section.map_meta %}
+      <div class="map-panel__meta">
+        {% for item in section.map_meta %}<span>{{ item }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="map-container">
+      {% if m.image_uri %}
+      <img src="{{ m.image_uri }}" style="display:block;width:100%;height:auto;">
+      {% else %}
+      <div class="map-placeholder">{{ section.eyebrow }} Map Placeholder</div>
+      {% endif %}
+      {% if m.overlay_svg %}
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;" viewBox="0 0 {{ m.size.split('x')[0] }} {{ m.size.split('x')[1] }}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        {{ m.overlay_svg | safe }}
+      </svg>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if section.callouts %}
+  <div class="callout-grid">
+    {% for callout in section.callouts %}
+    <aside class="guide-callout guide-callout--{{ callout.type | default('tip') }}">
+      <div class="guide-callout__label">{{ callout.label | default('Field Note') }}</div>
+      <div class="guide-callout__title">{{ callout.title }}</div>
+      <p>{{ callout.body }}</p>
+    </aside>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if section.image_plates %}
+  <div class="image-plate-grid image-plate-grid--{{ section.image_plates | length }}">
+    {% for plate in section.image_plates %}
+    <figure class="image-plate">
+      <img src="{{ plate.src }}" alt="{{ plate.alt }}">
+      <figcaption>
+        <span>{{ plate.caption }}</span>
+        {% if plate.credit %}<small>{{ plate.credit }}</small>{% endif %}
+      </figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   {% if section.prose_html %}
   <div class="section-prose">{{ section.prose_html | safe }}</div>
   {% endif %}
 
-  {% if section.map_key and guide.maps[section.map_key] is defined %}
-  {% set m = guide.maps[section.map_key] %}
-  <div class="map-container">
-    {% if m.image_uri %}
-    <img src="{{ m.image_uri }}" style="display:block;width:100%;height:auto;">
-    {% else %}
-    <div class="map-placeholder">{{ section.eyebrow }} Map Placeholder</div>
-    {% endif %}
-    {% if m.overlay_svg %}
-    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;" viewBox="0 0 {{ m.size.split('x')[0] }} {{ m.size.split('x')[1] }}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      {{ m.overlay_svg | safe }}
-    </svg>
-    {% endif %}
-  </div>
-  {% endif %}
-
   {% if section.show_campgrounds %}
   {% for camp in guide.campgrounds %}
   <article class="camp-card {% if camp.featured %}camp-card--featured{% endif %}">
+    {% if camp.image %}
+    <img class="camp-card__image" src="{{ camp.image }}" alt="{{ camp.name }}">
+    {% endif %}
     <div class="camp-card__region">{{ camp.region }}</div>
     <h3 class="camp-card__name">{{ camp.name }}</h3>
     {% if camp.badges %}
@@ -110,6 +154,11 @@
       {% for tag in camp.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
     </div>
     {% endif %}
+    <div class="link-actions">
+      {% if camp.website %}<a class="link-pill" href="{{ camp.website }}">Website</a>{% endif %}
+      {% if camp.reservations.url %}<a class="link-pill" href="{{ camp.reservations.url }}">Book</a>{% endif %}
+      {% if camp.maps_url %}<a class="link-pill" href="{{ camp.maps_url }}">Map</a>{% endif %}
+    </div>
   </article>
   {% endfor %}
   {% endif %}
@@ -121,6 +170,10 @@
       <div class="business-card__name">{{ biz.name }}</div>
       <div class="business-card__type">{{ biz.type }}</div>
       <p class="business-card__description">{{ biz.editorial }}</p>
+      <div class="link-actions">
+        {% if biz.website %}<a class="link-pill" href="{{ biz.website }}">Website</a>{% endif %}
+        {% if biz.maps_url %}<a class="link-pill" href="{{ biz.maps_url }}">Map</a>{% endif %}
+      </div>
     </div>
     <div class="business-card__meta">{% if biz.phone %}<div>{{ biz.phone }}</div>{% endif %}</div>
   </div>
@@ -134,13 +187,22 @@
     {% include 'assets/topo-lines.svg' %}
   </div>
   <div style="position:relative;z-index:1;text-align:center;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" style="margin-bottom:48px;">
-      <text text-anchor="middle" x="80" y="42" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">ADV</text>
-      <text text-anchor="middle" x="80" y="80" font-family="'Titan One',Impact,sans-serif" font-size="38" fill="#F9E4C5" letter-spacing="2">NTR</text>
-      <text text-anchor="middle" x="80" y="112" font-family="'Titan One',Impact,sans-serif" font-size="28" fill="#DDAD8A" letter-spacing="8">ROAD</text>
-    </svg>
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);">{{ guide.url }} · {{ guide.edition }}</div>
+    <img class="brand-logo brand-logo--back" src="{{ guide.logos.white }}" alt="ADVNTR Road">
+    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);"><a href="{{ guide.url_href }}" style="color:inherit;text-decoration:none;">{{ guide.url }}</a> · {{ guide.edition }}</div>
   </div>
+  {% if guide.other_guides %}
+  <div style="position:absolute;left:0.875in;right:0.875in;bottom:0.95in;z-index:1;">
+    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(249,228,197,0.55);text-align:center;border-top:1px solid rgba(249,228,197,0.22);padding-top:0.3in;margin-bottom:0.22in;">More From ADVNTR Road</div>
+    <div style="display:flex;justify-content:center;gap:0.5in;text-align:left;">
+      {% for other in guide.other_guides[:3] %}
+      <div style="max-width:1.7in;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--color-champagne);margin-bottom:4px;">{{ other.title }}</div>
+        <div style="font-family:var(--font-body);font-size:9.5px;line-height:1.4;color:rgba(249,228,197,0.62);">{{ other.teaser }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 </body>

@@ -5,3 +5,10 @@ outputs/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Large binary assets — fonts and reference screenshots tracked separately
+design_system/fonts/
+graphical-inspiration/
+
+# Root-level mount-rainier-np/ is a separate web project, not part of this pipeline
+/mount-rainier-np/

@@ -1,8 +1,7 @@
-.camp-card,
-.business-card,
 .gateway-card,
 .section-header,
 .pull-quote,
+.map-panel,
 .map-container,
 .activity-block,
 .checklist-group,
@@ -13,7 +12,7 @@
 }
 
 .section-header,
-h1, h2, h3 {
+h1 {
   page-break-after: avoid;
   break-after: avoid;
 }

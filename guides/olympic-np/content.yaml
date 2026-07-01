@@ -4,9 +4,10 @@ guide:
   subtitle: "Coast, Rain Forest, and the Mountains in Between"
   edition: "2026 Field Edition"
   region: "Pacific Northwest"
-  url: "road.advntr.io/olympic"
+  url: "road.advntr.io/olympic-np"
   published: "June 2026"
-  cover_map: "assets/cover-map.png"
+  verified: "June 2026"
+  cover_photo: "assets/cover-photo.png"
 
   stats:
     - "OLYMPIC PENINSULA, WA"
@@ -15,79 +16,157 @@ guide:
     - "UPDATED JUNE 2026"
 
   map_bounds:
-    north: 48.1500
+    north: 48.3000
     south: 47.5000
-    east: -123.2000
+    east: -122.7000
     west: -124.7500
 
   sections:
-    - id: orientation
+    - id: "orientation"
       file: "01-orientation"
       eyebrow: "Orientation"
       title: "Where You Are"
       subhead: "Three ecosystems, one peninsula, zero easy answers."
-      map_key: orientation
+      map_key: "orientation"
 
-    - id: getting-there
-      file: "02-getting-there"
-      eyebrow: "Getting There"
+    - id: "before-you-arrive"
+      file: "02-before-you-arrive"
+      eyebrow: "Before You Arrive"
       title: "The Drive In"
-      subhead: "Gateway towns, access roads, and what to know before you arrive."
-      map_key: gateway_towns
+      subhead: "Gateway towns, access roads, and what to handle before you arrive."
+      map_key: "gateway_towns"
+      show_gateway_towns: true
 
-    - id: where-to-camp
-      file: "03-where-to-camp"
-      eyebrow: "Where to Camp"
+    - id: "where-to-sleep"
+      file: "03-where-to-sleep"
+      eyebrow: "Where to Sleep"
       title: "Where You Sleep Matters"
       subhead: "From rain forest riverbanks to coastal bluffs."
-      map_key: campground_reference
+      map_key: "campground_reference"
       show_campgrounds: true
 
-    - id: what-to-do
-      file: "04-what-to-do"
+    - id: "what-to-do"
+      file: "05-what-to-do"
       eyebrow: "What to Do"
       title: "The Work of Being Here"
       subhead: "Trails, water, and the things worth slowing down for."
 
-    - id: eat-resupply
-      file: "05-eat-resupply"
+    - id: "eat-resupply"
+      file: "06-eat-resupply"
       eyebrow: "Eat + Resupply"
       title: "Feeding Yourself"
       subhead: "Where to eat, what to stock, and when to do it."
       show_businesses: true
 
-    - id: coastal
-      file: "06-coastal"
-      eyebrow: "The Coast"
-      title: "The Edge of the Continent"
-      subhead: "Kalaloch, Rialto, Ruby Beach, and how to read the tides."
-      map_key: coastal_logistics
-
-    - id: field-notes
+    - id: "field-notes"
       file: "07-field-notes"
       eyebrow: "Field Notes"
       title: "What You Actually Need to Know"
       subhead: "Cell service, permits, fees, bear boxes, and seasonal realities."
+      show_fees: true
+      show_permits: true
 
-    - id: checklist
-      file: "08-checklist"
-      eyebrow: "Planning Checklist"
-      title: "Before You Leave"
-      subhead: "The things people forget and wish they hadn't."
+    - id: "before-you-leave"
+      file: "08-before-you-leave"
+      eyebrow: "Before You Leave"
+      title: "Before You Leave Home"
+      subhead: "The things people forget and wish they had not."
+      show_checklist: true
+      show_resources: true
 
-    - id: before-you-go
-      file: "09-before-you-go"
-      eyebrow: "Before You Go"
-      title: "A Final Word"
-      subhead: ""
+  zones:
+    - id: "alpine"
+      file: "04a-alpine"
+      eyebrow: "The Alpine"
+      title: "Hurricane Ridge & Deer Park"
+      subhead: "Where the road climbs fast and the weather has the final vote."
+      map_key: "alpine"
+      highlights:
+        - label: "Hurricane Ridge"
+          note: "The most direct high-country access from Port Angeles."
+          tags: [consensus]
+        - label: "Deer Park Road"
+          note: "A steeper, narrower alpine road for smaller rigs and patient drivers."
+          tags: [heads-up]
+        - label: "Clear Mornings"
+          note: "The ridge rewards early starts before cloud and afternoon traffic build."
+
+    - id: "lake-crescent-sol-duc"
+      file: "04b-lake-crescent-sol-duc"
+      eyebrow: "Lake + Valley"
+      title: "Lake Crescent & Sol Duc Valley"
+      subhead: "Deep water, old-growth shade, and a hot-springs detour with tradeoffs."
+      map_key: "lake-crescent-sol-duc"
+      highlights:
+        - label: "Lake Crescent"
+          note: "A scenic reset between Port Angeles and the west side."
+          tags: [consensus]
+        - label: "Sol Duc Falls"
+          note: "A short forest walk with one of the park's classic waterfall payoffs."
+        - label: "Sol Duc Campground"
+          note: "Useful west-side positioning, but book early for summer."
+          tags: [reservable]
+
+    - id: "rainforest"
+      file: "04c-rainforest"
+      eyebrow: "Rain Forest"
+      title: "Hoh vs. Quinault"
+      subhead: "Two green worlds, different logistics, and a lot of rain."
+      map_key: "rainforest"
+      highlights:
+        - label: "Hoh Rain Forest"
+          note: "The famous one, with big crowds and the strongest in-park campground card."
+          tags: [consensus]
+        - label: "Quinault"
+          note: "A quieter southern rain-forest approach with lodge and lake logistics."
+          tags: [hidden-gem]
+        - label: "Rain Gear"
+          note: "This zone makes its own weather regardless of the forecast."
+          tags: [heads-up]
+
+    - id: "coast-central"
+      file: "04d-coast-central"
+      eyebrow: "Central Coast"
+      title: "Kalaloch & Ruby Beach"
+      subhead: "The simplest coastal base and the beach stops that justify the drive."
+      map_key: "coast-central"
+      highlights:
+        - label: "Kalaloch"
+          note: "The easiest coastal base camp for RV travelers."
+          tags: [dog-friendly]
+        - label: "Ruby Beach"
+          note: "A high-drama stop that works even when you are not backpacking."
+          tags: [consensus]
+        - label: "Tide Tables"
+          note: "Do not treat the coast like a casual beach walk."
+          tags: [heads-up]
+
+    - id: "coast-north"
+      file: "04e-coast-north"
+      eyebrow: "North Coast"
+      title: "Mora, Rialto, Ozette & Shi Shi"
+      subhead: "Bigger tide windows, slower roads, and the wildest edge of the trip."
+      map_key: "coast-north"
+      highlights:
+        - label: "Rialto Beach"
+          note: "A strong day stop from Mora or Forks when tides cooperate."
+          tags: [consensus]
+        - label: "Ozette"
+          note: "Remote, slower, and best when you have time to spare."
+          tags: [hidden-gem]
+        - label: "Shi Shi Beach"
+          note: "Requires extra planning and Makah Recreation access."
+          tags: [heads-up]
 
   campgrounds:
-    - id: hoh_rain_forest
+    - id: "hoh_rain_forest"
       name: "Hoh Rain Forest Campground"
       region: "HOH RAIN FOREST, OLYMPIC NP"
+      type: "nps"
       featured: true
       lat: 47.8601
       lng: -123.9340
+      open: "Year-round"
       reservations:
         method: "Recreation.gov"
         type: "reservable"
@@ -95,30 +174,30 @@ guide:
         url: "https://www.recreation.gov/camping/campgrounds/232464"
       hookups: "none"
       max_length: "21ft"
+      dump_station: "No"
+      showers: "No"
       pets:
         allowed: true
-        restrictions: "On leash, paved/gravel areas only"
-      badges:
-        - consensus
-        - reservable
-      tags:
-        - "Fills Fast"
-        - "Rain Ready"
+        restrictions: "On leash, paved and campground areas only"
+      badges: [consensus, reservable]
+      tags: ["Fills Fast", "Rain Ready"]
       editorial: >
         The Hoh sits inside one of the wettest temperate rain forests in North America,
         and the campground earns every reputation attached to it. Sites along the river
         hear the Hoh moving at night. Bring rain gear regardless of the forecast.
       verified_date: "June 2026"
-      verified_source: "NPS / Recreation.gov"
+      verified_source: "NPS.gov / Recreation.gov"
       website: "https://www.nps.gov/olym/planyourvisit/hoh-campground.htm"
       maps_url: "https://maps.google.com/?q=47.8601,-123.9340"
 
-    - id: kalaloch
+    - id: "kalaloch"
       name: "Kalaloch Campground"
       region: "SOUTH COAST, OLYMPIC NP"
-      featured: false
+      type: "nps"
+      featured: true
       lat: 47.6079
       lng: -124.3771
+      open: "Year-round"
       reservations:
         method: "Recreation.gov"
         type: "reservable"
@@ -126,33 +205,72 @@ guide:
         url: "https://www.recreation.gov/camping/campgrounds/232464"
       hookups: "none"
       max_length: "35ft"
+      dump_station: "No"
+      showers: "No"
       pets:
         allowed: true
         restrictions: "On leash; check beach rules by area"
-      badges:
-        - consensus
-        - dog-friendly
-      tags:
-        - "Coastal Base"
-        - "No Hookups"
+      badges: [consensus, dog-friendly]
+      tags: ["Coastal Base", "No Hookups"]
       editorial: >
         Kalaloch is the easiest coastal base camp in the park, with quick access to
         beach walks and a practical location between Forks and the southern peninsula.
         It is not secluded, but it earns its place through logistics and salt air.
       verified_date: "June 2026"
-      verified_source: "NPS / Recreation.gov"
+      verified_source: "NPS.gov / Recreation.gov"
       website: "https://www.nps.gov/olym/planyourvisit/kalaloch-campground.htm"
       maps_url: "https://maps.google.com/?q=47.6079,-124.3771"
 
+  gateway_towns:
+    - id: "port-townsend"
+      name: "Port Townsend"
+      role: "Ferry-side staging town"
+      distance: "About 47 miles to Port Angeles"
+      services: [fuel, grocery, laundry, medical]
+      editorial: >
+        Port Townsend is a graceful east-side approach when the ferry is part of the trip.
+        It is better as a first-night staging town than as a daily Olympic base.
+    - id: "sequim"
+      name: "Sequim"
+      role: "Dry-side grocery and fuel stop"
+      distance: "About 17 miles to Port Angeles"
+      services: [fuel, grocery, propane, medical]
+      editorial: >
+        Sequim is useful because it sits before the park roads get slower.
+        Handle practical errands here if Port Angeles traffic or timing is working against you.
+    - id: "port-angeles"
+      name: "Port Angeles"
+      role: "Primary northern hub"
+      distance: "Gateway to Hurricane Ridge and Lake Crescent"
+      services: [fuel, grocery, propane, laundry, rv-dump, medical]
+      editorial: >
+        Port Angeles has the deepest bench for groceries, gear, fuel, and sit-down meals.
+        It is the cleanest base for Hurricane Ridge and the most forgiving place to reset a plan.
+    - id: "forks"
+      name: "Forks"
+      role: "West-side reset"
+      distance: "About 31 miles to Hoh Rain Forest"
+      services: [fuel, grocery, laundry, medical]
+      editorial: >
+        Forks covers the essentials between the rain forest and the coast.
+        It is not fancy, but it is often exactly where you need food, fuel, and dry socks.
+    - id: "amanda-park"
+      name: "Amanda Park"
+      role: "Southern rain-forest anchor"
+      distance: "Near Lake Quinault"
+      services: [fuel, grocery]
+      editorial: >
+        Amanda Park is a small but useful southern anchor for Quinault and the lower peninsula.
+        Treat it as a targeted stop, not a full-service hub.
+
   businesses:
-    - id: lake_crescent_lodge
+    - id: "lake_crescent_lodge"
       name: "Lake Crescent Lodge"
       type: "Lodge / Dining"
       region: "LAKE CRESCENT, OLYMPIC NP"
       lat: 48.0582
       lng: -123.7898
-      badges:
-        - consensus
+      badges: [consensus]
       phone: "+1 360-928-3211"
       website: "https://olympicnationalparks.com/lodging/lake-crescent-lodge/"
       maps_url: "https://maps.google.com/?q=48.0582,-123.7898"
@@ -161,15 +279,13 @@ guide:
         repetition: consistent, unhurried, and set against a lake that makes almost
         any meal better. Reservations are worth making in advance for summer dinners.
       verified_date: "June 2026"
-
-    - id: country_aire
+    - id: "country_aire"
       name: "Country Aire Natural Foods"
       type: "Grocery / Resupply"
       region: "PORT ANGELES, WA"
       lat: 48.1180
       lng: -123.4308
-      badges:
-        - hidden-gem
+      badges: [hidden-gem]
       phone: "+1 360-452-7175"
       website: "https://www.countryairemarket.com/"
       maps_url: "https://maps.google.com/?q=48.1180,-123.4308"
@@ -179,6 +295,68 @@ guide:
         stores rarely handle well.
       verified_date: "June 2026"
 
+  fees:
+    entrance_vehicle: "$30 / 7-day"
+    entrance_motorcycle: "$25 / 7-day"
+    entrance_person: "$15 / 7-day"
+    annual_park: "$55"
+    america_beautiful: true
+    cashless: true
+    free_days: "Check the National Park Service fee-free entrance days list for 2026."
+    camping_range: "$15-$24/night"
+    backcountry_permit: "$8/person/night"
+
+  permits:
+    backcountry_required: true
+    platform: "Recreation.gov"
+    window: "in advance by itinerary"
+    walkup: "Limited"
+    bear_canister_required: true
+    bear_canister_rental:
+      available: true
+      location: "Olympic Wilderness Information Center"
+    other:
+      - name: "Makah Recreation Permit"
+        required_for: "Shi Shi Beach access"
+        cost: "Fee varies"
+        note: "Required for recreation on Makah lands, including Shi Shi access."
+
+  checklist:
+    - "Book campground reservations as soon as your window opens, especially for Hoh, Kalaloch, Sol Duc, and Mora."
+    - "Purchase or verify an entrance pass, or bring an America the Beautiful pass."
+    - "Download offline maps before leaving Port Angeles, Forks, or Aberdeen."
+    - "Save tide tables for every coastal day, not only backpacking routes."
+    - "Check current NPS alerts for roads, trailheads, campgrounds, and Hurricane Ridge access."
+    - "Fill fuel and grocery gaps before crossing to the west side."
+    - "Verify pet rules for beaches, trails, campgrounds, and lodge areas."
+    - "Keep rain gear accessible even when the forecast looks friendly."
+
+  resources:
+    - name: "National Park Service - Olympic National Park"
+      url: "https://www.nps.gov/olym/"
+      use: "Road conditions, alerts, entrance fees, campground status, and official planning notices"
+      when: "Check within 48 hours of arrival"
+    - name: "Recreation.gov"
+      url: "https://www.recreation.gov"
+      use: "Campground reservations and wilderness permits"
+      when: "Open your booking window the day it goes live"
+    - name: "Washington Trails Association"
+      url: "https://www.wta.org"
+      use: "Recent trail reports and access notes"
+      when: "Check before committing to longer hikes"
+    - name: "NOAA Tide Predictions"
+      url: "https://tidesandcurrents.noaa.gov/"
+      use: "Coastal tide timing for Rialto, Ozette, Shi Shi, Kalaloch, and Ruby Beach"
+      when: "Check before every coastal route"
+    - name: "Makah Recreation"
+      url: "https://makah.com/"
+      use: "Shi Shi Beach access and tribal recreation permit information"
+      when: "Use before planning the north coast"
+    - name: "Gaia GPS"
+      url: "https://www.gaiagps.com/"
+      use: "Offline map downloads and route planning"
+      when: "Download maps before entering low-service areas"
+
   maps:
     orientation:
       center_lat: 47.8500
@@ -186,9 +364,9 @@ guide:
       zoom: 9
       size: "760x440"
       bounds:
-        north: 48.15
+        north: 48.30
         south: 47.50
-        east: -123.20
+        east: -122.70
         west: -124.75
       markers:
         - label: "PORT ANGELES"
@@ -199,10 +377,10 @@ guide:
           lat: 47.9468
           lng: -124.3959
           type: "gateway"
-        - label: "ABERDEEN"
-          lat: 46.9751
-          lng: -123.8150
-          type: "gateway"
+        - label: "KALALOCH"
+          lat: 47.6079
+          lng: -124.3771
+          type: "campground"
 
     gateway_towns:
       center_lat: 47.8500
@@ -212,9 +390,17 @@ guide:
       bounds:
         north: 48.20
         south: 46.90
-        east: -123.20
+        east: -122.70
         west: -124.80
       markers:
+        - label: "PORT TOWNSEND"
+          lat: 48.1170
+          lng: -122.7604
+          type: "gateway"
+        - label: "SEQUIM"
+          lat: 48.0796
+          lng: -123.1018
+          type: "gateway"
         - label: "PORT ANGELES"
           lat: 48.1001
           lng: -123.4307
@@ -223,9 +409,9 @@ guide:
           lat: 47.9468
           lng: -124.3959
           type: "gateway"
-        - label: "ABERDEEN"
-          lat: 46.9751
-          lng: -123.8150
+        - label: "AMANDA PARK"
+          lat: 47.4576
+          lng: -123.9069
           type: "gateway"
 
     campground_reference:
@@ -260,16 +446,84 @@ guide:
           lng: -123.4870
           type: "campground"
 
-    coastal_logistics:
-      center_lat: 47.7000
-      center_lng: -124.4000
+    alpine:
+      center_lat: 47.9900
+      center_lng: -123.4300
       zoom: 11
       size: "760x440"
       bounds:
-        north: 47.90
-        south: 47.50
-        east: -124.20
-        west: -124.70
+        north: 48.08
+        south: 47.88
+        east: -123.25
+        west: -123.60
+      markers:
+        - label: "HURRICANE RIDGE"
+          lat: 47.9694
+          lng: -123.4985
+          type: "trailhead"
+        - label: "DEER PARK"
+          lat: 47.9464
+          lng: -123.2638
+          type: "trailhead"
+        - label: "HEART O' HILLS"
+          lat: 47.9790
+          lng: -123.4870
+          type: "campground"
+
+    lake-crescent-sol-duc:
+      center_lat: 48.0450
+      center_lng: -123.8250
+      zoom: 11
+      size: "760x440"
+      bounds:
+        north: 48.12
+        south: 47.94
+        east: -123.65
+        west: -124.00
+      markers:
+        - label: "LAKE CRESCENT"
+          lat: 48.0582
+          lng: -123.7898
+          type: "viewpoint"
+        - label: "SOL DUC FALLS"
+          lat: 47.9500
+          lng: -123.8150
+          type: "trailhead"
+        - label: "SOL DUC"
+          lat: 47.9715
+          lng: -123.8516
+          type: "campground"
+
+    rainforest:
+      center_lat: 47.6900
+      center_lng: -124.0000
+      zoom: 10
+      size: "760x440"
+      bounds:
+        north: 47.95
+        south: 47.35
+        east: -123.70
+        west: -124.35
+      markers:
+        - label: "HOH"
+          lat: 47.8601
+          lng: -123.9340
+          type: "campground"
+        - label: "QUINAULT"
+          lat: 47.4665
+          lng: -123.8496
+          type: "viewpoint"
+
+    coast-central:
+      center_lat: 47.6600
+      center_lng: -124.4100
+      zoom: 11
+      size: "760x440"
+      bounds:
+        north: 47.78
+        south: 47.55
+        east: -124.30
+        west: -124.50
       markers:
         - label: "RUBY BEACH"
           lat: 47.7107
@@ -279,7 +533,27 @@ guide:
           lat: 47.6079
           lng: -124.3771
           type: "campground"
+
+    coast-north:
+      center_lat: 47.9700
+      center_lng: -124.6200
+      zoom: 10
+      size: "760x440"
+      bounds:
+        north: 48.30
+        south: 47.85
+        east: -124.45
+        west: -124.75
+      markers:
         - label: "RIALTO"
           lat: 47.9154
           lng: -124.5969
+          type: "trailhead"
+        - label: "OZETTE"
+          lat: 48.1531
+          lng: -124.6677
+          type: "trailhead"
+        - label: "SHI SHI"
+          lat: 48.2648
+          lng: -124.6785
           type: "trailhead"

@@ -1,0 +1,13 @@
+series:
+  - id: north-cascades
+    title: "North Cascades National Park"
+    teaser: "The American Alps. Dramatic peaks, remote backcountry."
+  - id: mount-rainier-np
+    title: "Mount Rainier National Park"
+    teaser: "The volcano that dominates the horizon from three states."
+  - id: oregon-coast
+    title: "Oregon Coast"
+    teaser: "Three hundred miles of public coastline and working fishing towns."
+  - id: columbia-river-gorge
+    title: "Columbia River Gorge"
+    teaser: "Waterfalls, windsurfers, and the most dramatic river canyon in the Northwest."

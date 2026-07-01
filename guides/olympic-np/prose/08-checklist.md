@@ -1,7 +1,0 @@
-- Confirm campground reservation rules and arrival windows.
-- Download offline maps for each travel day.
-- Save tide tables for coastal routes.
-- Check NPS alerts for road, trail, and campground closures.
-- Pack rain gear even when the forecast looks friendly.
-- Plan fuel and groceries before crossing to the west side.
-- Verify pet rules for beaches, trails, and campgrounds.

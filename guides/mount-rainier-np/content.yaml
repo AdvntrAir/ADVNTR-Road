@@ -1,0 +1,549 @@
+guide:
+  id: "mount-rainier-np"
+  title: "Mount Rainier National Park"
+  subtitle: "The mountain that owns the sky above everything."
+  edition: "2026 Field Edition"
+  region: "Pacific Northwest - Washington State"
+  url: "road.advntr.io/mount-rainier-np"
+  published: "June 2026"
+  cover_photo: "assets/cover-photo.png"
+  cover_word:
+    - "Mount"
+    - "Rainier"
+  cover_footer: "No timed entry / offline first / big-rig routing matters"
+
+  stats:
+    - "PIERCE & LEWIS COUNTIES, WA"
+    - "~236,000 ACRES"
+    - "26 NAMED GLACIERS"
+    - "UPDATED JUNE 2026"
+
+  map_bounds:
+    north: 46.9907
+    south: 46.7213
+    east: -121.5259
+    west: -122.0014
+
+  sections:
+    - id: orientation
+      file: "01-orientation"
+      eyebrow: "Orientation"
+      title: "Where You Are"
+      subhead: "Two open road corridors, one closed northwest sector, and a mountain that sets the terms."
+      visual:
+        word: "Mt. Rainier"
+        theme: "photo"
+        image: "assets/rainier-aerial-sunset.jpg"
+        label: "Field Orientation"
+      map_key: orientation
+      map_title: "Orientation Map"
+      map_deck: "The working shape of the park in 2026: Paradise and Sunrise carry the trip, Ohanapecosh is limited, and the northwest sector is a no-go by vehicle."
+      map_meta:
+        - "No timed entry"
+        - "NW sector closed"
+        - "Download offline"
+      callouts:
+        - type: warning
+          label: "2026 Reality"
+          title: "No timed entry does not mean no friction."
+          body: "The reservation pilot is gone for 2026, so parking pressure returns. Paradise and Sunrise can fill by 8:00-8:30 AM on clear summer days."
+        - type: tip
+          label: "Offline First"
+          title: "Download everything before the gate."
+          body: "Cell service is effectively absent inside the park, with only weak intermittent signal around Paradise."
+      image_plates:
+        - src: "guides/mount-rainier-np/assets/paradise-wildflowers.jpg"
+          alt: "Wildflowers blooming in Paradise at Mount Rainier National Park"
+          caption: "Paradise is the classic first-timer corridor: meadows, glacier views, and summer wildflowers."
+          credit: "Public domain - Mount Rainier NPS / Wikimedia Commons"
+
+    - id: before-you-arrive
+      file: "02-before-you-arrive"
+      eyebrow: "Before You Arrive"
+      title: "The Drive In"
+      subhead: "Gateway towns, approach roads, tunnel clearances, and where to stock up."
+      visual:
+        word: "Route"
+        theme: "blue"
+        image: "assets/reflection-lake.jpg"
+        label: "Before The Gate"
+      map_key: gateway_towns
+      callouts:
+        - type: route
+          label: "Big Rig Route"
+          title: "Large setups belong outside the gate."
+          body: "If you are over 35 feet, base camp in Packwood, unhook, and enter the park with a passenger vehicle."
+        - type: warning
+          label: "Clearance"
+          title: "Stevens Canyon Road tops out at 12 ft 6 in."
+          body: "Tall toy haulers, fifth wheels, and rooftop AC stacks should avoid the Stevens Canyon tunnel route."
+
+    - id: where-to-sleep
+      file: "03-where-to-sleep"
+      eyebrow: "Where To Sleep"
+      title: "Camp By Rig Size"
+      subhead: "Inside the park is beautiful. Outside the park may be smarter."
+      visual:
+        word: "Camp"
+        theme: "dark"
+        image: "assets/emmons-vista.jpg"
+        label: "Rig-Size Reality"
+      map_key: campground_reference
+      show_campgrounds: true
+      callouts:
+        - type: warning
+          label: "Tank Math"
+          title: "No in-park dump stations for 2026."
+          body: "Cougar Rock may work for smaller rigs, but your tanks determine your stay length. Arrive empty and full."
+        - type: tip
+          label: "Best Base"
+          title: "Packwood is the honest large-rig answer."
+          body: "Full hookups and room to maneuver beat forcing a big setup into tight historic park infrastructure."
+
+    - id: experience-zones
+      file: "04-experience-zones"
+      eyebrow: "Experience Zones"
+      title: "Paradise, Sunrise, And The Closure"
+      subhead: "The classic corridor, the high alpine corridor, and the northwest sector to defer."
+      visual:
+        word: "Paradise"
+        theme: "cream"
+        image: "assets/paradise-wildflowers.jpg"
+        label: "Classic Corridor"
+      map_key: paradise_sunrise
+      callouts:
+        - type: tip
+          label: "Paradise"
+          title: "Do Skyline clockwise."
+          body: "You face the mountain on the climb, then descend the steeper gravel section with poles doing useful work."
+        - type: route
+          label: "Sunrise"
+          title: "Stay late for Sunrise Point."
+          body: "Most day traffic leaves by late afternoon, and the glacier light turns the whole northeast face into the reward."
+      image_plates:
+        - src: "guides/mount-rainier-np/assets/narada-falls.jpg"
+          alt: "Narada Falls in Mount Rainier National Park"
+          caption: "Narada Falls is a quick stop, but the lower viewpoint is slick and consistently wet."
+          credit: "Public domain - Mount Rainier National Park / Wikimedia Commons"
+        - src: "guides/mount-rainier-np/assets/emmons-vista.jpg"
+          alt: "Mount Rainier viewed from Emmons Vista near Sunrise"
+          caption: "Sunrise puts visitors closer to the mountain's northeast face and the Emmons Glacier perspective."
+          credit: "CC BY 2.0 - Mount Rainier National Park / Wikimedia Commons"
+
+    - id: what-to-do
+      file: "05-what-to-do"
+      eyebrow: "What To Do"
+      title: "The Work Of Being Here"
+      subhead: "Skyline, Fremont, Reflection Lakes, and the logistics that decide your day."
+      visual:
+        word: "Alpine"
+        theme: "blue"
+        image: "assets/reflection-lake.jpg"
+        label: "Day Moves"
+      callouts:
+        - type: tip
+          label: "Photo Timing"
+          title: "Reflection Lakes is a dawn move."
+          body: "The mirror effect needs still air. By mid-morning, wind usually starts breaking the surface."
+      image_plates:
+        - src: "guides/mount-rainier-np/assets/reflection-lake.jpg"
+          alt: "Mount Rainier reflected in Reflection Lake"
+          caption: "Reflection Lakes is one of the park's highest-reward short stops when the wind is calm."
+          credit: "Public domain - US National Park Service / Wikimedia Commons"
+
+    - id: eat-resupply
+      file: "06-eat-resupply"
+      eyebrow: "Eat + Resupply"
+      title: "Feeding Yourself"
+      subhead: "Packwood, Ashford, Enumclaw, and the places that matter."
+      visual:
+        word: "Fuel"
+        theme: "cream"
+        image: "assets/paradise-wildflowers.jpg"
+        label: "Gateway Stops"
+      show_businesses: true
+
+    - id: field-notes
+      file: "07-field-notes"
+      eyebrow: "Field Notes"
+      title: "What You Actually Need To Know"
+      subhead: "Fees, permits, cell service, closures, seasons, and 2026 realities."
+      visual:
+        word: "Offline"
+        theme: "dark"
+        image: "assets/narada-falls.jpg"
+        label: "2026 Realities"
+      map_key: closure_reference
+      callouts:
+        - type: warning
+          label: "Do Not Route"
+          title: "Ignore private bypass suggestions near Fairfax Bridge."
+          body: "Some navigation apps may show a private logging-road bypass around SR-165. It is gated and not open to public travel."
+
+    - id: checklist
+      file: "08-before-you-leave-home"
+      eyebrow: "Before You Leave Home"
+      title: "The Checklist"
+      subhead: "Do these before the mountains take your signal."
+      visual:
+        word: "Checklist"
+        theme: "blue"
+        image: "assets/reflection-lake.jpg"
+        label: "Before The Gate"
+
+  campgrounds:
+    - id: cougar_rock
+      name: "Cougar Rock Campground"
+      region: "PARADISE CORRIDOR, MOUNT RAINIER NP"
+      featured: true
+      lat: 46.7590
+      lng: -121.7982
+      image: "guides/mount-rainier-np/assets/cougar-rock-site.jpg"
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "Peak dates fill quickly"
+        url: "https://www.recreation.gov/camping/campgrounds/232464"
+      hookups: "none"
+      max_length: "~30 ft"
+      pets:
+        allowed: true
+        restrictions: "Campground and paved areas only"
+      badges:
+        - consensus
+        - reservable
+        - heads-up
+      tags:
+        - "No Dump 2026"
+        - "Dry Camping"
+      editorial: >
+        Cougar Rock is the interior park option for smaller rigs - Sprinters, Class C units,
+        vans, and trailers under 30 feet. The 2026 catch: the dump station and water fill
+        are shut down for the full season. Arrive with empty tanks and full water.
+      verified_date: "June 2026"
+      website: "https://www.nps.gov/mora/planyourvisit/cougar-rock-campground.htm"
+      maps_url: "https://maps.google.com/?q=46.7590,-121.7982"
+
+    - id: white_river
+      name: "White River Campground"
+      region: "SUNRISE CORRIDOR, MOUNT RAINIER NP"
+      featured: false
+      lat: 46.9004
+      lng: -121.6404
+      image: "guides/mount-rainier-np/assets/white-river-campsite.jpg"
+      reservations:
+        method: "First-come"
+        type: "first-come"
+        fills: "Early morning on summer weekends"
+        url: ""
+      hookups: "none"
+      max_length: "~24 ft practical"
+      pets:
+        allowed: true
+        restrictions: "Campground only"
+      badges:
+        - heads-up
+      tags:
+        - "Tiny Rigs"
+        - "Sunrise Base"
+      editorial: >
+        The closest camp to Sunrise, set along the river with sites that feel earned.
+        The internal loops are narrow enough to turn around mid-sized rigs. Do not
+        attempt it in anything past 24 feet.
+      verified_date: "June 2026"
+      website: "https://www.nps.gov/mora/planyourvisit/white-river-campground.htm"
+      maps_url: "https://maps.google.com/?q=46.9004,-121.6404"
+
+    - id: ohanapecosh
+      name: "Ohanapecosh Campground"
+      region: "SOUTHEAST OLD-GROWTH SECTOR, MOUNT RAINIER NP"
+      featured: false
+      lat: 46.7293
+      lng: -121.5699
+      image: "guides/mount-rainier-np/assets/ohanapecosh-campground.jpg"
+      reservations:
+        method: "Closed 2026"
+        type: "closed"
+        fills: "Unavailable"
+        url: "https://www.recreation.gov/camping/campgrounds/232462"
+      hookups: "none"
+      max_length: "Closed"
+      pets:
+        allowed: false
+        restrictions: "Construction closure"
+      badges:
+        - heads-up
+      tags:
+        - "Closed 2026"
+        - "Do Not Route"
+      editorial: >
+        Under normal conditions, Ohanapecosh is a strong old-growth campground for medium rigs.
+        For the entire 2026 season, it is fully closed for utility and accessibility work.
+        Do not build this year's itinerary around it.
+      verified_date: "June 2026"
+      website: "https://www.nps.gov/mora/planyourvisit/ohanapecosh-campground.htm"
+      maps_url: "https://maps.google.com/?q=46.7293,-121.5699"
+
+    - id: packwood_rv
+      name: "Packwood RV Park & Campground"
+      region: "PACKWOOD, WA"
+      featured: true
+      lat: 46.6065
+      lng: -121.6710
+      reservations:
+        method: "Direct booking"
+        type: "private"
+        fills: "Peak summer weekends"
+        url: ""
+      hookups: "full hookups"
+      max_length: "Up to 40 ft"
+      pets:
+        allowed: true
+        restrictions: "Leashed on site"
+      badges:
+        - consensus
+        - big-rig
+      tags:
+        - "Large Rig Base"
+        - "Full Hookups"
+      editorial: >
+        For any rig over 30 feet, Packwood is the answer. Full hookups, level sites,
+        enough room to maneuver, and a realistic commute into the park beat forcing a
+        large setup into infrastructure that was never built for it.
+      verified_date: "June 2026"
+      website: ""
+      maps_url: "https://maps.google.com/?q=46.6065,-121.6710"
+
+  businesses:
+    - id: packwood_brewing
+      name: "Packwood Brewing Co."
+      type: "Restaurant / Brewery"
+      region: "PACKWOOD, WA"
+      lat: 46.6061
+      lng: -121.6716
+      badges:
+        - consensus
+      phone: "+1 360-496-0131"
+      website: ""
+      maps_url: "https://maps.google.com/?q=Packwood+Brewing+Co"
+      editorial: >
+        The practical post-hike stop in Packwood: craft beer, casual food, no pretension.
+        If you are camped in Packwood after a day in the park, this is dinner.
+      verified_date: "June 2026"
+
+    - id: whittaker_mountaineering
+      name: "Whittaker Mountaineering"
+      type: "Gear"
+      region: "ASHFORD, WA"
+      lat: 46.7583
+      lng: -122.0293
+      badges:
+        - consensus
+      phone: "+1 360-569-2142"
+      website: "https://whittakermountaineering.com"
+      maps_url: "https://maps.google.com/?q=Whittaker+Mountaineering+Ashford+WA"
+      editorial: >
+        The one Ashford stop worth planning for. Last-minute poles, microspikes, rain layers,
+        and alpine gear live here, though prices are expedition-level.
+      verified_date: "June 2026"
+
+  maps:
+    orientation:
+      center_lat: 46.8550
+      center_lng: -121.7600
+      zoom: 10
+      size: "760x440"
+      bounds:
+        north: 46.9907
+        south: 46.7213
+        east: -121.5259
+        west: -122.0014
+      markers:
+        - label: "PARADISE"
+          lat: 46.7862
+          lng: -121.7357
+          type: "trailhead"
+          dx: -42
+          dy: -18
+          anchor: "middle"
+        - label: "SUNRISE"
+          lat: 46.9149
+          lng: -121.6441
+          type: "trailhead"
+          dx: 46
+          dy: -18
+          anchor: "middle"
+        - label: "LONGMIRE"
+          lat: 46.7503
+          lng: -121.8126
+          type: "gateway"
+          dx: -4
+          dy: 24
+        - label: "OHANAPECOSH CLOSED"
+          lat: 46.7293
+          lng: -121.5699
+          type: "closure"
+          dx: -58
+          dy: 28
+
+    gateway_towns:
+      center_lat: 46.7450
+      center_lng: -121.8400
+      zoom: 9
+      size: "760x420"
+      bounds:
+        north: 47.2300
+        south: 46.5000
+        east: -121.4500
+        west: -122.2500
+      markers:
+        - label: "PACKWOOD"
+          lat: 46.6043
+          lng: -121.6779
+          type: "gateway"
+          dx: 0
+          dy: 24
+        - label: "ASHFORD"
+          lat: 46.7587
+          lng: -122.0304
+          type: "gateway"
+          dx: -20
+          dy: -18
+        - label: "ENUMCLAW"
+          lat: 47.2043
+          lng: -121.9915
+          type: "gateway"
+          dx: 0
+          dy: 24
+        - label: "NISQUALLY"
+          lat: 46.7427
+          lng: -121.9244
+          type: "trailhead"
+          dx: 0
+          dy: 24
+        - label: "WHITE RIVER"
+          lat: 46.9029
+          lng: -121.5570
+          type: "trailhead"
+          dx: 0
+          dy: -18
+
+    campground_reference:
+      center_lat: 46.7650
+      center_lng: -121.7200
+      zoom: 10
+      size: "760x480"
+      bounds:
+        north: 46.9400
+        south: 46.5800
+        east: -121.5000
+        west: -121.8800
+      markers:
+        - label: "COUGAR ROCK"
+          lat: 46.7590
+          lng: -121.7982
+          type: "campground"
+          dx: -22
+          dy: 28
+        - label: "WHITE RIVER"
+          lat: 46.9004
+          lng: -121.6404
+          type: "campground"
+          dx: 44
+          dy: -16
+        - label: "OHANAPECOSH CLOSED"
+          lat: 46.7293
+          lng: -121.5699
+          type: "closure"
+          dx: 0
+          dy: 32
+        - label: "PACKWOOD RV"
+          lat: 46.6065
+          lng: -121.6710
+          type: "campground"
+          dx: 0
+          dy: 26
+
+    paradise_sunrise:
+      center_lat: 46.8450
+      center_lng: -121.7000
+      zoom: 11
+      size: "760x480"
+      bounds:
+        north: 46.9400
+        south: 46.7300
+        east: -121.6000
+        west: -121.8300
+      markers:
+        - label: "PARADISE"
+          lat: 46.7862
+          lng: -121.7357
+          type: "trailhead"
+          dx: -46
+          dy: -18
+        - label: "SKYLINE"
+          lat: 46.7862
+          lng: -121.7357
+          type: "trailhead"
+          dx: 44
+          dy: -4
+        - label: "NARADA"
+          lat: 46.7690
+          lng: -121.7617
+          type: "trailhead"
+          dx: -28
+          dy: 24
+        - label: "REFLECTION"
+          lat: 46.7648
+          lng: -121.7218
+          type: "trailhead"
+          dx: 44
+          dy: 24
+        - label: "SUNRISE"
+          lat: 46.9149
+          lng: -121.6441
+          type: "trailhead"
+          dx: 42
+          dy: -18
+        - label: "FREMONT"
+          lat: 46.9149
+          lng: -121.6441
+          type: "trailhead"
+          dx: -42
+          dy: -18
+        - label: "WHITE RIVER"
+          lat: 46.9004
+          lng: -121.6404
+          type: "campground"
+          dx: 0
+          dy: 28
+
+    closure_reference:
+      center_lat: 47.0450
+      center_lng: -122.0250
+      zoom: 11
+      size: "760x420"
+      bounds:
+        north: 47.1400
+        south: 46.9800
+        east: -121.9400
+        west: -122.1000
+      markers:
+        - label: "FAIRFAX BRIDGE CLOSED"
+          lat: 47.0765
+          lng: -122.0270
+          type: "closure"
+          dx: 0
+          dy: -18
+        - label: "WILKESON"
+          lat: 47.1131
+          lng: -122.0286
+          type: "gateway"
+          dx: 0
+          dy: -18
+        - label: "CARBONADO"
+          lat: 47.0820
+          lng: -122.0513
+          type: "gateway"
+          dx: 0
+          dy: 24
