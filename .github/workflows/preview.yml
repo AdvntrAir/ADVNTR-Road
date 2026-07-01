@@ -47,6 +47,29 @@ jobs:
             fi
           done
 
+      - name: Copy assets for web preview
+        run: |
+          # Guide images
+          for guide in guides/*/; do
+            slug=$(basename "$guide")
+            if [ -d "${guide}assets" ]; then
+              mkdir -p "_site/guides/${slug}/assets"
+              cp -r "${guide}assets/." "_site/guides/${slug}/assets/"
+            fi
+          done
+          # Logos
+          mkdir -p _site/template/assets/logos
+          cp template/assets/logos/*.png _site/template/assets/logos/ 2>/dev/null || true
+
+      - name: Inject web fonts into HTML previews
+        run: |
+          FONTS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">'
+          for f in _site/*.html; do
+            [ -f "$f" ] || continue
+            # Replace the closing </head> with web fonts + </head>
+            sed -i "s|</head>|${FONTS}</head>|" "$f"
+          done
+
       - name: Build index page
         run: |
           cat > _site/index.html << 'HTMLEOF'
@@ -63,12 +86,11 @@ jobs:
               li { margin: 12px 0; }
               a { color: #c0441e; text-decoration: none; font-size: 1.05em; font-weight: 600; }
               a:hover { text-decoration: underline; }
-              .note { font-size: 0.8em; color: #999; margin-top: 4px; }
             </style>
           </head>
           <body>
             <h1>ADVNTR Road — Guide Previews</h1>
-            <p>HTML layout preview only — fonts may differ from the final PDF.</p>
+            <p>HTML layout preview — fonts and fidelity approximate the final PDF.</p>
             <ul id="guides"></ul>
             <script>
               const guides = [];

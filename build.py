@@ -304,7 +304,7 @@ def format_prose_markdown(text):
     return re.sub(r"(?m)^-\s+\*\*Editorial note:\*\*\s+(.+)$", replace_note, text)
 
 
-def load_guide(guide_id):
+def load_guide(guide_id, web_preview=False):
     guide_dir = ROOT / "guides" / guide_id
     content_path = guide_dir / "content.yaml"
     if not content_path.exists():
@@ -322,7 +322,10 @@ def load_guide(guide_id):
 
     cover_photo = guide.get("cover_photo")
     if cover_photo:
-        guide["cover_photo_uri"] = str((guide_dir / cover_photo).resolve())
+        if web_preview:
+            guide["cover_photo_uri"] = f"guides/{guide_id}/{cover_photo}"
+        else:
+            guide["cover_photo_uri"] = str((guide_dir / cover_photo).resolve())
     else:
         guide["cover_photo_uri"] = ""
     guide_url = guide.get("url", "")
@@ -334,11 +337,18 @@ def load_guide(guide_id):
             f"WARNING - no cover_word set in content.yaml; defaulting to {guide['cover_word']!r}. "
             "Add an explicit cover_word list for proper cover typography."
         )
-    guide["logos"] = {
-        "rust": str((LOGO_DIR / "advntr-road-rust.png").resolve()),
-        "white": str((LOGO_DIR / "advntr-road-white.png").resolve()),
-        "green": str((LOGO_DIR / "advntr-road-green.png").resolve()),
-    }
+    if web_preview:
+        guide["logos"] = {
+            "rust": "template/assets/logos/advntr-road-rust.png",
+            "white": "template/assets/logos/advntr-road-white.png",
+            "green": "template/assets/logos/advntr-road-green.png",
+        }
+    else:
+        guide["logos"] = {
+            "rust": str((LOGO_DIR / "advntr-road-rust.png").resolve()),
+            "white": str((LOGO_DIR / "advntr-road-white.png").resolve()),
+            "green": str((LOGO_DIR / "advntr-road-green.png").resolve()),
+        }
 
     for section in guide.get("sections", []):
         visual = section.get("visual", {})
@@ -441,7 +451,7 @@ def write_pdf_with_chrome(html, pdf_path):
 
 
 def build(guide_id, no_maps=False, html_only=False):
-    guide = load_guide(guide_id)
+    guide = load_guide(guide_id, web_preview=html_only)
     font_css = build_font_css()
     css = read_css()
 
