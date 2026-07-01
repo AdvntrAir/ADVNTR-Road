@@ -6,17 +6,8 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,9 +29,8 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Copy font stubs (CI uses system fonts)
+      - name: Stub font directories (CI uses system fonts)
         run: |
-          mkdir -p design_system/fonts
           mkdir -p "design_system/fonts/Inter,Playfair_Display,Space_Mono,Titan_One"
           mkdir -p design_system/assets/fonts
 
@@ -49,43 +39,64 @@ jobs:
           mkdir -p _site
           for guide in guides/*/; do
             slug=$(basename "$guide")
+            echo "Building $slug..."
             python build.py --guide "$slug" --no-maps --html-only 2>&1 || true
             if [ -f "output/${slug}.html" ]; then
               cp "output/${slug}.html" "_site/${slug}.html"
+              echo "  -> _site/${slug}.html"
             fi
           done
 
       - name: Build index page
         run: |
-          cat > _site/index.html << 'EOF'
+          cat > _site/index.html << 'HTMLEOF'
           <!DOCTYPE html>
-          <html>
-          <head><meta charset="utf-8"><title>ADVNTR Road — Guide Previews</title>
-          <style>body{font-family:sans-serif;max-width:600px;margin:60px auto;color:#222}
-          a{color:#c0441e;text-decoration:none;font-size:1.1em}
-          a:hover{text-decoration:underline}li{margin:12px 0}</style></head>
-          <body><h1>ADVNTR Road Guide Previews</h1><ul>
-          EOF
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>ADVNTR Road — Guide Previews</title>
+            <style>
+              body { font-family: sans-serif; max-width: 640px; margin: 60px auto; color: #222; padding: 0 20px; }
+              h1 { font-size: 1.4em; margin-bottom: 8px; }
+              p { color: #666; font-size: 0.9em; }
+              ul { padding: 0; list-style: none; margin-top: 24px; }
+              li { margin: 12px 0; }
+              a { color: #c0441e; text-decoration: none; font-size: 1.05em; font-weight: 600; }
+              a:hover { text-decoration: underline; }
+              .note { font-size: 0.8em; color: #999; margin-top: 4px; }
+            </style>
+          </head>
+          <body>
+            <h1>ADVNTR Road — Guide Previews</h1>
+            <p>HTML layout preview only — fonts may differ from the final PDF.</p>
+            <ul id="guides"></ul>
+            <script>
+              const guides = [];
+          HTMLEOF
+
           for f in _site/*.html; do
             slug=$(basename "$f" .html)
             [ "$slug" = "index" ] && continue
-            echo "<li><a href=\"${slug}.html\">${slug}</a></li>" >> _site/index.html
+            echo "    guides.push('${slug}');" >> _site/index.html
           done
-          echo "</ul></body></html>" >> _site/index.html
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
+          cat >> _site/index.html << 'HTMLEOF2'
+              const ul = document.getElementById('guides');
+              guides.forEach(g => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${g}.html">${g}</a>`;
+                ul.appendChild(li);
+              });
+            </script>
+          </body>
+          </html>
+          HTMLEOF2
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to Netlify
+        if: github.ref == 'refs/heads/main'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npm install -g netlify-cli --silent
+          netlify deploy --dir=_site --prod --message="${{ github.event.head_commit.message }}"
