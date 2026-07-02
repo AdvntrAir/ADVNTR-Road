@@ -1,0 +1,749 @@
+guide:
+  id: "oregon-coast"
+  title: "The Oregon Coast"
+  subtitle: "Sea Stacks, Rainforest, and 363 Miles of Rugged Intertidal Wilderness"
+  edition: "2026 Field Edition"
+  region: "Pacific Northwest"
+  url: "road.advntr.io/oregon-coast"
+  published: "July 2026"
+  verified: "July 2026"
+  cover_photo: "assets/cover-photo.jpg"
+  cover_word:
+    - "Oregon"
+    - "Coast"
+  designation: "US-101 Corridor"
+  cover_footer: "363 miles of shoreline. The tide chart is the itinerary."
+
+  stats:
+    - "ASTORIA TO BROOKINGS, OREGON"
+    - "363 MILES ON US-101"
+    - "3 ZONES: ICONS, DUNES, WILD SOUTH"
+    - "UPDATED JULY 2026"
+
+  map_bounds:
+    north: 46.25
+    south: 42.00
+    east: -123.70
+    west: -124.60
+
+  sections:
+    - id: "orientation"
+      file: "01-orientation"
+      eyebrow: "Orientation"
+      title: "Three Coasts, One Highway"
+      subhead: "The road is easy. The geometry, the tides, and the traffic are not."
+      visual:
+        word: "US-101"
+        theme: "photo"
+        image: "assets/haystack-rock.jpg"
+        label: "Field Orientation"
+      map_key: "orientation"
+      callouts:
+        - type: warning
+          label: "Tide Windows"
+          title: "Several signature stops are only safe at specific tides."
+          body: "Thor's Well and the Bandon tide pools demand precise NOAA tide timing. Download charts offline before you lose signal - the ocean does not warn you before an incoming tide cuts off your exit."
+        - type: tip
+          label: "Offline First"
+          title: "Cell service dies south of Yachats."
+          body: "Signal is reliable in Astoria, Newport, and Coos Bay, and gone on open cliffside stretches and inside old-growth campground loops. Download maps, confirmations, and tide charts in the anchor towns."
+
+    - id: "before-you-arrive"
+      file: "02-before-you-arrive"
+      eyebrow: "Before You Arrive"
+      title: "Stage Big, Then Go Small"
+      subhead: "Astoria and Coos Bay do the heavy lifting. Everything between is a lunch stop."
+      visual:
+        word: "Route"
+        theme: "blue"
+        image: "assets/astoria-bridge.jpg"
+        label: "Before You Arrive"
+      map_key: "gateway_towns"
+      show_gateway_towns: true
+      callouts:
+        - type: warning
+          label: "Big Rigs"
+          title: "These downtowns were built before RVs existed."
+          body: "Parking a 40-footer near Astoria's historic waterfront on a summer weekend is not a plan, it's a problem. Scout your parking before committing to any viewpoint or lunch stop."
+
+    - id: "where-to-sleep"
+      file: "03-where-to-sleep"
+      eyebrow: "Where to Sleep"
+      title: "Pads, Pines, and Surf You Can Hear"
+      subhead: "State parks for the big rigs, a beachfront crown jewel for everyone else."
+      visual:
+        word: "Camp"
+        theme: "dark"
+        image: "assets/bandon-sea-stacks.jpg"
+        label: "Where To Sleep"
+      map_key: "campground_reference"
+      show_campgrounds: true
+      callouts:
+        - type: warning
+          label: "2026 Fee Change"
+          title: "Day-use parking is no longer free at the state parks."
+          body: "Fort Stevens and Bullards Beach now charge $10/day in-state ($12 out-of-state) as of October 2025, and Fort Stevens' dump station costs $10 per use as of March 2026. Older trip reports won't mention either."
+
+    - id: "what-to-do"
+      file: "05-what-to-do"
+      eyebrow: "What to Do"
+      title: "Tides, Dunes, and Crab Pots"
+      subhead: "Build the day around the tide chart, not the odometer."
+      visual:
+        word: "Explore"
+        theme: "dark"
+        image: "assets/thors-well.jpg"
+        label: "What To Do"
+      callouts:
+        - type: tip
+          label: "Beach Driving"
+          title: "Ten miles of legal sand driving start at the Columbia's mouth."
+          body: "The hard-packed stretch near Warrenton permits street-legal vehicles directly on the beach. Air down for the dune entry ramps and carry a 12-volt compressor to reinflate before returning to pavement."
+
+    - id: "eat-resupply"
+      file: "06-eat-resupply"
+      eyebrow: "Eat + Resupply"
+      title: "Eat Where the Boats Land"
+      subhead: "A creamery worth the crowds and a fishing-village fryer worth the detour."
+      visual:
+        word: "Fuel"
+        theme: "blue"
+        image: "assets/astoria-bridge.jpg"
+        label: "Eat + Resupply"
+      show_businesses: true
+
+    - id: "field-notes"
+      file: "07-field-notes"
+      eyebrow: "Field Notes"
+      title: "What Changed in 2026"
+      subhead: "The highway is free. The parking no longer is."
+      visual:
+        word: "Notes"
+        theme: "dark"
+        image: "assets/thors-well.jpg"
+        label: "Field Notes"
+      show_fees: true
+      show_permits: true
+      callouts:
+        - type: warning
+          label: "2026 Fees"
+          title: "The annual parking permit doubled in January 2026."
+          body: "$60 in-state / $75 out-of-state, up from $30. Day-use fees at Fort Stevens and Bullards Beach are new too. Budget off this guide, not a two-year-old blog post."
+        - type: tip
+          label: "Shellfish License"
+          title: "Anyone 12 and up needs a license to crab or clam."
+          body: "Buy it at myodfw.com or any gateway bait shop before dropping a net - $13/year for Oregon residents in 2026. Day licenses and non-resident rates run higher."
+
+    - id: "before-you-leave"
+      file: "08-before-you-leave"
+      eyebrow: "Before You Leave"
+      title: "Before You Leave Home"
+      subhead: "Tide charts, reservations, and the fee structure your old trip report got wrong."
+      visual:
+        word: "Checklist"
+        theme: "blue"
+        image: "assets/bandon-sea-stacks.jpg"
+        label: "Before You Leave"
+      show_checklist: true
+      show_resources: true
+
+  zones:
+    - id: "north-coast"
+      file: "04a-north-coast"
+      eyebrow: "North Coast"
+      title: "Astoria to Tillamook"
+      subhead: "Maritime legacy, landmark sea stacks, and the crowds that come with them."
+      visual:
+        word: "North Coast"
+        theme: "photo"
+        image: "assets/haystack-rock.jpg"
+        label: "North Coast"
+      map_key: "north-coast"
+      highlights:
+        - label: "Cannon Beach / Haystack Rock"
+          note: "A 235-foot sea stack and protected Marine Garden, anchoring two miles of open beach."
+          tags: [consensus, heads-up]
+        - label: "Peter Iredale Shipwreck"
+          note: "Pavement to open sand to a 1906 wreck skeleton in a five-minute walk."
+          tags: [dog-friendly, big-rig]
+        - label: "Short Sand Beach"
+          note: "Moss-draped old growth opens onto a secluded volcanic-sand surf cove."
+          tags: [hidden-gem, dog-friendly]
+        - label: "Tillamook Creamery"
+          note: "A working dairy institution, not a gift shop with cows on the wall."
+          tags: [consensus]
+      image_plates:
+        - src: "guides/oregon-coast/assets/cannon-beach-ecola.jpg"
+          alt: "Cannon Beach and Haystack Rock viewed from Ecola State Park"
+          caption: "The Ecola State Park overlook, a few minutes north of town, is the single best view of Haystack Rock and Cannon Beach's whole crescent of sea stacks."
+          credit: "CC BY-SA 4.0 - Joe Mabel / Wikimedia Commons"
+
+    - id: "central-coast"
+      file: "04b-central-coast"
+      eyebrow: "Central Coast"
+      title: "Newport to Florence"
+      subhead: "A working port, a wild dune system, and the tallest lighthouse in Oregon."
+      visual:
+        word: "Central Coast"
+        theme: "blue"
+        image: "assets/yaquina-head.jpg"
+        label: "Central Coast"
+      map_key: "central-coast"
+      highlights:
+        - label: "Yaquina Head Lighthouse"
+          note: "Oregon's tallest lighthouse tower over tidepools thick with sea stars at low tide."
+          tags: [consensus]
+        - label: "Oregon Dunes NRA"
+          note: "Forty miles of shifting sand - the largest coastal dune system in North America."
+          tags: [heads-up]
+        - label: "Sea Lion Caves"
+          note: "A sea cave with a wild, unscripted Steller sea lion colony - sightings aren't guaranteed."
+          tags: [consensus, heads-up]
+
+    - id: "southern-coast"
+      file: "04c-southern-coast"
+      eyebrow: "South Coast"
+      title: "Yachats to Brookings"
+      subhead: "Sheer cliffs, secret beaches, and a quiet the north gave up years ago."
+      visual:
+        word: "South Coast"
+        theme: "photo"
+        image: "assets/samuel-boardman.jpg"
+        label: "South Coast"
+      map_key: "southern-coast"
+      highlights:
+        - label: "Thor's Well"
+          note: "A marine sinkhole that has pulled people off the rocks. Platforms only."
+          tags: [consensus, heads-up]
+        - label: "Natural Bridges Viewpoint"
+          note: "Twin sea arches over turquoise water, a half-mile round trip from the pullout."
+          tags: [consensus]
+        - label: "Bandon Tide Pools"
+          note: "Sea stars at the base of the sea stacks - if you time the tide right."
+          tags: [consensus, dog-friendly]
+        - label: "Boardman Corridor"
+          note: "Steep, slick paths down to secret beaches framed by natural stone arches."
+          tags: [consensus, heads-up]
+      image_plates:
+        - src: "guides/oregon-coast/assets/natural-bridges.jpg"
+          alt: "Natural Bridges rock arch over teal water in Samuel H. Boardman State Scenic Corridor"
+          caption: "Natural Bridges: two moss-covered stone arches framing open water, arguably the most photographed formation on the corridor after Haystack Rock."
+          credit: "CC BY 2.0 - Rick McCharles / Wikimedia Commons"
+
+  campgrounds:
+    - id: "fort_stevens"
+      name: "Fort Stevens State Park"
+      region: "WARRENTON, NORTH COAST"
+      type: "state"
+      featured: true
+      lat: 46.1830
+      lng: -123.9630
+      image: "guides/oregon-coast/assets/fort-stevens-campground.jpg"
+      open: "Year-round; peak operations May - September"
+      reservations:
+        method: "Oregon State Parks (ReserveAmerica)"
+        type: "reservable"
+        fills: "Summer weekends fill months out - 6-month booking window"
+        url: "https://oregonstateparks.reserveamerica.com"
+      hookups: "full (water, 30/50-amp, sewer)"
+      max_length: "40ft+ - wide paved pads"
+      dump_station: "Yes - $10/use as of March 30, 2026"
+      showers: "Yes"
+      pets:
+        allowed: true
+        restrictions: "On leash, all paved loops and beach paths"
+      badges: [big-rig, reservable, heads-up]
+      tags: ["Big Rig Approved", "New 2026 Fees"]
+      editorial: >
+        One of the best public campgrounds on the entire West Coast, full stop. The
+        interior roads are wide enough that backing a large rig in isn't the stress
+        event it is everywhere else, and the park's 4,300 acres put you minutes from
+        historic military bunkers and a beach shipwreck without ever feeling crowded
+        in your own loop. Book early - this one fills before almost anywhere else on
+        the corridor, and budget for the new day-use parking permit and dump fee.
+      verified_date: "July 2026"
+      verified_source: "stateparks.oregon.gov"
+      website: "https://stateparks.oregon.gov/index.cfm?do=park.profile&parkId=129"
+      maps_url: "https://maps.google.com/?q=46.1830,-123.9630"
+
+    - id: "honeyman"
+      name: "Jessie M. Honeyman Memorial State Park"
+      region: "FLORENCE, CENTRAL COAST"
+      type: "state"
+      featured: true
+      lat: 43.9411
+      lng: -124.1086
+      image: "guides/oregon-coast/assets/honeyman-campground.jpg"
+      open: "Year-round"
+      reservations:
+        method: "Oregon State Parks (ReserveAmerica)"
+        type: "reservable"
+        fills: "One of the most reserved campgrounds on the coast - summer weekends gone within hours of the 6-month window"
+        url: "https://oregonstateparks.reserveamerica.com"
+      hookups: "47 full hookup; 121 electric + water; 187 tent, water nearby"
+      max_length: "Long paved pull-throughs in the hookup loops"
+      dump_station: "Yes - $10/use for non-campers as of March 30, 2026"
+      showers: "Yes"
+      pets:
+        allowed: true
+        restrictions: "On leash; 5 of the park's 10 yurts are pet-friendly"
+      badges: [big-rig, reservable, consensus]
+      tags: ["Two Freshwater Lakes", "343 Sites"]
+      editorial: >
+        The campground the Oregon Dunes built its reputation on - two warm freshwater
+        lakes, Cleawox and Woahink, for swimming steps from your site, and the dunes
+        themselves just past the tree line. Riding straight from camp onto the open sand
+        is only allowed from specific loops between October and April; the rest of the
+        year, stage from a dune access point in Florence like everyone else. With 343
+        sites it's large, but book the moment the 6-month window opens regardless -
+        this is one of the most in-demand campgrounds on the entire coast.
+      verified_date: "July 2026"
+      verified_source: "stateparks.oregon.gov / oregonstateparks.reserveamerica.com"
+      website: "https://stateparks.oregon.gov/index.cfm?do=park.profile&parkId=95"
+      maps_url: "https://maps.google.com/?q=43.9411,-124.1086"
+
+    - id: "tillicum_beach"
+      name: "Tillicum Beach Campground"
+      region: "NEAR WALDPORT, CENTRAL COAST"
+      type: "usfs"
+      featured: false
+      lat: 44.3662
+      lng: -124.0911
+      image: "guides/oregon-coast/assets/tillicum-beach-campground.jpg"
+      open: "Year-round"
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "Oceanfront sites book out months ahead - 6-month window"
+        url: "https://www.recreation.gov/camping/campgrounds/234199"
+      hookups: "electric + water at 20 sites; the rest dry"
+      max_length: "Up to 66ft per site listings - low branch clearance on the way in"
+      dump_station: "No - nearest is ~5 miles north in Waldport"
+      showers: "No"
+      pets:
+        allowed: true
+        restrictions: "On leash, direct beach access paths"
+      badges: [reservable, hidden-gem]
+      tags: ["Oceanfront Sites", "No Showers"]
+      editorial: >
+        The crown jewel of federal beachfront camping on the central coast - you can
+        hear the surf from every site, and some loops put the ocean directly outside
+        your window. The real warning is for dry-campers: there are genuinely no
+        showers here. Plan around your own tank capacity or detour to a state park
+        mid-trip, and take the low coastal canopy slowly on the drive in.
+      verified_date: "July 2026"
+      verified_source: "Recreation.gov / fs.usda.gov"
+      website: "https://www.fs.usda.gov/siuslaw"
+      maps_url: "https://maps.google.com/?q=44.3662,-124.0911"
+
+    - id: "bullards_beach"
+      name: "Bullards Beach State Park"
+      region: "BANDON, SOUTH COAST"
+      type: "state"
+      featured: false
+      lat: 43.1560
+      lng: -124.3930
+      image: "guides/oregon-coast/assets/bullards-beach-campground.jpg"
+      open: "Year-round"
+      reservations:
+        method: "Oregon State Parks (ReserveAmerica)"
+        type: "reservable"
+        fills: "High demand - the closest full-hookup park to Bandon's sea stacks"
+        url: "https://oregonstateparks.reserveamerica.com"
+      hookups: "full (water, 30/50-amp)"
+      max_length: "Long paved pull-throughs"
+      dump_station: "Yes - central, multi-lane"
+      showers: "Yes"
+      pets:
+        allowed: true
+        restrictions: "On leash; separate horse-camping loops on-site"
+      badges: [big-rig, reservable, heads-up]
+      tags: ["Pull-Throughs", "Wind-Sheltered"]
+      editorial: >
+        A spacious, remarkably clean park built for long trailers and heavy fifth
+        wheels - wide paved loops, and a dense pine canopy that genuinely shields
+        your rig from the wind that batters the open shoreline two miles south in
+        Bandon. Heads up: day-use parking here now requires a paid permit as of
+        October 2025, a new cost older trip reports won't mention.
+      verified_date: "July 2026"
+      verified_source: "stateparks.oregon.gov"
+      website: "https://stateparks.oregon.gov/index.cfm?do=park.profile&parkId=121"
+      maps_url: "https://maps.google.com/?q=43.1560,-124.3930"
+
+    - id: "sun_outdoors_coos_bay"
+      name: "Sun Outdoors Coos Bay"
+      region: "CHARLESTON, COOS BAY"
+      type: "private"
+      featured: false
+      lat: 43.3450
+      lng: -124.3220
+      image: "guides/oregon-coast/assets/sun-outdoors-campground.jpg"
+      open: "Year-round"
+      reservations:
+        method: "Online (sunoutdoors.com)"
+        type: "reservable"
+        fills: "High demand in summer and peak crabbing season"
+        url: "https://www.sunoutdoors.com/oregon/sun-outdoors-coos-bay"
+      hookups: "full luxury (water, sewer, 20/30/50-amp, cable)"
+      max_length: "No practical limit - engineered for the largest rigs"
+      dump_station: "Individual sewer at every site"
+      showers: "Yes - private tiled walk-in showers"
+      pets:
+        allowed: true
+        restrictions: "Fenced dog park on-site"
+      badges: [big-rig]
+      tags: ["Concrete Pads", "Crab Net Rentals"]
+      editorial: >
+        A standalone-vacation resort experience, not a coastal campground in the
+        usual sense - dead-level concrete pads and a layout that removes all big-rig
+        maneuvering stress. The standout is the crabbing culture: complimentary crab
+        net rentals and communal outdoor boiling pots mean you can catch dinner at
+        the Charleston docks and cook it on-site. Premium price ($60-$120+ a night,
+        seasonal - confirm current rates), but the infrastructure delivers.
+      verified_date: "July 2026"
+      verified_source: "Resort website (rates not independently verified)"
+      website: "https://www.sunoutdoors.com/oregon/sun-outdoors-coos-bay"
+      maps_url: "https://maps.google.com/?q=43.3450,-124.3220"
+
+  gateway_towns:
+    - id: "astoria"
+      name: "Astoria"
+      role: "Northern anchor and primary staging hub"
+      distance: "Milepost 0 - the corridor's northern terminus at the Columbia River mouth"
+      services: [fuel, propane, grocery, hardware, medical]
+      editorial: >
+        Astoria is where you do your homework before the coast asks you to improvise.
+        Fill everything here - tank, pantry, propane - because the towns south of
+        Tillamook get smaller and pricier fast. Don't try to park a 40-footer near
+        the historic waterfront on a summer weekend; there isn't room for you.
+    - id: "newport"
+      name: "Newport"
+      role: "Central coast anchor - working port, aquarium, and resupply"
+      distance: "Roughly the corridor's true midpoint, about 140 miles south of Astoria"
+      services: [fuel, grocery, medical, marine-repair]
+      editorial: >
+        Newport works twice as hard as most gateway towns on this corridor: a genuine
+        commercial fishing fleet still ties up on the historic Bayfront, the Oregon
+        Coast Aquarium gives you a rainy-day plan, and Samaritan Pacific Communities
+        Hospital means real medical care exists here if you need it. Fuel and groceries
+        are full-service and reasonably priced for a coastal town this size.
+    - id: "florence"
+      name: "Florence"
+      role: "Dune country basecamp and southern-central resupply"
+      distance: "About 60 miles south of Newport, at the edge of the Oregon Dunes"
+      services: [fuel, grocery, atv-rental, medical]
+      editorial: >
+        Florence's Old Town sits on the Siuslaw River and still looks like the
+        lumber-and-fishing port it was a century ago, right up until you notice the
+        ATV and dune buggy rental lots lining the highway at the edge of town. This is
+        where the dune-riding half of the corridor stages - fuel up, rent the buggy,
+        and expect the town's rhythm to run on tourist season more than the tide.
+    - id: "coos_bay"
+      name: "Coos Bay"
+      role: "Central-southern anchor and heavy resupply oasis"
+      distance: "Roughly the corridor's midpoint, 110 miles south of Florence"
+      services: [fuel, diesel, grocery, rv-repair, medical]
+      editorial: >
+        Coos Bay is the coast's working-class engine room, not its postcard. That's
+        exactly why it's useful - this is where you fix what broke on the drive down
+        and load up before the southern corridor gets thin again. Charleston, just
+        west, is the actual draw if you want to fish or crab rather than just resupply.
+    - id: "port_orford"
+      name: "Port Orford"
+      role: "Southern historic fishing whistle-stop"
+      distance: "About 50 miles south of Coos Bay"
+      services: [fuel, convenience]
+      editorial: >
+        Don't look for big-box infrastructure in Port Orford - it's a quiet, working
+        fishing village, and that's the whole appeal. Vans and Class Cs handle the
+        street parking fine; a 40-foot fifth wheel needs a highway-shoulder staging
+        plan before anyone walks into town.
+
+  businesses:
+    - id: "tillamook_creamery"
+      name: "Tillamook Creamery"
+      type: "Culinary Attraction / Resupply"
+      region: "TILLAMOOK, OR"
+      lat: 45.4979
+      lng: -123.8460
+      badges: [consensus]
+      phone: "+1 503-815-1300"
+      website: "https://www.tillamook.com/visit-us/creamery"
+      maps_url: "https://maps.google.com/?q=45.4979,-123.8460"
+      editorial: >
+        A genuine culinary institution on the north coast, not a highway gift shop
+        with cows painted on the wall. Despite immense seasonal crowds and a hectic
+        parking lot, getting your rig in here is worth the effort - the cheese
+        production windows are legitimately impressive and the ice cream holds up to
+        the hype. A Wednesday late morning beats any summer weekend.
+      verified_date: "July 2026"
+    - id: "crazy_norwegians"
+      name: "The Crazy Norwegian's Fish & Chips"
+      type: "Seafood Diner"
+      region: "PORT ORFORD, OR"
+      lat: 42.7457
+      lng: -124.4988
+      badges: [heads-up]
+      phone: "+1 541-332-8601"
+      maps_url: "https://maps.google.com/?q=42.7457,-124.4988"
+      editorial: >
+        The longtime local answer for fish and chips and clam chowder on the far
+        south coast, praised consistently and worth planning a Port Orford lunch
+        around - with one catch. The business was listed for sale in 2025 and its
+        hours have wobbled since. Call before you build the day's only meal stop
+        around it; historically Wednesday through Sunday, midday to 7 PM.
+      verified_date: "July 2026"
+
+  fees:
+    entrance_vehicle: "$0 - the highway corridor has no toll or gate fee"
+    entrance_motorcycle: "$0"
+    entrance_person: "$0"
+    annual_park: "$60 resident / $75 non-resident - 12-month Oregon State Parks day-use parking permit (doubled January 2026)"
+    america_beautiful: "Accepted at federal USFS sites (Tillicum Beach, Cape Perpetua) - NOT at Oregon State Parks"
+    cashless: true
+    free_days: "N/A - the highway is always free; state park day-use fees have no waiver calendar"
+    camping_range: "$35-$52/night state parks; $39-$51 Tillicum Beach (USFS); $60-$120+ private resorts"
+    dump_station: "$10/use at Fort Stevens and Honeyman as of March 30, 2026 (new); Bullards Beach status unconfirmed"
+    backcountry_permit: "N/A for standard corridor road-tripping"
+    yaquina_head: "$7/vehicle at Yaquina Head Outstanding Natural Area - good for 3 days; America the Beautiful accepted"
+    oregon_dunes_day_use: "$5 Forest Service digital day pass, or a Northwest Forest Pass/America the Beautiful annual pass, at most Oregon Dunes NRA staging areas"
+    sea_lion_caves_admission: "~$18/adult - private attraction, not covered by any public land pass"
+
+  permits:
+    backcountry_required: false
+    platform: "N/A"
+    window: "N/A"
+    walkup: "N/A"
+    bear_canister_required: false
+    other:
+      - name: "Oregon Shellfish License"
+        required_for: "Anyone 12+ crabbing or clamming"
+        cost: "$13/year (Oregon resident, 2026); day and non-resident licenses higher"
+        note: "Purchased instantly at myodfw.com or at bait/tackle shops in any gateway town."
+      - name: "Oregon State Parks Day-Use Parking Permit"
+        required_for: "Day-use lots at Fort Stevens, Bullards Beach, and other fee parks"
+        cost: "$10/day in-state, $12/day out-of-state, or $60/$75 annual"
+        note: "New as of October 2025 - these parks previously had free day-use parking."
+      - name: "Oregon ATV Operating Permit"
+        required_for: "Any OHV ridden on the Oregon Dunes National Recreation Area sand"
+        cost: "Separate from the Forest Service day pass - purchased per vehicle"
+        note: "Required in addition to, not instead of, the $5 day pass or Northwest Forest Pass for parking."
+
+  checklist:
+    - "Download offline maps and trail files (Gaia GPS/AllTrails) for the full 363-mile corridor - signal dies south of Yachats."
+    - "Save current NOAA tide charts offline - Bandon tide pools and Thor's Well require specific tide windows for safe access."
+    - "Reserve Fort Stevens and/or Tillicum Beach well in advance - both fill months out in peak summer."
+    - "Buy the Oregon State Parks annual parking permit ($60/$75) if stopping at multiple day-use areas."
+    - "Purchase an Oregon Shellfish License at myodfw.com before dropping any crab nets - required for anyone 12+."
+    - "Buy the $5 Forest Service day pass (or a Northwest Forest Pass) before parking at Yaquina Head or an Oregon Dunes NRA staging area."
+    - "Reserve an ATV or dune buggy rental in Florence ahead of time for summer weekends - walk-ins aren't reliable in peak season."
+    - "Call ahead to confirm The Crazy Norwegian's is open before counting on it for a Port Orford meal stop."
+    - "Carry leveling blocks or SnapPads - root heave is common on older state park asphalt pads."
+    - "Pack windproof rain layers and rubber-soled, high-traction footwear for wet intertidal rock."
+
+  resources:
+    - name: "TripCheck (ODOT)"
+      url: "https://tripcheck.com"
+      use: "Real-time lane restrictions, landslide construction delays, and cliffside erosion closures"
+      when: "Every morning before pulling out onto US-101"
+    - name: "ODFW Electronic Licensing System"
+      url: "https://myodfw.com"
+      use: "The Oregon Shellfish License required for crabbing and clamming"
+      when: "A few days before reaching Charleston, Bandon, or any bay you plan to crab"
+    - name: "Oregon State Parks - Day-Use Parking Permits"
+      url: "https://stateparks.oregon.gov"
+      use: "Which parks now charge day-use fees, and annual permit purchase"
+      when: "Before departure - the single most out-of-date item in older trip reports"
+    - name: "Oregon Dunes NRA (Siuslaw National Forest)"
+      url: "https://www.fs.usda.gov/siuslaw"
+      use: "Day pass purchase, OHV staging area locations, and ATV permit requirements"
+      when: "Before staging any dune ride out of Florence or Reedsport"
+
+  maps:
+    orientation:
+      center_lat: 44.15
+      center_lng: -124.10
+      zoom: 6
+      size: "760x520"
+      bounds:
+        north: 46.25
+        south: 42.00
+        east: -123.70
+        west: -124.60
+      markers:
+        - label: "ASTORIA"
+          lat: 46.1876
+          lng: -123.8281
+          type: "gateway"
+        - label: "NEWPORT"
+          lat: 44.6368
+          lng: -124.0535
+          type: "gateway"
+        - label: "FLORENCE"
+          lat: 43.9805
+          lng: -124.1004
+          type: "gateway"
+        - label: "CAPE PERPETUA"
+          lat: 44.2812
+          lng: -124.1088
+          type: "viewpoint"
+        - label: "COOS BAY"
+          lat: 43.3665
+          lng: -124.2179
+          type: "gateway"
+        - label: "BROOKINGS"
+          lat: 42.0526
+          lng: -124.2837
+          type: "gateway"
+
+    gateway_towns:
+      center_lat: 44.40
+      center_lng: -124.15
+      zoom: 6
+      size: "760x480"
+      bounds:
+        north: 46.25
+        south: 42.60
+        east: -123.70
+        west: -124.60
+      markers:
+        - label: "ASTORIA"
+          lat: 46.1876
+          lng: -123.8281
+          type: "gateway"
+        - label: "COOS BAY"
+          lat: 43.3665
+          lng: -124.2179
+          type: "gateway"
+        - label: "NEWPORT"
+          lat: 44.6368
+          lng: -124.0535
+          type: "gateway"
+        - label: "FLORENCE"
+          lat: 43.9805
+          lng: -124.1004
+          type: "gateway"
+        - label: "PORT ORFORD"
+          lat: 42.7457
+          lng: -124.4972
+          type: "gateway"
+
+    campground_reference:
+      center_lat: 44.65
+      center_lng: -124.15
+      zoom: 7
+      size: "760x520"
+      bounds:
+        north: 46.25
+        south: 43.10
+        east: -123.80
+        west: -124.55
+      markers:
+        - label: "FORT STEVENS"
+          lat: 46.1830
+          lng: -123.9630
+          type: "campground"
+        - label: "TILLICUM BEACH"
+          lat: 44.3662
+          lng: -124.0911
+          type: "campground"
+        - label: "BULLARDS BEACH"
+          lat: 43.1560
+          lng: -124.3930
+          type: "campground"
+        - label: "HONEYMAN STATE PARK"
+          lat: 43.9411
+          lng: -124.1086
+          type: "campground"
+        - label: "SUN OUTDOORS COOS BAY"
+          lat: 43.3450
+          lng: -124.3220
+          type: "campground"
+
+    north-coast:
+      center_lat: 45.85
+      center_lng: -123.90
+      zoom: 9
+      size: "760x440"
+      bounds:
+        north: 46.25
+        south: 45.45
+        east: -123.70
+        west: -124.05
+      markers:
+        - label: "ASTORIA COLUMN"
+          lat: 46.1876
+          lng: -123.8156
+          type: "viewpoint"
+        - label: "PETER IREDALE WRECK"
+          lat: 46.1878
+          lng: -123.9679
+          type: "trailhead"
+        - label: "HAYSTACK ROCK"
+          lat: 45.8823
+          lng: -123.9615
+          type: "viewpoint"
+        - label: "TILLAMOOK CREAMERY"
+          lat: 45.4979
+          lng: -123.8460
+          type: "gateway"
+
+    central-coast:
+      center_lat: 44.30
+      center_lng: -124.05
+      zoom: 8
+      size: "760x480"
+      bounds:
+        north: 44.75
+        south: 43.85
+        east: -123.85
+        west: -124.25
+      markers:
+        - label: "YAQUINA HEAD LIGHTHOUSE"
+          lat: 44.6809
+          lng: -124.0788
+          type: "viewpoint"
+        - label: "NEWPORT"
+          lat: 44.6368
+          lng: -124.0535
+          type: "gateway"
+        - label: "SEA LION CAVES"
+          lat: 44.1341
+          lng: -124.1201
+          type: "viewpoint"
+        - label: "OREGON DUNES / FLORENCE"
+          lat: 43.9805
+          lng: -124.1004
+          type: "gateway"
+        - label: "HONEYMAN STATE PARK"
+          lat: 43.9411
+          lng: -124.1086
+          type: "campground"
+
+    southern-coast:
+      center_lat: 43.20
+      center_lng: -124.30
+      zoom: 7
+      size: "760x480"
+      bounds:
+        north: 44.35
+        south: 42.05
+        east: -123.90
+        west: -124.60
+      markers:
+        - label: "CAPE PERPETUA"
+          lat: 44.2812
+          lng: -124.1088
+          type: "viewpoint"
+        - label: "SUNSET BAY"
+          lat: 43.3399
+          lng: -124.3733
+          type: "viewpoint"
+        - label: "FACE ROCK"
+          lat: 43.1187
+          lng: -124.4295
+          type: "viewpoint"
+        - label: "BOARDMAN CORRIDOR"
+          lat: 42.1500
+          lng: -124.3600
+          type: "marker"

@@ -1,0 +1,5 @@
+Eating well on this corridor means knowing which stops are worth a detour and which are just what's closest when you're hungry. Tillamook Creamery earns its reputation honestly — yes, it's crowded, and yes, it's still worth threading a rig into the lot for. Port Orford's draw is smaller in scale but bigger in character: a real, unpolished fishing-village lunch stop rather than a highway attraction.
+
+The resupply picture is the same one from the start of this guide, worth repeating because it shapes every food decision: Astoria is the heavy-provisioning boundary at the north end, Coos Bay is the central-southern hub for bulk shopping, diesel, and repairs, and the small harbors — Charleston, Bandon — are where you buy fresh catch straight off the commercial docks instead of from a case.
+
+Between the anchors, budget for the isolation markup rather than being surprised by it. The smaller beach towns price fuel and fresh food like the captive audience you are, and the big discount chains simply don't exist directly on the shoreline. Buy heavy, buy early, and treat everything in between as topping off.
