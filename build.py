@@ -274,6 +274,17 @@ def build_overlay_svg(cfg):
                 f'<rect x="{x - 9}" y="{y - 9}" width="18" height="18" transform="rotate(45 {x} {y})" fill="#8C3D2D" stroke="#F9E4C5" stroke-width="1.5"/>'
                 + label_text(x, y, label, "#8C3D2D", dx, dy, anchor)
             )
+        elif marker_type == "viewpoint":
+            points = f"{x},{y - 9} {x + 9},{y} {x},{y + 9} {x - 9},{y}"
+            parts.append(
+                f'<polygon points="{points}" fill="#4A7FA5" stroke="#F9E4C5" stroke-width="1.5"/>'
+                + label_text(x, y, label, "#4A7FA5", dx, dy, anchor)
+            )
+        else:
+            parts.append(
+                f'<circle cx="{x}" cy="{y}" r="8" fill="none" stroke="#5B768C" stroke-width="2.5"/>'
+                + label_text(x, y, label, "#5B768C", dx, dy, anchor)
+            )
     return "\n".join(parts)
 
 

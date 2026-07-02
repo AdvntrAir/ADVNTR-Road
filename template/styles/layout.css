@@ -90,6 +90,19 @@ hr {
   margin-bottom: var(--space-4);
   font-size: 14px;
   line-height: 1.62;
+  orphans: 3;
+  widows: 3;
+}
+
+.section-prose blockquote {
+  max-width: 6.45in;
+  margin: 0 0 var(--space-4) var(--space-6);
+  break-inside: avoid;
+}
+
+.section-prose blockquote p {
+  orphans: 3;
+  widows: 3;
 }
 
 .section-prose > p:first-of-type {

@@ -123,7 +123,7 @@
   {% endif %}
 
   {% if section.image_plates %}
-  <div class="image-plate-grid image-plate-grid--{{ section.image_plates | length }}">
+  <div class="image-plate-grid image-plate-grid--{{ section.image_plates | length }}" data-word="{{ section.visual_word }}">
     {% for plate in section.image_plates %}
     <figure class="image-plate">
       <img src="{{ plate.src }}" alt="{{ plate.alt }}">

@@ -1299,15 +1299,16 @@
 }
 
 .section--photo .image-plate-grid--1::before {
-  content: "PARADISE";
+  content: attr(data-word);
   position: absolute;
   left: 0.28in;
-  top: 1.64in;
+  top: 1.72in;
   z-index: 3;
+  max-width: 4.3in;
   font-family: var(--font-body);
-  font-size: 70px;
+  font-size: 46px;
   font-weight: 900;
-  line-height: 0.85;
+  line-height: 0.95;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.86);
   text-transform: uppercase;
