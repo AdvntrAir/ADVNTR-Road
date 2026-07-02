@@ -1,0 +1,5 @@
+The west side doesn't feel like a national park so much as a very good rest stop — which, at this stage of the drive, is exactly what you need. The valley floor is humid, mossy, and cool, running parallel to a river the color of jade before the lake ahead earns that description properly. Trail of the Cedars asks almost nothing of you: a flat quarter-mile loop through cedars old enough to make a redwood tourist feel at home, crossing a footbridge that swings slightly over the Skagit.
+
+Ladder Creek Falls is the odder pleasure here — a slot canyon behind the old Gorge Powerhouse, lit after dark by a lighting rig old enough to be historic in its own right. Come at twilight if you can. Bring a headlamp anyway; the stairs are wet regardless of how well-lit the waterfall is.
+
+And if you're managing a mobility limitation or just don't want to work for a view, the Sterling Munro boardwalk delivers the Picket Range's jagged skyline for the cost of walking three hundred flat feet from the visitor center parking lot.

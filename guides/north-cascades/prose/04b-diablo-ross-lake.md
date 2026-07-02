@@ -1,0 +1,5 @@
+This is the zone that ends up on the cover of the brochure, and for once the brochure isn't overselling it. Diablo Lake's color isn't a filter or a trick of light — it's rock flour, glacial silt fine enough to stay suspended in the water and scatter sunlight into an improbable turquoise. You'll see it first from the highway pullouts, which is honestly enough for a lot of travelers. It's worth more than a pullout, though.
+
+Thunder Knob is the hike that rewards the extra effort without demanding technical skill: a well-graded 3.6-mile roundtrip that gains just enough elevation to earn a genuine overlook, then gives it back on the way down. It leaves straight from Colonial Creek South, which means campers there can walk to the trailhead in sandals before breakfast. Everyone else should plan to arrive early — this is the busiest hike in the park on a July Saturday.
+
+If you brought a kayak or an inflatable paddleboard, this is where it earns its space in the rig. The finger inlets off the lake stay wind-sheltered even when the main body is choppy, and launching from the campground shore beats trailering anywhere else in the complex.

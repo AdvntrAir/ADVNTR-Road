@@ -1,0 +1,549 @@
+guide:
+  id: "north-cascades"
+  title: "North Cascades National Park"
+  subtitle: "The American Alps: Raw, Remote, and Off-Grid"
+  edition: "2026 Field Edition"
+  region: "Pacific Northwest"
+  url: "road.advntr.io/north-cascades"
+  published: "July 2026"
+  verified: "July 2026"
+  cover_photo: "assets/cover-photo.jpg"
+  cover_word:
+    - "North"
+    - "Cascades"
+  designation: "National Park"
+  cover_footer: "Two hours from Seattle. Zero cell signal. Zero crowds."
+
+  stats:
+    - "NORTH CASCADES, WA - 2 HRS FROM SEATTLE"
+    - "504,781 ACRES"
+    - "2ND-LEAST VISITED U.S. NATIONAL PARK"
+    - "ZERO ENTRANCE FEE, ZERO CELL SIGNAL"
+
+  map_bounds:
+    north: 49.00
+    south: 48.02
+    east: -120.05
+    west: -121.65
+
+  sections:
+    - id: "orientation"
+      file: "01-orientation"
+      eyebrow: "Orientation"
+      title: "A Park You Mostly Drive Past"
+      subhead: "The wilderness is roadless. The highway just shows you the edges."
+      visual:
+        word: "Cascades"
+        theme: "photo"
+        image: "assets/diablo-lake.jpg"
+        label: "Field Orientation"
+      map_key: "orientation"
+      callouts:
+        - type: warning
+          label: "2026 Reality"
+          title: "SR-20 reopened June 14 after a six-month closure."
+          body: "A December storm and March rockslide near Diablo Lake shut a 26-mile stretch far past the normal winter window. Verify current status before you leave, regardless of what any guide says."
+        - type: tip
+          label: "Offline First"
+          title: "Cell service ends past Marblemount."
+          body: "Signal doesn't return until Mazama. Download maps, reservations, and permit confirmations before you commit to the drive."
+
+    - id: "before-you-arrive"
+      file: "02-before-you-arrive"
+      eyebrow: "Before You Arrive"
+      title: "The Drive In"
+      subhead: "One checkpoint town, one town worth lingering in."
+      visual:
+        word: "Route"
+        theme: "blue"
+        image: "assets/washington-pass.jpg"
+        label: "Before You Arrive"
+      map_key: "gateway_towns"
+      show_gateway_towns: true
+
+    - id: "where-to-sleep"
+      file: "03-where-to-sleep"
+      eyebrow: "Where to Sleep"
+      title: "Dry Camping, No Exceptions"
+      subhead: "No hookups anywhere in the complex, and old growth kills your solar."
+      visual:
+        word: "Camp"
+        theme: "dark"
+        image: "assets/skagit-river.jpg"
+        label: "Where To Sleep"
+      map_key: "campground_reference"
+      show_campgrounds: true
+      callouts:
+        - type: warning
+          label: "Closed Indefinitely"
+          title: "Gorge Lake Campground has no reopening date."
+          body: "Closed since the 2023 Sourdough Fire due to debris flow and flooding hazard. Goodell Creek is the year-round alternative for smaller rigs."
+
+    - id: "what-to-do"
+      file: "05-what-to-do"
+      eyebrow: "What to Do"
+      title: "The Off-Grid Stress Test"
+      subhead: "Charged batteries, empty tanks, and a highway that demands attention."
+      visual:
+        word: "Explore"
+        theme: "dark"
+        image: "assets/skagit-river.jpg"
+        label: "What To Do"
+      callouts:
+        - type: warning
+          label: "2026 Heads Up"
+          title: "Stehekin's only lodge is closed this season."
+          body: "North Cascades Lodge won't operate in 2026 due to fire and flood recovery. No rooms, fuel, laundry, or showers in the valley. The ferry and shuttle are still running - plan to camp."
+
+    - id: "eat-resupply"
+      file: "06-eat-resupply"
+      eyebrow: "Eat + Resupply"
+      title: "Two Towns, One Detour"
+      subhead: "Marblemount is a checkpoint. Winthrop is a reward. Twisp is worth the ten minutes."
+      visual:
+        word: "Fuel"
+        theme: "blue"
+        image: "assets/washington-pass.jpg"
+        label: "Eat + Resupply"
+      show_businesses: true
+
+    - id: "field-notes"
+      file: "07-field-notes"
+      eyebrow: "Field Notes"
+      title: "What You Actually Need to Know"
+      subhead: "No fee, no signal, and a permit process that changed recently."
+      visual:
+        word: "Notes"
+        theme: "dark"
+        image: "assets/diablo-lake.jpg"
+        label: "Field Notes"
+      show_fees: true
+      show_permits: true
+      callouts:
+        - type: warning
+          label: "Adjacent Land"
+          title: "Fee-free doesn't cover every trailhead."
+          body: "Blue Lake, Rainy Pass, Maple Pass, and Cutthroat Lake sit on National Forest land. You'll need a Northwest Forest Pass or America the Beautiful pass for parking."
+        - type: tip
+          label: "Permit Process Changed"
+          title: "Most backcountry permits now arrive by email."
+          body: "Reserve on Recreation.gov, watch the mandatory safety video, and expect your permit from the Wilderness Information Center no more than 3 days before your trip."
+
+    - id: "before-you-leave"
+      file: "08-before-you-leave"
+      eyebrow: "Before You Leave"
+      title: "Before You Leave Home"
+      subhead: "Check the road status one more time than feels necessary."
+      visual:
+        word: "Checklist"
+        theme: "blue"
+        image: "assets/skagit-river.jpg"
+        label: "Before You Leave"
+      show_checklist: true
+      show_resources: true
+
+  zones:
+    - id: "west-side-gateway"
+      file: "04a-west-side-gateway"
+      eyebrow: "West Side"
+      title: "Skagit River Corridor"
+      subhead: "Giant cedars, rushing rivers, and the last easy hiking before the climb."
+      visual:
+        word: "Skagit"
+        theme: "photo"
+        image: "assets/skagit-river.jpg"
+        label: "West Side"
+      map_key: "west-side-gateway"
+      highlights:
+        - label: "Trail of the Cedars"
+          note: "A flat quarter-mile loop through old growth, zero exertion required."
+          tags: [dog-friendly, big-rig]
+        - label: "Ladder Creek Falls"
+          note: "A lit slot-canyon waterfall behind the Gorge Powerhouse, best at twilight."
+          tags: [heads-up]
+        - label: "Sterling Munro Boardwalk"
+          note: "Picket Range views for the cost of three hundred flat feet."
+          tags: [hidden-gem]
+
+    - id: "diablo-ross-lake"
+      file: "04b-diablo-ross-lake"
+      eyebrow: "Recreation Core"
+      title: "Diablo & Ross Lake"
+      subhead: "The glacial-jade water that ends up on every brochure, for good reason."
+      visual:
+        word: "Diablo Lake"
+        theme: "blue"
+        image: "assets/diablo-lake.jpg"
+        label: "Recreation Core"
+      map_key: "diablo-ross-lake"
+      highlights:
+        - label: "Diablo Lake Vista Point"
+          note: "The color isn't a filter - it's suspended glacial silt scattering sunlight."
+          tags: [consensus]
+        - label: "Thunder Knob"
+          note: "A well-graded 3.6-mile roundtrip that earns a real overlook without technical skill."
+          tags: [dog-friendly]
+        - label: "Colonial Creek Launch"
+          note: "Wind-sheltered inlets make this the best paddle launch in the complex."
+
+    - id: "high-alpine-pass"
+      file: "04c-high-alpine-pass"
+      eyebrow: "High Country"
+      title: "Rainy & Washington Pass"
+      subhead: "The stretch of highway that earns the American Alps nickname."
+      visual:
+        word: "Washington Pass"
+        theme: "photo"
+        image: "assets/washington-pass.jpg"
+        label: "High Country"
+      map_key: "high-alpine-pass"
+      highlights:
+        - label: "Washington Pass Overlook"
+          note: "A paved, big-rig-friendly loop with a direct view of Liberty Bell Mountain."
+          tags: [big-rig]
+        - label: "Blue Lake"
+          note: "Five miles roundtrip to a sub-alpine lake beneath the peaks."
+          tags: [heads-up]
+        - label: "Layers, Always"
+          note: "The pass runs 20-30 degrees colder than the Skagit valley floor."
+          tags: [heads-up]
+
+  campgrounds:
+    - id: "newhalem_creek"
+      name: "Newhalem Creek Campground"
+      region: "NEWHALEM, NORTH CASCADES"
+      type: "nps"
+      featured: true
+      lat: 48.6650
+      lng: -121.2470
+      image: "guides/north-cascades/assets/newhalem-creek-campground.jpg"
+      open: "May 18 - Sep 6, 2026 (peak season)"
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "High demand summer weekends; loops A/C release 6 months out, loop B releases 7 days out"
+        url: "https://www.recreation.gov/camping/campgrounds/234060"
+      hookups: "none"
+      max_length: "50ft"
+      dump_station: "Yes"
+      showers: "No"
+      pets:
+        allowed: true
+        restrictions: "On leash, 6 ft max"
+      badges: [consensus, reservable, big-rig]
+      tags: ["Big Rig Friendly", "Real Dump Station"]
+      editorial: >
+        The safe pick for anything long. The loops handle Class As and big fifth wheels
+        without drama, and it is the only campground in the complex where "sold out" is
+        not a given. The trade-off is the canopy: old-growth cover kills rooftop solar,
+        so plan power around generator hours, not sun.
+      verified_date: "July 2026"
+      verified_source: "NPS.gov / Recreation.gov"
+      website: "https://www.nps.gov/noca/planyourvisit/camping.htm"
+      maps_url: "https://maps.google.com/?q=48.6650,-121.2470"
+
+    - id: "colonial_creek_south"
+      name: "Colonial Creek South"
+      region: "DIABLO LAKE, NORTH CASCADES"
+      type: "nps"
+      featured: true
+      lat: 48.7076
+      lng: -121.1481
+      image: "guides/north-cascades/assets/colonial-creek-campground.jpg"
+      open: "May 18 - Sep 6, 2026 (peak season); tent-only sites 64-73 open fee-free in winter"
+      reservations:
+        method: "Recreation.gov"
+        type: "reservable"
+        fills: "The most sought-after campground in the complex - direct lake frontage"
+        url: "https://www.recreation.gov/camping/campgrounds/255201"
+      hookups: "none"
+      max_length: "36ft (posted; 30ft+ struggles with loop turns)"
+      dump_station: "Yes"
+      showers: "No"
+      pets:
+        allowed: true
+        restrictions: "On leash, including boat launch pathways"
+      badges: [consensus, reservable]
+      tags: ["Lake Frontage", "Tight Turns"]
+      editorial: >
+        The crown jewel of the park if your rig fits - private, wooded sites that step
+        straight onto jade-green water. The internal loop turns are genuinely tight, and
+        anything pushing 30-plus feet will have a stressful backing-in experience. Worth
+        fighting for on Recreation.gov at midnight, not worth fighting your trailer over
+        once you arrive.
+      verified_date: "July 2026"
+      verified_source: "NPS.gov / Recreation.gov"
+      website: "https://www.nps.gov/noca/planyourvisit/camping.htm"
+      maps_url: "https://maps.google.com/?q=48.7076,-121.1481"
+
+  gateway_towns:
+    - id: "marblemount"
+      name: "Marblemount"
+      role: "Western gateway staging hub"
+      distance: "Roughly 15 miles west of Newhalem"
+      services: [fuel, propane, grocery, medical]
+      editorial: >
+        Marblemount is the last place civilization checks your work. Tire pressure, propane,
+        ice, holding tanks - if any of it is low, fix it here. There is no version of "I'll
+        handle it in the park." The Wilderness Information Center here is also the required
+        stop for walk-up backcountry permits and bear canister loans.
+    - id: "winthrop"
+      name: "Winthrop"
+      role: "Eastern gateway staging hub and resupply oasis"
+      distance: "Milepost 193, roughly 35 miles east of Washington Pass"
+      services: [fuel, grocery, laundry, rv-dump, medical]
+      editorial: >
+        Winthrop is the reward for surviving the crossing. Dry heat, wide streets, and
+        bakery cases that do not care what state your rig is in. If you are eastbound,
+        this is where the trip exhales.
+
+  businesses:
+    - id: "buffalo_run"
+      name: "Buffalo Run Restaurant"
+      type: "Restaurant"
+      region: "MARBLEMOUNT, WA"
+      lat: 48.5326
+      lng: -121.4362
+      badges: [consensus]
+      phone: "+1 360-873-2461"
+      website: "https://buffalorunrestaurant.com"
+      maps_url: "https://maps.google.com/?q=48.5326,-121.4362"
+      editorial: >
+        The one real sit-down option in Marblemount, and it earns the stop - elk and bison
+        burgers, a garden patio, and a beer list deep enough to make the wait painless.
+        Changed hands in 2025; reviews since trend noticeably better than before.
+      verified_date: "July 2026"
+    - id: "rocking_horse_bakery"
+      name: "Rocking Horse Bakery"
+      type: "Bakery / Cafe"
+      region: "WINTHROP, WA"
+      lat: 48.4762
+      lng: -120.1859
+      badges: [consensus]
+      website: "https://rockinghorsebakery.com"
+      maps_url: "https://maps.google.com/?q=48.4762,-120.1859"
+      editorial: >
+        Winthrop's default coffee stop - a historic building, river views, and a line out
+        the door most mornings. Go for the espresso and the setting; treat the pastry case
+        as a good bet, not a sure one.
+      verified_date: "July 2026"
+    - id: "hanks_harvest_foods"
+      name: "Hank's Harvest Foods"
+      type: "Grocery"
+      region: "TWISP, WA"
+      lat: 48.3635
+      lng: -120.1201
+      badges: [hidden-gem]
+      phone: "+1 509-997-7711"
+      website: "https://hanksharvestfoods.com"
+      maps_url: "https://maps.google.com/?q=48.3635,-120.1201"
+      editorial: >
+        A genuinely full grocery store, family-run since 1975, with better produce and
+        noticeably better prices than Winthrop's in-town option. Decorated wall-to-wall
+        with big-game taxidermy, which turns a supply run into a story. Worth the extra
+        ten minutes if stocking up for more than a night.
+      verified_date: "July 2026"
+
+  fees:
+    entrance_vehicle: "$0 - fee-free park"
+    entrance_motorcycle: "$0"
+    entrance_person: "$0"
+    annual_park: "Not applicable - no fee to waive"
+    america_beautiful: true
+    cashless: true
+    free_days: "Not applicable - always free"
+    camping_range: "$20-$24/night ($75 group sites; Hozomeen free)"
+    backcountry_permit: "$10/person/trip + $6 non-refundable reservation fee"
+
+  permits:
+    backcountry_required: true
+    platform: "Recreation.gov + mandatory safety video"
+    window: "Reservations open early spring; permit issued by email no more than 3 days before trip"
+    walkup: "~40% of capacity held for walk-up"
+    bear_canister_required: true
+    bear_canister_rental:
+      available: true
+      location: "Wilderness Information Center (Marblemount) / Glacier Public Service Center"
+    other:
+      - name: "Northwest Forest Pass"
+        required_for: "Adjacent USFS trailheads: Blue Lake, Rainy Pass, Maple Pass, Cutthroat Lake"
+        cost: "$5/day or $30/year"
+        note: "Not required on NPS land itself - only at National Forest trailheads bordering the park."
+      - name: "Lake Chelan Dock Permit"
+        required_for: "Boaters using Lake Chelan NRA docks, May 1-Oct 31"
+        cost: "$10/day or $75/year"
+        note: "Available at Chelan Ranger Station and select Chelan/Stehekin stores."
+
+  checklist:
+    - "Check WSDOT's real-time North Cascades Highway map the morning you leave."
+    - "Reserve campgrounds on Recreation.gov as early as your loop's booking window allows."
+    - "Download offline maps and print Recreation.gov confirmations before Marblemount - no signal past it."
+    - "Fully charge house batteries and service your generator - old-growth canopy blocks solar."
+    - "Empty black/grey tanks and top off fresh water at a gateway town."
+    - "Top off fuel and propane in Marblemount or Winthrop - none sold inside the park."
+    - "Buy a Northwest Forest Pass if hiking Blue Lake, Rainy Pass, Maple Pass, or Cutthroat Lake."
+    - "If backcountry camping, reserve on Recreation.gov and email the Wilderness Information Center."
+    - "Leave the firewood at home - a park-wide campfire ban is in effect starting June 29, 2026."
+
+  resources:
+    - name: "WSDOT Real-Time Travel Map"
+      url: "https://wsdot.com/travel/real-time/mountainpasses/north-cascade-hwy"
+      use: "Current SR-20 status, construction delays, and closure alerts"
+      when: "The morning of departure and again before breaking camp each day"
+    - name: "NPS North Cascades Conditions Page"
+      url: "https://www.nps.gov/noca/planyourvisit/conditions.htm"
+      use: "Road, trail, fire, and lake condition alerts direct from the park"
+      when: "Before finalizing an itinerary, and again at any gateway town with signal"
+    - name: "Recreation.gov"
+      url: "https://www.recreation.gov"
+      use: "Campground bookings and backcountry permit reservations"
+      when: "As soon as your loop's booking window opens"
+    - name: "NPS Wilderness Information Center"
+      url: "https://www.nps.gov/noca/planyourvisit/permits.htm"
+      use: "Backcountry permit issuance, bear canister loans, ranger trip consultations"
+      when: "Before any overnight backcountry trip - email no more than 3 days ahead"
+
+  maps:
+    orientation:
+      center_lat: 48.6900
+      center_lng: -121.1900
+      zoom: 10
+      size: "760x440"
+      bounds:
+        north: 48.85
+        south: 48.55
+        east: -120.90
+        west: -121.45
+      markers:
+        - label: "NEWHALEM"
+          lat: 48.6708
+          lng: -121.2417
+          type: "gateway"
+        - label: "DIABLO LAKE"
+          lat: 48.7076
+          lng: -121.1481
+          type: "campground"
+        - label: "WASHINGTON PASS"
+          lat: 48.5310
+          lng: -120.6602
+          type: "viewpoint"
+
+    gateway_towns:
+      center_lat: 48.5200
+      center_lng: -120.7500
+      zoom: 9
+      size: "760x420"
+      bounds:
+        north: 48.85
+        south: 48.20
+        east: -119.90
+        west: -121.60
+      markers:
+        - label: "MARBLEMOUNT"
+          lat: 48.5326
+          lng: -121.4362
+          type: "gateway"
+        - label: "WINTHROP"
+          lat: 48.4762
+          lng: -120.1859
+          type: "gateway"
+        - label: "TWISP"
+          lat: 48.3635
+          lng: -120.1201
+          type: "gateway"
+
+    campground_reference:
+      center_lat: 48.6900
+      center_lng: -121.2000
+      zoom: 11
+      size: "760x480"
+      bounds:
+        north: 48.75
+        south: 48.62
+        east: -121.05
+        west: -121.35
+      markers:
+        - label: "NEWHALEM CREEK"
+          lat: 48.6650
+          lng: -121.2470
+          type: "campground"
+        - label: "COLONIAL CREEK SOUTH"
+          lat: 48.7076
+          lng: -121.1481
+          type: "campground"
+        - label: "COLONIAL CREEK NORTH"
+          lat: 48.7080
+          lng: -121.1470
+          type: "campground"
+
+    west-side-gateway:
+      center_lat: 48.6750
+      center_lng: -121.2350
+      zoom: 12
+      size: "760x440"
+      bounds:
+        north: 48.71
+        south: 48.64
+        east: -121.18
+        west: -121.29
+      markers:
+        - label: "NEWHALEM VISITOR CENTER"
+          lat: 48.6708
+          lng: -121.2417
+          type: "gateway"
+        - label: "TRAIL OF THE CEDARS"
+          lat: 48.6667
+          lng: -121.2483
+          type: "trailhead"
+        - label: "GORGE POWERHOUSE"
+          lat: 48.6890
+          lng: -121.1990
+          type: "trailhead"
+
+    diablo-ross-lake:
+      center_lat: 48.7150
+      center_lng: -121.1300
+      zoom: 12
+      size: "760x440"
+      bounds:
+        north: 48.75
+        south: 48.68
+        east: -121.05
+        west: -121.20
+      markers:
+        - label: "DIABLO LAKE VISTA POINT"
+          lat: 48.7186
+          lng: -121.1264
+          type: "viewpoint"
+        - label: "COLONIAL CREEK SOUTH"
+          lat: 48.7076
+          lng: -121.1481
+          type: "campground"
+        - label: "ROSS LAKE RESORT"
+          lat: 48.7357
+          lng: -121.0684
+          type: "marker"
+
+    high-alpine-pass:
+      center_lat: 48.5250
+      center_lng: -120.7000
+      zoom: 11
+      size: "760x440"
+      bounds:
+        north: 48.57
+        south: 48.48
+        east: -120.60
+        west: -120.80
+      markers:
+        - label: "RAINY PASS TRAILHEAD"
+          lat: 48.5145
+          lng: -120.7359
+          type: "trailhead"
+        - label: "WASHINGTON PASS OVERLOOK"
+          lat: 48.5310
+          lng: -120.6602
+          type: "viewpoint"
+        - label: "BLUE LAKE TRAILHEAD"
+          lat: 48.5388
+          lng: -120.6871
+          type: "trailhead"

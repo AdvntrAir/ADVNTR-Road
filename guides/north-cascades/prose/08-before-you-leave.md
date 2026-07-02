@@ -1,0 +1,7 @@
+Get the logistics right before you leave and this park rewards you completely. Get them wrong, and the isolation that makes North Cascades special is the same isolation that turns a dead phone or an empty propane tank into a real problem.
+
+Check WSDOT's real-time highway map the morning you leave — this corridor closed for six months in 2026 outside the normal winter window, and conditions change fast. Reserve campgrounds on Recreation.gov as early as your loop's window allows; Colonial Creek South and Newhalem Creek both fill for summer weekends, and windows differ by loop and site block. Download offline maps and print your Recreation.gov confirmations before Marblemount — there is no signal past it.
+
+Fully charge house batteries and service your generator before you arrive; old-growth canopy blocks rooftop solar at every in-park campground. Empty tanks and top off fuel and propane at a gateway town — there's no fuel sold inside the park complex. If you're hiking Blue Lake, Rainy Pass, Maple Pass, or Cutthroat Lake, buy a Northwest Forest Pass first; those trailheads sit on adjacent National Forest land and aren't covered by the park's fee-free status. If you're backcountry camping, reserve on Recreation.gov and email the Wilderness Information Center no more than three days out — don't assume a walk-up permit will be waiting for you. And leave the firewood at home: a park-wide campfire ban is in effect starting June 29, 2026.
+
+> Check the road status one more time than feels necessary, then go.
