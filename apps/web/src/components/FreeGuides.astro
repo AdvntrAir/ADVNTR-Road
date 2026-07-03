@@ -1,0 +1,35 @@
+---
+import GuideCard from './GuideCard.astro';
+import { freeGuides } from '../data/guides';
+---
+<section class="free-guides" id="free-guides">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Start Here</p>
+    <h2 data-reveal>The free launch guides.</h2>
+    <p class="free-guides__sub" data-reveal>
+      Free isn't a funnel trick — it's the verification standard every paid guide is held to.
+      These two are live now.
+    </p>
+    <div class="free-guides__grid">
+      {freeGuides.map((guide) => <GuideCard guide={guide} featured />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .free-guides { padding-block: var(--space-20); }
+  .free-guides__sub {
+    margin-top: var(--space-4);
+    max-width: var(--measure-narrow);
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+  .free-guides__grid {
+    margin-top: var(--space-10);
+    display: grid;
+    gap: var(--space-8);
+  }
+  @media (min-width: 720px) {
+    .free-guides__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

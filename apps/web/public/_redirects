@@ -1,0 +1,15 @@
+# ADVNTR Road QR / short-link redirects.
+# Every printed guide QR code should encode https://road.advntr.io/r/[link-slug]
+# so a destination can change (new PDF, new page) without reprinting anything.
+# All redirects here are 302 (temporary) per the launch spec — these are living
+# pointers, not permanent URL moves.
+
+# Live — confirmed public Google Drive links (Stage 3 folder), 2026-07-03.
+/r/olympic-np-free-guide       https://drive.google.com/file/d/18W4_o3vpQpiyCQppZNtpNOsyRAmkHpHl/view  302
+/r/oregon-coast-free-guide     https://drive.google.com/file/d/17r07KEwe7wf_ljZXj1uAa_aJw38HeZnJ/view  302
+
+# Internal anchors — point at homepage sections until dedicated pages exist.
+/r/guide-library               /#guides           302
+/r/subscribe                   /#subscribe        302
+/r/latest-trailhead            /#trailhead        302
+/r/latest-field-note           /#field-notes      302

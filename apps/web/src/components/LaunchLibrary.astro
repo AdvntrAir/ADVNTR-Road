@@ -1,0 +1,37 @@
+---
+import GuideCard from './GuideCard.astro';
+import { launchLibrary } from '../data/guides';
+---
+<section class="launch-library" id="guides">
+  <div class="container">
+    <p class="eyebrow" data-reveal>The Launch Sequence</p>
+    <h2 data-reveal>Six guides. One region, built out properly.</h2>
+    <p class="launch-library__sub" data-reveal>
+      Pacific Northwest first — a drivable map, not a scattered list of unrelated parks.
+    </p>
+    <div class="launch-library__grid">
+      {launchLibrary.map((guide) => <GuideCard guide={guide} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .launch-library { padding-block: var(--space-20); background: var(--surface-buff-subtle); }
+  .launch-library__sub {
+    margin-top: var(--space-4);
+    max-width: var(--measure-narrow);
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+  .launch-library__grid {
+    margin-top: var(--space-10);
+    display: grid;
+    gap: var(--space-8);
+  }
+  @media (min-width: 640px) {
+    .launch-library__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .launch-library__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

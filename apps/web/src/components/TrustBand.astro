@@ -1,0 +1,37 @@
+---
+---
+<section class="trust-band">
+  <div class="container trust-band__inner">
+    <p class="eyebrow" data-reveal>Verified, Not Guaranteed</p>
+    <div class="trust-band__grid">
+      <p data-reveal>Every guide is verified before publication against official park, agency, and reservation sources.</p>
+      <p data-reveal>The Trailhead tracks changing conditions and visitor impact between guide editions.</p>
+      <p data-reveal>Fees, closures, reservations, roads, weather, and businesses change. Always check official conditions before you travel.</p>
+    </div>
+    <p class="trust-band__link" data-reveal>Read the full <a href="/accuracy-disclaimer">accuracy disclaimer</a>.</p>
+  </div>
+</section>
+
+<style>
+  .trust-band { padding-block: var(--space-16); border-top: 1px solid var(--border-card); border-bottom: 1px solid var(--border-card); }
+  .trust-band__grid {
+    margin-top: var(--space-8);
+    display: grid;
+    gap: var(--space-6);
+  }
+  .trust-band__grid p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-body);
+  }
+  .trust-band__link {
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+  .trust-band__link a { color: var(--color-brunswick); }
+  @media (min-width: 720px) {
+    .trust-band__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

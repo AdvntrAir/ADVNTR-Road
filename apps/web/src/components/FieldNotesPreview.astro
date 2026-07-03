@@ -1,0 +1,78 @@
+---
+import { getFieldNotesPreview } from '../lib/content-adapter';
+const { cards, source } = await getFieldNotesPreview(5);
+---
+<section class="field-notes" id="field-notes">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Field Notes</p>
+    <h2 data-reveal>The editorial column, not a blog feed.</h2>
+    <p class="field-notes__sub" data-reveal>
+      Essays behind the guides — voice, tradeoffs, and the thinking that doesn't fit in a field card.
+    </p>
+    <div class="field-notes__grid">
+      {cards.map((card) => (
+        <a class="field-notes__card" href={card.href} data-reveal>
+          <h3>{card.title}</h3>
+          <p>{card.excerpt}</p>
+          <span class="field-notes__cta">Read the piece &rarr;</span>
+        </a>
+      ))}
+    </div>
+    {source === 'local-fallback' && (
+      <p class="field-notes__note">
+        Showing curated Field Notes ideas — live essays publish to this section automatically once posted.
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .field-notes { padding-block: var(--space-20); }
+  .field-notes__sub {
+    margin-top: var(--space-4);
+    max-width: var(--measure-narrow);
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+  .field-notes__grid {
+    margin-top: var(--space-10);
+    display: grid;
+    gap: var(--space-6);
+  }
+  .field-notes__card {
+    display: block;
+    text-decoration: none;
+    padding: var(--space-6) 0 0;
+    border-top: var(--border-thick) solid var(--border-card);
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+  .field-notes__card:hover { border-top-color: var(--color-brunswick); }
+  .field-notes__card h3 { font-size: var(--text-lg); }
+  .field-notes__card p {
+    margin-top: var(--space-3);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+  .field-notes__cta {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-brunswick);
+  }
+  .field-notes__note {
+    margin-top: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+  @media (min-width: 720px) {
+    .field-notes__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .field-notes__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

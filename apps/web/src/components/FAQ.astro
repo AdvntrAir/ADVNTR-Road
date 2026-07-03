@@ -1,0 +1,55 @@
+---
+export const faqs = [
+  { q: 'What is ADVNTR Road?', a: 'A publisher of opinionated, verified road trip guides for national parks and scenic corridors — starting in the Pacific Northwest.' },
+  { q: 'Are the guides free?', a: 'The Olympic National Park and Oregon Coast guides are free. Additional guides will be paid as the library grows.' },
+  { q: 'What is The Trailhead?', a: 'A weekly read on national park conditions, closures, and visitor impact, written for what it means for your trip — not general news.' },
+  { q: 'Why not just use AI to plan a trip?', a: 'AI can summarize what already exists. It can\'t tell you what to skip, or verify a closure against a live source. That judgment is the product.' },
+  { q: 'Are these guides only for RV travelers?', a: 'No. Every guide covers hotel, camping, and drive-in logistics — RVers get extra detail because rig size changes more decisions than any other factor.' },
+  { q: 'Do the guides include hotels and lodges?', a: 'Yes, alongside campgrounds and gateway towns, so the guide works regardless of how you sleep.' },
+  { q: 'Do the guides include campgrounds?', a: 'Yes — verified reservation windows, hookups, length limits, and pet rules for every campground featured.' },
+  { q: 'How are the guides verified?', a: 'Against official park, agency, and reservation sources at time of publication, with a verified-as-of date printed in every guide.' },
+  { q: 'Will guides be updated?', a: 'Yes. The Trailhead surfaces the conditions that trigger a guide update; see our public accuracy disclaimer for how we handle changes.' },
+  { q: 'Where can I buy paid guides?', a: 'Paid guides and bundles are coming soon. Join the road list to be notified the moment they\'re live.' },
+];
+---
+<section class="faq">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Questions</p>
+    <h2 data-reveal>Straight answers.</h2>
+    <dl class="faq__list">
+      {faqs.map((item) => (
+        <div class="faq__item" data-reveal>
+          <dt>{item.q}</dt>
+          <dd>{item.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .faq { padding-block: var(--space-20); }
+  .faq__list {
+    margin: var(--space-10) 0 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+  .faq__item {
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-card);
+  }
+  .faq__item dt {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+  .faq__item dd {
+    margin: var(--space-2) 0 0;
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 900px) {
+    .faq__list { grid-template-columns: repeat(2, 1fr); column-gap: var(--space-10); }
+  }
+</style>

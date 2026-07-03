@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page Not Found" description="This page doesn't exist." canonicalPath="/404" noindex>
+  <div class="container not-found">
+    <p class="eyebrow">404</p>
+    <h1>That trail doesn't go through.</h1>
+    <p>The page you're looking for moved or never existed. Head back to the guides.</p>
+    <a class="btn btn--primary" href="/">Back to ADVNTR Road</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found { padding-block: var(--space-24); text-align: center; }
+  .not-found h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
+  .not-found p { margin-top: var(--space-4); color: var(--text-secondary); }
+  .not-found .btn { margin-top: var(--space-8); }
+</style>

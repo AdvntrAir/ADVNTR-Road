@@ -1,0 +1,108 @@
+---
+import { site } from '../data/site';
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__brand" href="/" aria-label={`${site.name} home`}>
+      <img src="/images/brand/advntr-road-green.png" alt="" width="36" height="36" />
+      <span>{site.name}</span>
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul>
+        {site.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a class="btn btn--secondary site-header__cta" href="#free-guides">Get a free guide</a>
+  </div>
+  <div class="site-header__folio">
+    <div class="container site-header__folio-inner">
+      <span>Pacific Northwest Edition</span>
+      <span>Vol. 01 &middot; 2026</span>
+      <span>Verified Guides</span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(249, 228, 197, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
+  .site-header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-brunswick);
+    margin-right: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .site-header__brand img { border-radius: var(--radius-sm); }
+  .site-header__nav {
+    max-width: 60vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
+  }
+  .site-header__nav::-webkit-scrollbar { display: none; }
+  .site-header__nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-5);
+    white-space: nowrap;
+  }
+  .site-header__nav a {
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .site-header__nav a:hover { color: var(--color-brunswick); }
+  .site-header__cta { display: none; white-space: nowrap; flex-shrink: 0; }
+
+  @media (min-width: 900px) {
+    .site-header__nav { max-width: none; overflow: visible; }
+    .site-header__nav a { font-size: var(--text-sm); }
+    .site-header__cta { display: inline-flex; }
+  }
+
+  .site-header__folio {
+    display: none;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--color-brunswick);
+  }
+  .site-header__folio-inner {
+    display: flex;
+    justify-content: space-between;
+    padding-block: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-on-dark-secondary);
+  }
+  @media (min-width: 640px) {
+    .site-header__folio { display: block; }
+  }
+</style>

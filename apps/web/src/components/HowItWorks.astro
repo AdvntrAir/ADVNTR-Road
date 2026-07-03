@@ -1,0 +1,66 @@
+---
+const steps = [
+  { n: '01', title: 'Read the free guides', body: 'Olympic and Oregon Coast are live now, no signup required to read them.' },
+  { n: '02', title: 'Join the road list', body: 'Get new guide releases and planning notes as the library grows.' },
+  { n: '03', title: 'Read The Trailhead', body: 'A weekly read on park conditions, closures, and what they mean for your trip.' },
+  { n: '04', title: 'Paid guides and bundles', body: 'Coming to the library as each region is fully verified and built out.' },
+];
+---
+<section class="how-it-works">
+  <div class="container">
+    <p class="eyebrow" data-reveal>How It Works</p>
+    <h2 data-reveal>Simple on purpose.</h2>
+    <ol class="how-it-works__steps">
+      {steps.map((step) => (
+        <li data-reveal>
+          <span class="how-it-works__num">{step.n}</span>
+          <div>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="how-it-works__note" data-reveal>
+      Custom planning and Before-You-Go briefings may come later. For now: read, join, and let the library grow.
+    </p>
+  </div>
+</section>
+
+<style>
+  .how-it-works { padding-block: var(--space-20); background: var(--surface-buff-subtle); }
+  .how-it-works__steps {
+    margin: var(--space-10) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--space-8);
+  }
+  .how-it-works__steps li {
+    display: flex;
+    gap: var(--space-5);
+    align-items: flex-start;
+  }
+  .how-it-works__num {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    color: var(--color-buff-dark);
+    line-height: 1;
+  }
+  .how-it-works__steps h3 { font-size: var(--text-lg); }
+  .how-it-works__steps p {
+    margin-top: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+  .how-it-works__note {
+    margin-top: var(--space-12);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    max-width: var(--measure-narrow);
+  }
+  @media (min-width: 720px) {
+    .how-it-works__steps { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

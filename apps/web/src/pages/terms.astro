@@ -1,0 +1,25 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+---
+<LegalLayout
+  title="Terms"
+  description="Terms of use for the ADVNTR Road website and guides."
+  canonicalPath="/terms"
+>
+  <p>
+    By using {site.url.replace('https://', '')} you agree to use its content — guides,
+    Field Notes, Trailhead issues, and any downloadable PDFs — for personal trip planning.
+    Guide content is not to be resold, republished, or redistributed as your own without
+    written permission.
+  </p>
+  <p>
+    ADVNTR Road guides are editorial travel content, not a booking service, travel agency,
+    or safety guarantee. See the <a href="/accuracy-disclaimer">accuracy disclaimer</a> for
+    how we handle changing conditions.
+  </p>
+  <p>
+    This page is a launch draft and will be expanded into complete terms of service. Contact
+    <a href={`mailto:${site.contactEmail}`}> {site.contactEmail}</a> with questions.
+  </p>
+</LegalLayout>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { guides } from '../../data/guides';
+
+export async function getStaticPaths() {
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+---
+<BaseLayout
+  title={guide.title}
+  description={guide.description}
+  canonicalPath={`/guides/${guide.slug}`}
+  structuredData={[{
+    '@context': 'https://schema.org',
+    '@type': 'DigitalDocument',
+    name: guide.title,
+    description: guide.description,
+    isAccessibleForFree: guide.status === 'free',
+  }]}
+>
+  <article class="container guide-page">
+    <p class="eyebrow">{guide.format} · {guide.region}</p>
+    <h1>{guide.title}</h1>
+    <img class="guide-page__cover" src={guide.coverImage} alt={`${guide.title} guide cover`} width="900" height="1125" />
+    <p class="guide-page__status">Status: {guide.statusLabel}</p>
+    <p class="guide-page__desc">{guide.description}</p>
+    {guide.ctaExternal ? (
+      <a class="btn btn--primary" href={guide.ctaHref} target="_blank" rel="noopener noreferrer">{guide.ctaLabel}</a>
+    ) : (
+      <a class="btn btn--secondary" href={guide.ctaHref}>{guide.ctaLabel}</a>
+    )}
+    <p class="guide-page__back"><a href="/#guides">&larr; All guides</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .guide-page { max-width: 42rem; padding-block: var(--space-16) var(--space-24); }
+  .guide-page h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
+  .guide-page__cover { margin-top: var(--space-8); border-radius: var(--radius-lg); aspect-ratio: 4/5; object-fit: cover; }
+  .guide-page__status { margin-top: var(--space-6); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-accent); }
+  .guide-page__desc { margin-top: var(--space-4); color: var(--text-secondary); line-height: var(--leading-body); font-size: var(--text-lg); }
+  .guide-page__back { margin-top: var(--space-10); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>

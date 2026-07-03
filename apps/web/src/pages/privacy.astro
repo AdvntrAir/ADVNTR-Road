@@ -1,0 +1,30 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+---
+<LegalLayout
+  title="Privacy Policy"
+  description="How ADVNTR Road handles email signups and site analytics."
+  canonicalPath="/privacy"
+>
+  <p>
+    ADVNTR Road collects the minimum information needed to run a small publication: your
+    email address if you subscribe to the road list via Beehiiv, and basic, aggregated site
+    analytics (see below). We do not sell your data.
+  </p>
+  <h2>Email</h2>
+  <p>
+    Email signups are processed by Beehiiv, our newsletter provider. Beehiiv's own privacy
+    policy governs how your email address is stored and processed. You can unsubscribe from
+    any email at any time.
+  </p>
+  <h2>Analytics</h2>
+  <p>
+    This site does not run third-party tracking by default at launch. If analytics are
+    added later (see the launch report for provider options under consideration), this page
+    will be updated to name the provider and what it collects.
+  </p>
+  <h2>Contact</h2>
+  <p>Questions about this policy can be sent to <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.</p>
+  <p>This page is a launch draft, not final legal advice, and should be reviewed by Matt before relying on it.</p>
+</LegalLayout>

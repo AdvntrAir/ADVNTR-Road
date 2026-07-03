@@ -1,0 +1,79 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
+const formAction = import.meta.env.PUBLIC_BEEHIIV_FORM_ACTION;
+const embedUrl = import.meta.env.PUBLIC_BEEHIIV_EMBED_URL;
+const publicationUrl = import.meta.env.PUBLIC_BEEHIIV_PUBLICATION_URL || 'https://advntr-road.beehiiv.com';
+
+// Priority order per launch spec: form action → embed → publication subscribe
+// page → local dev placeholder. Right now only the publication URL is known
+// (no custom Beehiiv form exists yet), so this renders as a link-out CTA.
+const mode = formAction ? 'form' : embedUrl ? 'embed' : publicationUrl ? 'link' : 'placeholder';
+const subscribeUrl = `${publicationUrl.replace(/\/$/, '')}/subscribe`;
+---
+
+<div class="subscribe-form" class:list={{ 'subscribe-form--compact': compact }}>
+  {mode === 'form' && (
+    <form class="subscribe-form__form" action={formAction} method="post" target="_blank">
+      <label class="visually-hidden" for="subscribe-email">Email address</label>
+      <input id="subscribe-email" class="subscribe-form__input" type="email" name="email" required placeholder="you@example.com" />
+      <button class="btn btn--primary" type="submit">Join the road list</button>
+    </form>
+  )}
+  {mode === 'embed' && (
+    <iframe class="subscribe-form__embed" src={embedUrl} title="Subscribe to ADVNTR Road" loading="lazy"></iframe>
+  )}
+  {(mode === 'link' || mode === 'placeholder') && (
+    <a
+      class="btn btn--primary subscribe-form__link"
+      href={mode === 'link' ? subscribeUrl : '#'}
+      target={mode === 'link' ? '_blank' : undefined}
+      rel={mode === 'link' ? 'noopener noreferrer' : undefined}
+      aria-disabled={mode === 'placeholder' ? 'true' : undefined}
+    >
+      Join the road list
+    </a>
+  )}
+  <p class="subscribe-form__note">No spam. No generic travel sludge. Unsubscribe anytime.</p>
+</div>
+
+<style>
+  .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .subscribe-form__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .subscribe-form__input {
+    flex: 1 1 220px;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-pill);
+    border: var(--border-base) solid var(--border-accent);
+    background: var(--surface-card);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+  }
+  .subscribe-form__embed {
+    width: 100%;
+    min-height: 220px;
+    border: none;
+    border-radius: var(--radius-lg);
+  }
+  .subscribe-form__note {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-on-dark-secondary);
+    letter-spacing: var(--tracking-normal);
+  }
+  .subscribe-form--compact .subscribe-form__note {
+    color: var(--text-muted);
+  }
+</style>

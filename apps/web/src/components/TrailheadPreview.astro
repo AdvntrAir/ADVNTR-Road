@@ -1,0 +1,94 @@
+---
+import { getLatestTrailhead } from '../lib/content-adapter';
+const issue = await getLatestTrailhead();
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<section class="trailhead" id="trailhead">
+  <div class="topo-field" aria-hidden="true">
+    <img src="/images/brand/topo-lines.svg" alt="" />
+  </div>
+  <div class="container trailhead__inner">
+    <p class="eyebrow" data-reveal>The Trailhead</p>
+    <h2 data-reveal>Weekly national park intel for people planning real trips, not fantasy itineraries.</h2>
+    <p class="trailhead__sub" data-reveal>
+      Conditions, closures, access, and timing — read for the decisions it changes, not the headline.
+    </p>
+
+    {issue ? (
+      <div class="trailhead__card" data-reveal>
+        <p class="trailhead__window">
+          Coverage window: {fmt(issue.coverageWindowStart)} &ndash; {fmt(issue.coverageWindowEnd)}
+        </p>
+        <h3>{issue.title}</h3>
+        <p class="trailhead__summary">{issue.summary}</p>
+
+        {issue.topStories.length > 0 && (
+          <ul class="trailhead__stories">
+            {issue.topStories.map((s) => (
+              <li><span class="trailhead__rank">{s.rank}</span> {s.parkOrRegion} — {s.topic}</li>
+            ))}
+          </ul>
+        )}
+
+        {issue.affectedGuides.length > 0 && (
+          <p class="trailhead__guides">Guides affected: {issue.affectedGuides.join(', ')}</p>
+        )}
+
+        <div class="trailhead__ctas">
+          <a class="btn btn--primary" href={issue.href} target={issue.source === 'beehiiv-rss' ? '_blank' : undefined} rel={issue.source === 'beehiiv-rss' ? 'noopener noreferrer' : undefined}>
+            Read the latest issue
+          </a>
+          <a class="btn btn--secondary" href="#subscribe">Subscribe for weekly intel</a>
+        </div>
+        {issue.source === 'local-fallback' && (
+          <p class="trailhead__note">Showing local fallback content — live once the Beehiiv Intel Pack issue is published and classified.</p>
+        )}
+      </div>
+    ) : (
+      <p class="trailhead__note" data-reveal>The first Trailhead issue is in progress — check back soon.</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .trailhead {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-paynes-gray-dark);
+    color: var(--text-on-dark);
+    padding-block: var(--space-20);
+  }
+  .trailhead .eyebrow { color: var(--color-champagne); }
+  .trailhead__inner { position: relative; z-index: 1; }
+  .trailhead h2 { color: var(--text-on-dark); max-width: 26ch; font-size: clamp(1.5rem, 3.5vw, var(--text-3xl)); }
+  .trailhead__sub { margin-top: var(--space-4); max-width: var(--measure-narrow); color: var(--text-on-dark-secondary); font-size: var(--text-lg); }
+  .trailhead__card {
+    margin-top: var(--space-10);
+    background: rgba(249, 228, 197, 0.08);
+    border: 1px solid rgba(249, 228, 197, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    max-width: 42rem;
+  }
+  .trailhead__window {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-buff);
+  }
+  .trailhead__card h3 { margin-top: var(--space-2); color: var(--text-on-dark); font-size: var(--text-xl); }
+  .trailhead__summary { margin-top: var(--space-4); color: var(--text-on-dark-secondary); line-height: var(--leading-body); }
+  .trailhead__stories { margin: var(--space-5) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
+  .trailhead__stories li { font-size: var(--text-sm); color: var(--text-on-dark-secondary); }
+  .trailhead__rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem; margin-right: var(--space-2);
+    border-radius: 50%; background: var(--color-buff); color: var(--color-brunswick);
+    font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700;
+  }
+  .trailhead__guides { margin-top: var(--space-5); font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-on-dark-secondary); }
+  .trailhead__ctas { margin-top: var(--space-7); display: flex; flex-wrap: wrap; gap: var(--space-4); }
+  .trailhead__ctas .btn--secondary { color: var(--text-on-dark); border-color: rgba(249,228,197,0.4); }
+  .trailhead__note { margin-top: var(--space-5); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-on-dark-secondary); }
+</style>

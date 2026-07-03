@@ -1,0 +1,33 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { imageCredits, unverifiedImageCredits, brandAssetCredits } from '../data/image-credits';
+---
+<LegalLayout
+  title="Image Credits"
+  description="Sources, licenses, and credits for images used on the ADVNTR Road website."
+  canonicalPath="/image-credits"
+>
+  <p>Guide cover photos reused on this site, sourced from Wikimedia Commons under the licenses below.</p>
+  <ul>
+    {imageCredits.map((c) => (
+      <li>
+        <strong>{c.file}</strong> — "{c.title}", credit: {c.credit}, license: {c.license}.
+        {' '}<a href={c.source} target="_blank" rel="noopener noreferrer">Source</a>. Used for: {c.usage}.
+      </li>
+    ))}
+  </ul>
+
+  <h2>Original brand assets</h2>
+  <ul>
+    {brandAssetCredits.map((c) => (
+      <li><strong>{c.file}</strong> — {c.usage}. {c.note}</li>
+    ))}
+  </ul>
+
+  <h2>Needs verification</h2>
+  <ul>
+    {unverifiedImageCredits.map((c) => (
+      <li><strong>{c.file}</strong> — {c.usage}. {c.note}</li>
+    ))}
+  </ul>
+</LegalLayout>

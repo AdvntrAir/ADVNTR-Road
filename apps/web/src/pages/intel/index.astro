@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('intel')).sort(
+  (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
+);
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<BaseLayout title="The Trailhead — Archive" description="Weekly national park intel from ADVNTR Road." canonicalPath="/intel">
+  <div class="container intel-index">
+    <p class="eyebrow">The Trailhead</p>
+    <h1>Weekly intel archive.</h1>
+    <ul class="intel-index__list">
+      {entries.map((entry) => (
+        <li>
+          <a href={`/intel/${entry.id}`}>
+            <p class="intel-index__window">{fmt(entry.data.coverageWindowStart)} &ndash; {fmt(entry.data.coverageWindowEnd)}</p>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.trailheadSummary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="intel-index__back"><a href="/#trailhead">&larr; Back to ADVNTR Road</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .intel-index { max-width: 46rem; padding-block: var(--space-16) var(--space-24); }
+  .intel-index h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
+  .intel-index__list { list-style: none; margin: var(--space-10) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-8); }
+  .intel-index__list a { text-decoration: none; }
+  .intel-index__window { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-accent); }
+  .intel-index__list h2 { margin-top: var(--space-2); font-size: var(--text-xl); }
+  .intel-index__list p:not(.intel-index__window) { margin-top: var(--space-2); color: var(--text-secondary); }
+  .intel-index__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>

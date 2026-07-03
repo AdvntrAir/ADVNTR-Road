@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://road.advntr.io/sitemap-index.xml

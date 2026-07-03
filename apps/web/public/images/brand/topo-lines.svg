@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+  <path d="M-50,80 C120,65 280,95 450,72 C580,55 700,88 850,70" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,140 C100,128 260,158 420,138 C560,122 690,148 850,132" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,200 C140,185 300,218 460,200 C600,185 720,210 850,195" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,265 C90,252 250,278 430,258 C575,242 700,268 850,255" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,330 C110,315 275,342 450,325 C590,310 715,335 850,320" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,398 C130,382 290,408 460,390 C600,375 720,402 850,388" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,468 C105,452 265,480 445,462 C585,448 710,472 850,458" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+  <path d="M-50,538 C120,522 280,548 455,530 C595,515 718,540 850,526" stroke="#DDAD8A" stroke-width="0.8" fill="none" opacity="0.18"/>
+</svg>

@@ -1,0 +1,22 @@
+# ADVNTR Road website — Netlify config.
+#
+# If this Netlify site's "base directory" is set to apps/web in the Netlify UI,
+# the paths below are relative to that. If the Netlify site instead points at
+# the repo root, set base = "apps/web" here (uncomment) so this config applies
+# from the monorepo root build.
+#
+# base = "apps/web"
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

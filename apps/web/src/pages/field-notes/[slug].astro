@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('field-notes');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.excerpt}
+  canonicalPath={`/field-notes/${entry.id}`}
+  structuredData={[{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: entry.data.title,
+    description: entry.data.excerpt,
+  }]}
+>
+  <article class="container fn-article">
+    <p class="eyebrow">Field Notes</p>
+    <h1>{entry.data.title}</h1>
+    {entry.data.status === 'placeholder' && (
+      <p class="fn-article__flag">This piece is a launch placeholder — the full essay hasn't been written yet.</p>
+    )}
+    <div class="fn-article__body">
+      <Content />
+    </div>
+    <p class="fn-article__back"><a href="/field-notes">&larr; All Field Notes</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .fn-article { max-width: 42rem; padding-block: var(--space-16) var(--space-24); }
+  .fn-article h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
+  .fn-article__flag {
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    background: var(--surface-buff-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-accent);
+  }
+  .fn-article__body { margin-top: var(--space-8); color: var(--text-secondary); line-height: var(--leading-body); }
+  .fn-article__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>

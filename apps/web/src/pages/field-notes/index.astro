@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../data/site';
+
+const entries = await getCollection('field-notes');
+---
+<BaseLayout title="Field Notes" description="The ADVNTR Road editorial column." canonicalPath="/field-notes">
+  <div class="container fn-index">
+    <p class="eyebrow">Field Notes</p>
+    <h1>The editorial column.</h1>
+    <ul class="fn-index__list">
+      {entries.map((entry) => (
+        <li>
+          <a href={`/field-notes/${entry.id}`}>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.excerpt}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="fn-index__back"><a href="/#field-notes">&larr; Back to {site.name}</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .fn-index { max-width: 46rem; padding-block: var(--space-16) var(--space-24); }
+  .fn-index h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
+  .fn-index__list { list-style: none; margin: var(--space-10) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-8); }
+  .fn-index__list a { text-decoration: none; }
+  .fn-index__list h2 { font-size: var(--text-xl); }
+  .fn-index__list p { margin-top: var(--space-2); color: var(--text-secondary); }
+  .fn-index__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>

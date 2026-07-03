@@ -1,0 +1,66 @@
+---
+---
+<section class="manifesto" id="why">
+  <div class="container manifesto__inner">
+    <p class="eyebrow" data-reveal>Why ADVNTR Road Exists</p>
+    <h2 class="manifesto__lead" data-reveal>
+      The internet gives travelers more information than ever and less judgment than ever.
+    </h2>
+    <div class="manifesto__grid">
+      <p class="manifesto__dropcap" data-reveal>
+        Every trip-planning search now returns the same flattened pile: a hundred "top 10"
+        lists, each one treating a shipwreck, a gas station, and the single most photographed
+        formation on the coast as equally worth your afternoon. Generic lists don't help when
+        every choice looks the same size.
+      </p>
+      <p data-reveal>
+        ADVNTR Road tells you what matters, what to skip, where the tradeoffs actually are,
+        and why — written with a literary voice and verified against official sources, not
+        assembled from whichever posts ranked highest.
+      </p>
+      <p data-reveal>
+        We write for road trippers, hotel-based travelers, campers, RVers, van travelers, and
+        the fly-in-rental-car crowd alike. The format changes. The judgment doesn't.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    background: var(--color-brunswick);
+    color: var(--text-on-dark);
+    padding-block: var(--space-20);
+  }
+  .manifesto .eyebrow { color: var(--color-buff); }
+  .manifesto__lead {
+    font-size: clamp(1.75rem, 4vw, var(--text-4xl));
+    max-width: 20ch;
+    margin-top: var(--space-4);
+    color: var(--text-on-dark);
+  }
+  .manifesto__grid {
+    margin-top: var(--space-12);
+    display: grid;
+    gap: var(--space-8);
+  }
+  .manifesto__grid p {
+    font-size: var(--text-lg);
+    line-height: var(--leading-body);
+    color: var(--text-on-dark-secondary);
+    max-width: var(--measure-prose);
+  }
+  .manifesto__dropcap::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 3.4em;
+    line-height: 0.8;
+    font-weight: 700;
+    color: var(--color-buff);
+    padding-right: var(--space-2);
+  }
+  @media (min-width: 900px) {
+    .manifesto__grid { grid-template-columns: repeat(3, 1fr); }
+    .manifesto__grid p { font-size: var(--text-base); }
+  }
+</style>

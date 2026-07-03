@@ -1,0 +1,86 @@
+---
+import type { Guide } from '../data/guides';
+
+interface Props {
+  guide: Guide;
+  featured?: boolean;
+}
+const { guide, featured = false } = Astro.props;
+const statusClass = `tag--${guide.status}`;
+---
+<article class="guide-card" class:list={{ 'guide-card--featured': featured }} data-reveal>
+  <div class="guide-card__media">
+    <img src={guide.coverImage} alt={`${guide.title} guide cover`} loading="lazy" width="640" height="800" />
+    <span class={`tag ${statusClass} guide-card__status`}>{guide.statusLabel}</span>
+  </div>
+  <div class="guide-card__body">
+    <p class="eyebrow">{guide.format} · {guide.region}</p>
+    <h3>{guide.title}</h3>
+    <p class="guide-card__desc">{guide.description}</p>
+    <div class="guide-card__footer">
+      {guide.ctaExternal ? (
+        <a class="btn btn--primary" href={guide.ctaHref} target="_blank" rel="noopener noreferrer">{guide.ctaLabel}</a>
+      ) : (
+        <a class="btn btn--secondary" href={guide.ctaHref} aria-disabled={guide.status !== 'free' ? 'true' : undefined}>{guide.ctaLabel}</a>
+      )}
+      {guide.secondaryLabel && <span class="guide-card__meta">{guide.secondaryLabel}</span>}
+    </div>
+  </div>
+</article>
+
+<style>
+  .guide-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-card);
+    border: var(--border-thin) solid var(--border-card);
+    border-top: var(--border-thick) solid var(--color-brunswick);
+    overflow: hidden;
+    transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
+  }
+  .guide-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-buff);
+    border-top-color: var(--color-brunswick);
+  }
+  .guide-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--surface-gray-subtle);
+  }
+  .guide-card__media img { width: 100%; height: 100%; object-fit: cover; }
+  .guide-card__status {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding-left: var(--space-3);
+    background: var(--surface-card);
+  }
+  .guide-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    flex: 1;
+  }
+  .guide-card__body h3 { font-size: var(--text-xl); }
+  .guide-card__desc {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+    flex: 1;
+  }
+  .guide-card__footer {
+    margin-top: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .guide-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+  .guide-card--featured { border-color: var(--border-accent); }
+</style>

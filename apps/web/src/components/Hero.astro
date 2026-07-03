@@ -1,0 +1,95 @@
+---
+import SubscribeForm from './SubscribeForm.astro';
+---
+<section class="hero">
+  <div class="topo-field" aria-hidden="true">
+    <img src="/images/brand/topo-lines.svg" alt="" />
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow hero__eyebrow">A Publication, Not a Platform</p>
+      <h1 class="hero__headline">Road trips for people who want more than a list.</h1>
+      <p class="hero__sub">
+        Opinionated, verified, beautifully built travel guides for national parks, coast
+        roads, and the long way around.
+      </p>
+      <p class="hero__thesis">&ldquo;Tools do not have opinions. We do.&rdquo;</p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href="/r/olympic-np-free-guide" target="_blank" rel="noopener noreferrer">
+          Get the free Olympic guide
+        </a>
+        <a class="btn btn--secondary" href="#guides">Explore the launch guides</a>
+      </div>
+      <div class="hero__subscribe">
+        <SubscribeForm />
+      </div>
+    </div>
+    <div class="hero__media" data-reveal>
+      <img
+        src="/images/guides/olympic-np.jpg"
+        alt="Hurricane Ridge panorama, Olympic National Park"
+        width="900"
+        height="1125"
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-page);
+    padding-block: var(--space-16) var(--space-20);
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-10);
+    align-items: center;
+  }
+  .hero__eyebrow { margin-bottom: var(--space-4); }
+  .hero__headline {
+    font-size: clamp(2.25rem, 5vw, var(--text-6xl));
+    max-width: 14ch;
+  }
+  .hero__sub {
+    margin-top: var(--space-6);
+    max-width: var(--measure-narrow);
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    line-height: var(--leading-body);
+  }
+  .hero__thesis {
+    margin-top: var(--space-6);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--color-brunswick);
+    border-left: 3px solid var(--color-buff);
+    padding-left: var(--space-4);
+  }
+  .hero__ctas {
+    margin-top: var(--space-8);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  .hero__subscribe {
+    margin-top: var(--space-10);
+    max-width: 26rem;
+  }
+  .hero__media {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4 / 5;
+  }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (min-width: 960px) {
+    .hero__inner { grid-template-columns: 1.1fr 0.9fr; }
+  }
+</style>

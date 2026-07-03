@@ -1,0 +1,64 @@
+---
+const points = [
+  {
+    title: 'Verified details',
+    body: 'Fees, reservation windows, and closures are checked against official sources, not last year’s blog post.',
+  },
+  {
+    title: 'Original prose',
+    body: 'Every guide is written, not templated. A good guide should tell you what to skip.',
+  },
+  {
+    title: 'Honest tradeoffs',
+    body: 'We do not pretend every traveler needs the same trip. A road trip is not a database problem.',
+  },
+  {
+    title: 'The complete field view',
+    body: 'Not just camping. Not just hotels. Campgrounds, lodges, gateway towns, and the drive between them.',
+  },
+  {
+    title: 'Human judgment',
+    body: 'Synthesis, verification, and voice — the parts a search engine or an AI summary still can’t do for you.',
+  },
+];
+---
+<section class="why-different">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Why Our Guides Are Different</p>
+    <h2 data-reveal>The product is judgment, not information.</h2>
+    <div class="why-different__grid">
+      {points.map((point) => (
+        <div class="why-different__item" data-reveal>
+          <h3>{point.title}</h3>
+          <p>{point.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-different { padding-block: var(--space-20); }
+  .why-different__grid {
+    margin-top: var(--space-10);
+    display: grid;
+    gap: var(--space-8);
+  }
+  .why-different__item {
+    padding: var(--space-6);
+    border-top: var(--border-thick) solid var(--color-brunswick);
+  }
+  .why-different__item h3 { font-size: var(--text-lg); }
+  .why-different__item p {
+    margin-top: var(--space-3);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 720px) {
+    .why-different__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .why-different__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
