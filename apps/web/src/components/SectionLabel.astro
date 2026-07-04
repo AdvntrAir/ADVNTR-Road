@@ -1,0 +1,46 @@
+---
+interface Props {
+  label: string;
+  index?: number;
+  reveal?: boolean;
+  class?: string;
+}
+const { label, index, reveal = true, class: extraClass } = Astro.props;
+---
+<p class:list={['eyebrow', 'section-label', extraClass]} data-reveal={reveal ? true : undefined}>
+  {typeof index === 'number' && (
+    <span class="section-label__index">{String(index).padStart(2, '0')}</span>
+  )}
+  <svg class="section-label__route" viewBox="0 0 30 8" aria-hidden="true" focusable="false">
+    <line x1="0" y1="4" x2="21" y2="4"></line>
+    <circle cx="26" cy="4" r="3"></circle>
+  </svg>
+  <span class="section-label__text">{label}</span>
+</p>
+
+<style>
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .section-label__index {
+    color: var(--color-rust);
+    font-weight: var(--weight-bold);
+  }
+  .section-label__route {
+    width: 26px;
+    height: 8px;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  .section-label__route line {
+    stroke: var(--color-rust);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+    stroke-linecap: round;
+  }
+  .section-label__route circle {
+    fill: var(--color-rust);
+  }
+</style>

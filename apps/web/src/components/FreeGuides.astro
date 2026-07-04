@@ -1,10 +1,11 @@
 ---
 import GuideCard from './GuideCard.astro';
+import SectionLabel from './SectionLabel.astro';
 import { freeGuides } from '../data/guides';
 ---
 <section class="free-guides" id="free-guides">
   <div class="container">
-    <p class="eyebrow" data-reveal>Start Here</p>
+    <SectionLabel label="Start Here" index={3} />
     <h2 data-reveal>The free launch guides.</h2>
     <p class="free-guides__sub" data-reveal>
       Free isn't a funnel trick — it's the verification standard every paid guide is held to.

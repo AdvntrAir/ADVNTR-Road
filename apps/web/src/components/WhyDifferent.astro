@@ -1,4 +1,5 @@
 ---
+import SectionLabel from './SectionLabel.astro';
 const points = [
   {
     title: 'Verified details',
@@ -24,7 +25,7 @@ const points = [
 ---
 <section class="why-different">
   <div class="container">
-    <p class="eyebrow" data-reveal>Why Our Guides Are Different</p>
+    <SectionLabel label="Why Our Guides Are Different" />
     <h2 data-reveal>The product is judgment, not information.</h2>
     <div class="why-different__grid">
       {points.map((point) => (

@@ -1,18 +1,33 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../../data/site';
 
 const entries = await getCollection('field-notes');
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 ---
 <BaseLayout title="Field Notes" description="The ADVNTR Road editorial column." canonicalPath="/field-notes">
+  <section class="fn-masthead">
+    <div class="topo-field" aria-hidden="true">
+      <img src="/images/brand/topo-lines.svg" alt="" />
+    </div>
+    <div class="container fn-masthead__inner">
+      <SectionLabel label="Field Notes" />
+      <h1>The editorial column.</h1>
+      <p class="fn-masthead__quote">&ldquo;Where the judgment gets written down.&rdquo;</p>
+    </div>
+  </section>
+
   <div class="container fn-index">
-    <p class="eyebrow">Field Notes</p>
-    <h1>The editorial column.</h1>
     <ul class="fn-index__list">
-      {entries.map((entry) => (
+      {entries.map((entry, i) => (
         <li>
-          <a href={`/field-notes/${entry.id}`}>
+          <a class="fn-index__entry" href={`/field-notes/${entry.id}`}>
+            <div class="fn-index__meta">
+              <span class="fn-index__num">{String(i + 1).padStart(2, '0')}</span>
+              {entry.data.publishedDate && <span class="fn-index__date">{fmt(entry.data.publishedDate)}</span>}
+            </div>
             <h2>{entry.data.title}</h2>
             <p>{entry.data.excerpt}</p>
           </a>
@@ -24,11 +39,57 @@ const entries = await getCollection('field-notes');
 </BaseLayout>
 
 <style>
+  .fn-masthead {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-kraft-paper);
+    padding-block: var(--space-16) var(--space-12);
+  }
+  .fn-masthead .topo-field { opacity: 0.4; }
+  .fn-masthead__inner { position: relative; z-index: 1; max-width: 46rem; }
+  .fn-masthead h1 {
+    margin-top: var(--space-3);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--color-brunswick);
+  }
+  .fn-masthead__quote {
+    margin-top: var(--space-4);
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--color-brunswick);
+  }
+
   .fn-index { max-width: 46rem; padding-block: var(--space-16) var(--space-24); }
-  .fn-index h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
-  .fn-index__list { list-style: none; margin: var(--space-10) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-8); }
-  .fn-index__list a { text-decoration: none; }
-  .fn-index__list h2 { font-size: var(--text-xl); }
-  .fn-index__list p { margin-top: var(--space-2); color: var(--text-secondary); }
+  .fn-index__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .fn-index__list li { border-top: var(--border-thin) solid var(--border-card); }
+  .fn-index__list li:last-child { border-bottom: var(--border-thin) solid var(--border-card); }
+  .fn-index__entry { display: block; padding-block: var(--space-8); text-decoration: none; }
+  .fn-index__meta { display: flex; align-items: center; gap: var(--space-4); }
+  .fn-index__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-rust);
+  }
+  .fn-index__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .fn-index__entry h2 {
+    margin-top: var(--space-3);
+    font-size: var(--text-2xl);
+    color: var(--color-brunswick);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .fn-index__entry:hover h2 { color: var(--color-rust); }
+  .fn-index__entry p {
+    margin-top: var(--space-2);
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: var(--leading-body);
+  }
   .fn-index__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
 </style>

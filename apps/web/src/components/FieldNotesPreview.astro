@@ -1,58 +1,201 @@
 ---
+import SectionLabel from './SectionLabel.astro';
 import { getFieldNotesPreview } from '../lib/content-adapter';
 const { cards, source } = await getFieldNotesPreview(5);
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 ---
 <section class="field-notes" id="field-notes">
-  <div class="container">
-    <p class="eyebrow" data-reveal>Field Notes</p>
-    <h2 data-reveal>The editorial column, not a blog feed.</h2>
-    <p class="field-notes__sub" data-reveal>
-      Essays behind the guides — voice, tradeoffs, and the thinking that doesn't fit in a field card.
-    </p>
-    <div class="field-notes__grid">
-      {cards.map((card) => (
-        <a class="field-notes__card" href={card.href} data-reveal>
-          <h3>{card.title}</h3>
-          <p>{card.excerpt}</p>
-          <span class="field-notes__cta">Read the piece &rarr;</span>
-        </a>
-      ))}
+  <div class="topo-field" aria-hidden="true">
+    <img src="/images/brand/topo-lines.svg" alt="" />
+  </div>
+  <div class="container field-notes__inner">
+    <div class="field-notes__folio">
+      <span>Trip Reports &amp; Essays</span>
+      <span>No Sponsored Placements</span>
     </div>
-    {source === 'local-fallback' && (
-      <p class="field-notes__note">
-        Showing curated Field Notes ideas — live essays publish to this section automatically once posted.
+
+    <div class="field-notes__masthead-block" data-reveal>
+      <SectionLabel label="Field Notes" index={5} />
+      <img
+        class="field-notes__mark"
+        src="/images/brand/advntr-road-mark-rust.png"
+        alt=""
+        width="280"
+        height="336"
+      />
+      <h2 class="field-notes__masthead">Field Notes</h2>
+      <p class="field-notes__quote">&ldquo;Where the judgment gets written down.&rdquo;</p>
+      <p class="field-notes__sub">
+        Essays behind the guides — voice, tradeoffs, and the thinking that doesn't fit in a field card.
       </p>
-    )}
+    </div>
+
+    <ul class="field-notes__columns">
+      {cards.map((card, i) => (
+        <li data-reveal>
+          <a class="field-notes__entry" href={card.href}>
+            <div class="field-notes__meta">
+              <span class="field-notes__index">{String(i + 1).padStart(2, '0')}</span>
+              {card.date && <span class="field-notes__date">{fmt(card.date)}</span>}
+            </div>
+            <h3>{card.title}</h3>
+            <p class="field-notes__excerpt">{card.excerpt}</p>
+            <span class="field-notes__cta">Read the piece &rarr;</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="field-notes__folio field-notes__folio--bottom">
+      <span>
+        {source === 'local-fallback'
+          ? 'Curated ideas — live essays publish here automatically once posted.'
+          : 'The editorial column.'}
+      </span>
+      <a href="/field-notes">All Field Notes &rarr;</a>
+    </div>
   </div>
 </section>
 
 <style>
-  .field-notes { padding-block: var(--space-20); }
+  .field-notes {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-kraft-paper);
+    padding-block: var(--space-20);
+  }
+  .field-notes::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .field-notes .topo-field { opacity: 0.3; }
+  .field-notes__inner { position: relative; z-index: 1; }
+
+  .field-notes__folio {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-6);
+    border-bottom: var(--border-thin) solid rgba(18, 45, 36, 0.22);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-brunswick-dark);
+  }
+  .field-notes__folio--bottom {
+    margin-top: var(--space-16);
+    padding-bottom: 0;
+    padding-top: var(--space-6);
+    border-bottom: none;
+    border-top: var(--border-thin) solid rgba(18, 45, 36, 0.22);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .field-notes__folio--bottom span { max-width: 32rem; }
+  .field-notes__folio--bottom a {
+    flex-shrink: 0;
+    color: var(--color-brunswick-dark);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    font-size: var(--text-xs);
+  }
+  .field-notes__folio--bottom a:hover { color: var(--color-rust); }
+
+  .field-notes__masthead-block {
+    margin-top: var(--space-12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .field-notes__masthead-block :global(.section-label__index) { color: var(--color-brunswick-dark) !important; }
+  .field-notes__masthead-block :global(.section-label__route line) { stroke: var(--color-brunswick-dark) !important; }
+  .field-notes__masthead-block :global(.section-label__route circle) { fill: var(--color-brunswick-dark) !important; }
+  .field-notes__masthead-block :global(.section-label__text) { color: var(--color-brunswick-dark) !important; }
+  .field-notes__mark {
+    margin-top: var(--space-6);
+    width: 64px;
+    height: auto;
+  }
+  .field-notes__masthead {
+    margin-top: var(--space-4);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 0.95;
+    color: var(--color-brunswick-dark);
+  }
+  .field-notes__quote {
+    margin-top: var(--space-4);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--color-brunswick-dark);
+  }
   .field-notes__sub {
     margin-top: var(--space-4);
     max-width: var(--measure-narrow);
-    color: var(--text-secondary);
-    font-size: var(--text-lg);
+    color: var(--color-brunswick-dark);
+    opacity: 0.75;
+    font-size: var(--text-base);
   }
-  .field-notes__grid {
-    margin-top: var(--space-10);
-    display: grid;
-    gap: var(--space-6);
+
+  .field-notes__columns {
+    margin-top: var(--space-16);
+    list-style: none;
+    padding: 0;
+    columns: 1;
+    column-gap: var(--space-12);
   }
-  .field-notes__card {
+  .field-notes__columns li {
+    break-inside: avoid;
+    border-top: var(--border-thin) solid rgba(18, 45, 36, 0.22);
+  }
+  .field-notes__entry {
     display: block;
+    padding-block: var(--space-8);
     text-decoration: none;
-    padding: var(--space-6) 0 0;
-    border-top: var(--border-thick) solid var(--border-card);
-    transition: border-color var(--duration-base) var(--ease-out);
   }
-  .field-notes__card:hover { border-top-color: var(--color-brunswick); }
-  .field-notes__card h3 { font-size: var(--text-lg); }
-  .field-notes__card p {
-    margin-top: var(--space-3);
-    color: var(--text-secondary);
+  .field-notes__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .field-notes__index {
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-brunswick-dark);
+  }
+  .field-notes__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-brunswick-dark);
+    opacity: 0.65;
+  }
+  .field-notes__entry h3 {
+    margin-top: var(--space-3);
+    font-size: clamp(1.375rem, 2.4vw, var(--text-2xl));
+    line-height: var(--leading-snug);
+    color: var(--color-brunswick-dark);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .field-notes__entry:hover h3 { color: var(--color-rust); }
+  .field-notes__excerpt {
+    margin-top: var(--space-3);
+    color: var(--color-brunswick-dark);
+    opacity: 0.8;
+    font-size: var(--text-base);
     line-height: var(--leading-body);
+    font-style: italic;
   }
   .field-notes__cta {
     display: inline-block;
@@ -61,18 +204,10 @@ const { cards, source } = await getFieldNotesPreview(5);
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: var(--tracking-label);
-    color: var(--color-brunswick);
+    color: var(--color-brunswick-dark);
   }
-  .field-notes__note {
-    margin-top: var(--space-8);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-  }
+
   @media (min-width: 720px) {
-    .field-notes__grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 1100px) {
-    .field-notes__grid { grid-template-columns: repeat(3, 1fr); }
+    .field-notes__columns { columns: 2; }
   }
 </style>

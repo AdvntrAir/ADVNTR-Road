@@ -1,20 +1,23 @@
 ---
 import { site } from '../data/site';
 ---
+<Fragment>
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/" aria-label={`${site.name} home`}>
-      <img src="/images/brand/advntr-road-green.png" alt="" width="36" height="36" />
-      <span>{site.name}</span>
+      <img src="/images/brand/advntr-road-logo-horizontal.png" alt={site.name} width="160" height="80" />
     </a>
-    <nav class="site-header__nav" aria-label="Primary">
-      <ul>
-        {site.nav.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
-        ))}
-      </ul>
-    </nav>
-    <a class="btn btn--secondary site-header__cta" href="#free-guides">Get a free guide</a>
+    <button
+      type="button"
+      class="site-header__menu-btn"
+      data-menu-toggle
+      aria-expanded="false"
+      aria-controls="site-menu"
+    >
+      <span class="site-header__menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      Menu
+    </button>
+    <a class="btn btn--primary site-header__cta" href="#free-guides">Get a free guide</a>
   </div>
   <div class="site-header__folio">
     <div class="container site-header__folio-inner">
@@ -25,65 +28,165 @@ import { site } from '../data/site';
   </div>
 </header>
 
+<div class="site-menu" id="site-menu" data-menu-panel>
+    <div class="site-menu__backdrop" data-menu-close aria-hidden="true"></div>
+    <div class="site-menu__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <div class="site-menu__top">
+        <img
+          class="site-menu__logo"
+          src="/images/brand/advntr-road-logo-horizontal.png"
+          alt={site.name}
+          width="160"
+          height="80"
+        />
+        <button type="button" class="site-menu__close" data-menu-close aria-label="Close menu">
+          <span class="site-menu__close-icon" aria-hidden="true">&times;</span> Close
+        </button>
+      </div>
+
+      <nav class="site-menu__section" aria-label="Primary">
+        <p class="site-menu__label">Menu</p>
+        <ul>
+          {site.nav.map((item, i) => (
+            <li>
+              <a href={item.href} data-menu-link>
+                <span class="site-menu__link-index">{String(i + 1).padStart(2, '0')}</span>
+                <svg class="site-menu__link-route" viewBox="0 0 30 8" aria-hidden="true" focusable="false">
+                  <line x1="0" y1="4" x2="21" y2="4"></line>
+                  <circle cx="26" cy="4" r="3"></circle>
+                </svg>
+                <span class="site-menu__link-text">{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="site-menu__divider"></div>
+
+      <nav class="site-menu__section site-menu__section--legal" aria-label="Legal">
+        <p class="site-menu__label">Legal</p>
+        <ul>
+          {site.footerLinks.legal.map((item) => (
+            <li><a href={item.href} data-menu-link>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <a class="btn btn--primary site-menu__cta" href="#free-guides" data-menu-link>Get a free guide</a>
+    </div>
+  </div>
+</Fragment>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+  const closeEls = document.querySelectorAll<HTMLElement>('[data-menu-close]');
+  const links = document.querySelectorAll<HTMLElement>('[data-menu-link]');
+  const header = document.querySelector<HTMLElement>('.site-header');
+
+  const updateAnchor = () => {
+    if (!header) return;
+    const bottom = header.getBoundingClientRect().bottom;
+    document.documentElement.style.setProperty('--menu-anchor-top', `${bottom + 12}px`);
+  };
+  updateAnchor();
+  window.addEventListener('resize', updateAnchor);
+
+  if (toggle && panel) {
+    const openMenu = () => {
+      updateAnchor();
+      panel.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      panel.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+
+    toggle.addEventListener('click', () => {
+      if (panel.classList.contains('is-open')) closeMenu();
+      else openMenu();
+    });
+    closeEls.forEach((el) => el.addEventListener('click', closeMenu));
+    links.forEach((el) => el.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && panel.classList.contains('is-open')) closeMenu();
+    });
+  }
+</script>
+
 <style>
   .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(249, 228, 197, 0.92);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border-subtle);
   }
   .site-header__inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: var(--space-6);
-    padding-block: var(--space-4);
+    padding-block: var(--space-3);
   }
   .site-header__brand {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    justify-self: start;
     text-decoration: none;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: var(--text-lg);
-    color: var(--color-brunswick);
-    margin-right: auto;
-    white-space: nowrap;
     flex-shrink: 0;
   }
-  .site-header__brand img { border-radius: var(--radius-sm); }
-  .site-header__nav {
-    max-width: 60vw;
-    overflow-x: auto;
-    scrollbar-width: none;
-    mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
+  .site-header__brand img {
+    height: auto;
+    width: 100%;
+    max-width: 128px;
+    object-fit: contain;
   }
-  .site-header__nav::-webkit-scrollbar { display: none; }
-  .site-header__nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: var(--space-5);
-    white-space: nowrap;
-  }
-  .site-header__nav a {
-    text-decoration: none;
+
+  .site-header__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    gap: var(--space-3);
+    border: var(--border-base) solid var(--color-brunswick);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    padding: var(--space-3) var(--space-6);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--text-secondary);
-    transition: color var(--duration-fast) var(--ease-out);
+    color: var(--color-brunswick);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
   }
-  .site-header__nav a:hover { color: var(--color-brunswick); }
-  .site-header__cta { display: none; white-space: nowrap; flex-shrink: 0; }
-
-  @media (min-width: 900px) {
-    .site-header__nav { max-width: none; overflow: visible; }
-    .site-header__nav a { font-size: var(--text-sm); }
+  .site-header__menu-btn:hover {
+    background: var(--color-brunswick);
+    color: var(--color-champagne);
+  }
+  .site-header__menu-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 18px;
+  }
+  .site-header__menu-icon span {
+    display: block;
+    height: 1.5px;
+    background: currentColor;
+  }
+  .site-header__cta {
+    justify-self: end;
+    display: none;
+    white-space: nowrap;
+  }
+  @media (min-width: 640px) {
     .site-header__cta { display: inline-flex; }
   }
 
@@ -104,5 +207,149 @@ import { site } from '../data/site';
   }
   @media (min-width: 640px) {
     .site-header__folio { display: block; }
+  }
+
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .site-menu.is-open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .site-menu__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 45, 36, 0.55);
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .site-menu.is-open .site-menu__backdrop { opacity: 1; }
+  .site-menu__panel {
+    position: absolute;
+    inset: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-page);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow-y: auto;
+    padding: var(--space-6);
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+  }
+  .site-menu.is-open .site-menu__panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .site-menu__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .site-menu__logo {
+    height: 80px;
+    width: auto;
+  }
+  .site-menu__close {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: none;
+    background: transparent;
+    padding: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-brunswick);
+    cursor: pointer;
+  }
+  .site-menu__close-icon { font-size: var(--text-xl); line-height: 1; }
+
+  .site-menu__section { margin-top: var(--space-8); }
+  .site-menu__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .site-menu__section ul {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .site-menu__section a {
+    text-decoration: none;
+    color: var(--color-brunswick);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .site-menu__section a:hover { color: var(--color-buff-dark); }
+  .site-menu__section:not(.site-menu__section--legal) a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .site-menu__link-index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-rust);
+    flex-shrink: 0;
+  }
+  .site-menu__link-route {
+    width: 22px;
+    height: 8px;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  .site-menu__link-route line {
+    stroke: var(--color-rust);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+    stroke-linecap: round;
+  }
+  .site-menu__link-route circle { fill: var(--color-rust); }
+  .site-menu__link-text {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    letter-spacing: var(--tracking-tight);
+  }
+  .site-menu__section--legal a {
+    font-size: var(--text-md);
+    color: var(--text-secondary);
+  }
+  .site-menu__divider {
+    margin-top: var(--space-8);
+    border-top: var(--border-thin) solid var(--border-card);
+  }
+  .site-menu__cta {
+    margin-top: var(--space-10);
+    align-self: flex-start;
+  }
+
+  @media (min-width: 640px) {
+    .site-menu__panel {
+      inset: auto;
+      top: var(--menu-anchor-top, 100px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      width: min(92vw, 28rem);
+      max-height: calc(100vh - var(--menu-anchor-top, 100px) - var(--space-6));
+      padding: var(--space-10);
+    }
+    .site-menu.is-open .site-menu__panel {
+      transform: translateX(-50%) translateY(0);
+    }
   }
 </style>

@@ -19,9 +19,24 @@ const statusClass = `tag--${guide.status}`;
     <p class="guide-card__desc">{guide.description}</p>
     <div class="guide-card__footer">
       {guide.ctaExternal ? (
-        <a class="btn btn--primary" href={guide.ctaHref} target="_blank" rel="noopener noreferrer">{guide.ctaLabel}</a>
+        <a
+          class="btn btn--primary"
+          href={guide.ctaHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${guide.ctaLabel} — ${guide.title}`}
+        >
+          {guide.ctaLabel}
+        </a>
       ) : (
-        <a class="btn btn--secondary" href={guide.ctaHref} aria-disabled={guide.status !== 'free' ? 'true' : undefined}>{guide.ctaLabel}</a>
+        <a
+          class="btn btn--secondary"
+          href={guide.ctaHref}
+          aria-disabled={guide.status !== 'free' ? 'true' : undefined}
+          aria-label={`${guide.ctaLabel} — ${guide.title}`}
+        >
+          {guide.ctaLabel}
+        </a>
       )}
       {guide.secondaryLabel && <span class="guide-card__meta">{guide.secondaryLabel}</span>}
     </div>
@@ -35,13 +50,15 @@ const statusClass = `tag--${guide.status}`;
     background: var(--surface-card);
     border: var(--border-thin) solid var(--border-card);
     border-top: var(--border-thick) solid var(--color-brunswick);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
-    transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
+    transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
   }
   .guide-card:hover {
     transform: translateY(-4px);
     border-color: var(--color-buff);
     border-top-color: var(--color-brunswick);
+    box-shadow: var(--shadow-md);
   }
   .guide-card__media {
     position: relative;

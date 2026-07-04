@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
 import { getCollection } from 'astro:content';
 
 const entries = (await getCollection('intel')).sort(
@@ -8,14 +9,26 @@ const entries = (await getCollection('intel')).sort(
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 ---
 <BaseLayout title="The Trailhead — Archive" description="Weekly national park intel from ADVNTR Road." canonicalPath="/intel">
+  <section class="intel-masthead">
+    <div class="topo-field" aria-hidden="true">
+      <img src="/images/brand/topo-lines.svg" alt="" />
+    </div>
+    <div class="container intel-masthead__inner">
+      <SectionLabel label="The Trailhead" />
+      <h1>Weekly intel archive.</h1>
+      <p class="intel-masthead__live"><span class="intel-masthead__dot" aria-hidden="true"></span>Updated weekly</p>
+    </div>
+  </section>
+
   <div class="container intel-index">
-    <p class="eyebrow">The Trailhead</p>
-    <h1>Weekly intel archive.</h1>
     <ul class="intel-index__list">
-      {entries.map((entry) => (
+      {entries.map((entry, i) => (
         <li>
-          <a href={`/intel/${entry.id}`}>
-            <p class="intel-index__window">{fmt(entry.data.coverageWindowStart)} &ndash; {fmt(entry.data.coverageWindowEnd)}</p>
+          <a class="intel-index__entry" href={`/intel/${entry.id}`}>
+            <div class="intel-index__meta">
+              <span class="intel-index__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="intel-index__window">{fmt(entry.data.coverageWindowStart)} &ndash; {fmt(entry.data.coverageWindowEnd)}</span>
+            </div>
             <h2>{entry.data.title}</h2>
             <p>{entry.data.trailheadSummary}</p>
           </a>
@@ -27,12 +40,65 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'n
 </BaseLayout>
 
 <style>
+  .intel-masthead {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-paynes-gray-dark);
+    color: var(--text-on-dark);
+    padding-block: var(--space-16) var(--space-12);
+  }
+  .intel-masthead .eyebrow { color: var(--color-champagne); }
+  .intel-masthead__inner { position: relative; z-index: 1; max-width: 46rem; }
+  .intel-masthead h1 { margin-top: var(--space-3); font-size: clamp(2rem, 5vw, var(--text-4xl)); color: var(--text-on-dark); }
+  .intel-masthead__live {
+    margin-top: var(--space-4);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-on-dark-secondary);
+  }
+  .intel-masthead__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-rust);
+    animation: intel-pulse 2s ease-in-out infinite;
+  }
+  @keyframes intel-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
   .intel-index { max-width: 46rem; padding-block: var(--space-16) var(--space-24); }
-  .intel-index h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
-  .intel-index__list { list-style: none; margin: var(--space-10) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-8); }
-  .intel-index__list a { text-decoration: none; }
-  .intel-index__window { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-accent); }
-  .intel-index__list h2 { margin-top: var(--space-2); font-size: var(--text-xl); }
-  .intel-index__list p:not(.intel-index__window) { margin-top: var(--space-2); color: var(--text-secondary); }
+  .intel-index__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .intel-index__list li { border-top: var(--border-thin) solid var(--border-card); }
+  .intel-index__list li:last-child { border-bottom: var(--border-thin) solid var(--border-card); }
+  .intel-index__entry { display: block; padding-block: var(--space-8); text-decoration: none; }
+  .intel-index__meta { display: flex; align-items: center; gap: var(--space-4); }
+  .intel-index__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-rust);
+  }
+  .intel-index__window {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .intel-index__entry h2 {
+    margin-top: var(--space-3);
+    font-size: var(--text-2xl);
+    color: var(--color-brunswick);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .intel-index__entry:hover h2 { color: var(--color-rust); }
+  .intel-index__entry p { margin-top: var(--space-2); color: var(--text-secondary); line-height: var(--leading-body); }
   .intel-index__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
 </style>

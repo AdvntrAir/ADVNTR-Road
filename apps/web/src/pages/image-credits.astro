@@ -24,10 +24,14 @@ import { imageCredits, unverifiedImageCredits, brandAssetCredits } from '../data
     ))}
   </ul>
 
-  <h2>Needs verification</h2>
-  <ul>
-    {unverifiedImageCredits.map((c) => (
-      <li><strong>{c.file}</strong> — {c.usage}. {c.note}</li>
-    ))}
-  </ul>
+  {unverifiedImageCredits.length > 0 && (
+    <>
+      <h2>Needs verification</h2>
+      <ul>
+        {unverifiedImageCredits.map((c) => (
+          <li><strong>{c.file}</strong> — {c.usage}. {c.note}</li>
+        ))}
+      </ul>
+    </>
+  )}
 </LegalLayout>

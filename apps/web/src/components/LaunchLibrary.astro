@@ -1,4 +1,5 @@
 ---
+import SectionLabel from './SectionLabel.astro';
 import { launchLibrary } from '../data/guides';
 
 const total = launchLibrary.length;
@@ -8,7 +9,7 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
 ---
 <section class="launch-sequence" id="guides">
   <div class="container">
-    <p class="eyebrow" data-reveal>The Launch Sequence</p>
+    <SectionLabel label="The Launch Sequence" index={1} />
     <h2 data-reveal>Six guides. One region, built out properly.</h2>
     <p class="launch-sequence__sub" data-reveal>
       Pacific Northwest first — a drivable map, not a scattered list of unrelated parks.
@@ -57,11 +58,9 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
     </div>
 
     <div class="launch-stage__controls">
-      <button type="button" class="launch-stage__nav-btn" data-stage-prev aria-label="Previous guide">&larr;</button>
       <p class="launch-stage__index" data-stage-index aria-live="polite">
         01 / {String(total).padStart(2, '0')}
       </p>
-      <button type="button" class="launch-stage__nav-btn" data-stage-next aria-label="Next guide">&rarr;</button>
     </div>
   </div>
 </section>
@@ -107,8 +106,6 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
     const ctaLabel = root.querySelector<HTMLElement>('[data-stage-cta-label]');
     const stack = root.querySelector<HTMLElement>('[data-stage-stack]');
     const indexEl = document.querySelector<HTMLElement>('[data-stage-index]');
-    const prevBtn = document.querySelector<HTMLButtonElement>('[data-stage-prev]');
-    const nextBtn = document.querySelector<HTMLButtonElement>('[data-stage-next]');
 
     function renderStage() {
       const guide = guides[activeIndex];
@@ -159,7 +156,10 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
           <span${scopeAttrHtml} class="launch-stage__stack-tag launch-stage__stack-tag--${guide.status}">${guide.region}</span>
           <span${scopeAttrHtml} class="launch-stage__stack-title">${guide.title}</span>
         `;
-        card.addEventListener('click', () => setActive(guideIndex));
+        card.addEventListener('click', () => {
+          setActive(guideIndex);
+          if (!prefersReducedMotion) scheduleNext();
+        });
         stack.appendChild(card);
       }
     }
@@ -176,12 +176,29 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
       }, 160);
     }
 
-    prevBtn?.addEventListener('click', () => setActive(activeIndex - 1));
-    nextBtn?.addEventListener('click', () => setActive(activeIndex + 1));
-    root.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft') setActive(activeIndex - 1);
-      if (event.key === 'ArrowRight') setActive(activeIndex + 1);
-    });
+    // Auto-advance through the sequence — no manual prev/next controls.
+    // Pauses on hover/keyboard-focus and is skipped entirely under
+    // prefers-reduced-motion, since this is a prominent, page-width
+    // auto-changing element (the same treatment as the FAQ auto-shuffle).
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL = 6000;
+    let timer: number | undefined;
+
+    function scheduleNext() {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        setActive(activeIndex + 1);
+        scheduleNext();
+      }, INTERVAL);
+    }
+
+    if (!prefersReducedMotion) {
+      scheduleNext();
+      root.addEventListener('mouseenter', () => window.clearTimeout(timer));
+      root.addEventListener('mouseleave', scheduleNext);
+      root.addEventListener('focusin', () => window.clearTimeout(timer));
+      root.addEventListener('focusout', scheduleNext);
+    }
 
     renderStack();
   }
@@ -408,22 +425,6 @@ const firstDisabled = !first.ctaExternal && first.status !== 'free';
     justify-content: center;
     gap: var(--space-5);
   }
-  .launch-stage__nav-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-pill);
-    border: var(--border-base) solid var(--color-brunswick);
-    background: transparent;
-    color: var(--color-brunswick);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--text-lg);
-    line-height: 1;
-    cursor: pointer;
-    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
-  }
-  .launch-stage__nav-btn:hover { background: var(--color-brunswick); color: var(--color-champagne); }
   .launch-stage__index {
     font-family: var(--font-mono);
     font-size: var(--text-sm);

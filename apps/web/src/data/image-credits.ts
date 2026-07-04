@@ -17,27 +17,22 @@ const guideLabels: Record<string, string> = {
   'mount-rainier-national-park': 'Mount Rainier guide (cover used on homepage)',
 };
 
+/**
+ * Cover photos are recorded under the 'cover-photo' filename in most guides'
+ * attribution JSON. Mount Rainier's cover was swapped to reflection-lake.jpg
+ * (its own documented, public-domain entry below) after the original
+ * cover-photo.png turned out to have no recorded source or license.
+ */
 export const imageCredits: ImageCredit[] = (raw as Omit<ImageCredit, 'usage'>[])
-  .filter((entry) => entry.file.startsWith('cover-photo'))
+  .filter((entry) => entry.file.startsWith('cover-photo') || entry.file === 'reflection-lake.jpg')
   .map((entry) => ({ ...entry, usage: guideLabels[entry.guide] ?? entry.guide }));
 
-/**
- * The Mount Rainier cover-photo.png has no attribution record in
- * guides/mount-rainier-np/assets/image-attributions.json — it was never
- * documented in the PDF pipeline either. Flagged here rather than guessed.
- * Do not treat this image as cleared for reuse beyond this placeholder use
- * until Matt verifies its source and license.
- */
-export const unverifiedImageCredits = [
-  {
-    file: 'mount-rainier-np.png',
-    usage: 'Mount Rainier guide card on homepage (launch library, status: Pending Verification)',
-    note: 'No source/license recorded in the PDF pipeline for this image. Verify before any public reuse beyond this placeholder.',
-  },
-];
+/** No images currently lack a documented source/license. */
+export const unverifiedImageCredits: { file: string; usage: string; note: string }[] = [];
 
 /** Original ADVNTR Road brand assets — no external credit required. */
 export const brandAssetCredits = [
-  { file: 'advntr-road-green.png / -rust.png / -white.png', usage: 'Site logo (header, footer)', note: 'Original ADVNTR Road brand asset.' },
+  { file: 'advntr-road-logo-horizontal.png', usage: 'Site logo (header, footer)', note: 'Original ADVNTR Road brand asset.' },
+  { file: 'advntr-road-green.png', usage: 'Organization logo (structured data)', note: 'Original ADVNTR Road brand asset.' },
   { file: 'topo-lines.svg', usage: 'Hero and section background motif', note: 'Original ADVNTR Road brand asset.' },
 ];

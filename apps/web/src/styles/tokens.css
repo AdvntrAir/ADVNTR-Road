@@ -21,6 +21,8 @@
   --color-paynes-gray-light: #7A96AD;
   --color-lake-crescent: #4A7FA5;
   --color-rust: #FF6A21;
+  --color-kraft: #C9A66C;
+  --color-kraft-dark: #A9895A;
 
   --text-primary: var(--color-brunswick);
   --text-secondary: var(--color-paynes-gray-dark);
@@ -30,19 +32,21 @@
   --text-on-dark: var(--color-champagne);
   --text-on-dark-secondary: rgba(249, 228, 197, 0.62);
 
-  --surface-page: var(--color-champagne);
+  --surface-page: #FFFFFF;
   --surface-card: #FFFFFF;
   --surface-dark: var(--color-brunswick);
   --surface-moss-subtle: #EFF5E5;
   --surface-buff-subtle: #FAF5EE;
   --surface-gray-subtle: #F2F5F7;
+  --surface-kraft: var(--color-buff-light);
+  --surface-kraft-paper: var(--color-kraft);
 
   --border-accent: var(--color-buff);
   --border-subtle: rgba(221, 173, 138, 0.40);
   --border-card: #EDE0D4;
   --border-dark: var(--color-brunswick);
 
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-display: 'Archivo Narrow', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
   --font-brand: 'Titan One', Impact, sans-serif;

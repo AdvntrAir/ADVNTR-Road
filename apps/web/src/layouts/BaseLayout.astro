@@ -71,9 +71,17 @@ const baseStructuredData = [
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Titan+One&display=swap"
-    rel="stylesheet"
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Titan+One&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'"
   />
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Titan+One&display=swap"
+    />
+  </noscript>
 
   {[...baseStructuredData, ...structuredData].map((data) => (
     <script type="application/ld+json" set:html={JSON.stringify(data)} is:inline />

@@ -8,11 +8,9 @@ const year = new Date().getFullYear();
   </div>
   <div class="container site-footer__inner">
     <div class="site-footer__brand">
-      <img src="/images/brand/advntr-road-white.png" alt="" width="40" height="40" />
-      <div>
-        <p class="site-footer__name">{site.name}</p>
-        <p class="site-footer__parent">A publication of {site.parentBrand} · ADVNTR Press (reserved)</p>
-      </div>
+      <img src="/images/brand/advntr-road-logo-horizontal.png" alt={site.name} width="320" height="160" />
+      <p class="site-footer__desc">{site.description}</p>
+      <p class="site-footer__parent">A publication of {site.parentBrand} · ADVNTR Press (reserved)</p>
     </div>
 
     <nav class="site-footer__col" aria-label="Product">
@@ -56,13 +54,20 @@ const year = new Date().getFullYear();
   }
   .site-footer__brand {
     display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
   }
-  .site-footer__name {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: 700;
+  .site-footer__brand img {
+    height: 80px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+  .site-footer__desc {
+    max-width: 32ch;
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+    color: var(--text-on-dark-secondary);
     margin: 0;
   }
   .site-footer__parent {

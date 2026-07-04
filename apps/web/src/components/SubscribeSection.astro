@@ -1,12 +1,13 @@
 ---
 import SubscribeForm from './SubscribeForm.astro';
+import SectionLabel from './SectionLabel.astro';
 ---
 <section class="subscribe" id="subscribe">
   <div class="topo-field" aria-hidden="true">
     <img src="/images/brand/topo-lines.svg" alt="" />
   </div>
   <div class="container subscribe__inner">
-    <p class="eyebrow" data-reveal>Join The Road List</p>
+    <SectionLabel label="Join The Road List" index={6} />
     <h2 data-reveal>Get the free guides, Field Notes, and weekly Trailhead intel.</h2>
     <p class="subscribe__sub" data-reveal>New releases and seasonal planning notes, delivered as they're ready. No spam, no generic travel sludge.</p>
     <div class="subscribe__form" data-reveal>

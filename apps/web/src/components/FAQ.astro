@@ -1,4 +1,5 @@
 ---
+import SectionLabel from './SectionLabel.astro';
 export const faqs = [
   { q: 'What is ADVNTR Road?', a: 'A publisher of opinionated, verified road trip guides for national parks and scenic corridors — starting in the Pacific Northwest.' },
   { q: 'Are the guides free?', a: 'The Olympic National Park and Oregon Coast guides are free. Additional guides will be paid as the library grows.' },
@@ -11,45 +12,241 @@ export const faqs = [
   { q: 'Will guides be updated?', a: 'Yes. The Trailhead surfaces the conditions that trigger a guide update; see our public accuracy disclaimer for how we handle changes.' },
   { q: 'Where can I buy paid guides?', a: 'Paid guides and bundles are coming soon. Join the road list to be notified the moment they\'re live.' },
 ];
+
+// Each item's fill + text color, chosen so the bold label clears WCAG AA's
+// 3:1 large-text contrast ratio against its own background (used as the
+// mobile strip fill and the desktop left-edge accent).
+const palette = [
+  { bg: 'var(--color-brunswick)', text: 'var(--color-champagne)' },
+  { bg: 'var(--color-rust)', text: 'var(--color-brunswick-dark)' },
+  { bg: 'var(--color-paynes-gray-dark)', text: 'var(--color-champagne)' },
+  { bg: 'var(--color-moss-green-dark)', text: 'var(--color-champagne)' },
+  { bg: 'var(--color-buff-dark)', text: 'var(--color-brunswick-dark)' },
+];
 ---
 <section class="faq">
   <div class="container">
-    <p class="eyebrow" data-reveal>Questions</p>
+    <SectionLabel label="Questions" />
     <h2 data-reveal>Straight answers.</h2>
-    <dl class="faq__list">
-      {faqs.map((item) => (
-        <div class="faq__item" data-reveal>
-          <dt>{item.q}</dt>
-          <dd>{item.a}</dd>
-        </div>
-      ))}
-    </dl>
+
+    <div class="faq__accordion" data-faq-accordion data-reveal>
+      {faqs.map((item, i) => {
+        const c = palette[i % palette.length];
+        return (
+          <details class="faq__item" data-faq-item open={i === 0} style={`--item-bg: ${c.bg}; --item-text: ${c.text};`}>
+            <summary class="faq__summary">
+              <span class="faq__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="faq__question">{item.q}</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__answer">
+              <span class="faq__answer-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="faq__answer-q">{item.q}</h3>
+              <p>{item.a}</p>
+            </div>
+          </details>
+        );
+      })}
+    </div>
   </div>
 </section>
 
+<script>
+  const accordion = document.querySelector<HTMLElement>('[data-faq-accordion]');
+  const items = document.querySelectorAll<HTMLDetailsElement>('[data-faq-item]');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const INTERVAL = 6000;
+
+  if (accordion && items.length > 0) {
+    let activeIndex = [...items].findIndex((item) => item.open);
+    if (activeIndex < 0) activeIndex = 0;
+    let timer: number | undefined;
+
+    // Bring the newly active strip into view on the mobile horizontal
+    // carousel only. Deliberately scrolls the accordion's own scrollLeft
+    // rather than calling scrollIntoView, which can also scroll the page
+    // vertically (and did — the linked bug: auto-advance was yanking the
+    // whole page back down to this section).
+    const revealStrip = (el: HTMLElement) => {
+      if (!accordion) return;
+      const isHorizontallyScrollable = accordion.scrollWidth > accordion.clientWidth + 1;
+      if (!isHorizontallyScrollable) return;
+      const accRect = accordion.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const offset = (elRect.left + elRect.right) / 2 - (accRect.left + accRect.right) / 2;
+      accordion.scrollBy({ left: offset, behavior: 'smooth' });
+    };
+
+    const scheduleNext = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const next = items[(activeIndex + 1) % items.length];
+        next.open = true;
+        revealStrip(next);
+      }, INTERVAL);
+    };
+
+    items.forEach((item, i) => {
+      item.addEventListener('toggle', () => {
+        if (item.open) {
+          items.forEach((other) => { if (other !== item) other.open = false; });
+          activeIndex = i;
+          if (!prefersReducedMotion) scheduleNext();
+        }
+      });
+    });
+
+    if (!prefersReducedMotion) {
+      scheduleNext();
+      accordion.addEventListener('mouseenter', () => window.clearTimeout(timer));
+      accordion.addEventListener('mouseleave', scheduleNext);
+      accordion.addEventListener('focusin', () => window.clearTimeout(timer));
+      accordion.addEventListener('focusout', scheduleNext);
+    }
+  }
+</script>
+
 <style>
   .faq { padding-block: var(--space-20); }
-  .faq__list {
-    margin: var(--space-10) 0 0;
-    display: grid;
-    gap: var(--space-6);
+
+  .faq__accordion {
+    margin-top: var(--space-10);
+    display: flex;
+    flex-direction: column;
   }
   .faq__item {
-    padding-bottom: var(--space-6);
-    border-bottom: 1px solid var(--border-card);
+    border-top: var(--border-thin) solid var(--border-card);
+    border-left: 4px solid var(--item-bg);
+    padding-left: var(--space-4);
   }
-  .faq__item dt {
+  .faq__item:last-child { border-bottom: var(--border-thin) solid var(--border-card); }
+
+  .faq__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__summary::-webkit-details-marker { display: none; }
+  .faq__num {
+    flex-shrink: 0;
+    width: 2.5ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--item-bg);
+  }
+  .faq__question {
+    flex: 1;
     font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
     font-size: var(--text-lg);
-    font-weight: 600;
+    color: var(--color-brunswick);
   }
-  .faq__item dd {
-    margin: var(--space-2) 0 0;
+  .faq__icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--item-bg);
+    color: var(--item-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+  }
+  .faq__icon::before { content: '+'; }
+  .faq__item[open] .faq__icon::before { content: '\2212'; }
+
+  .faq__answer-q { display: none; }
+  .faq__answer-num { display: none; }
+  .faq__answer {
+    padding: 0 0 var(--space-5);
+    max-width: var(--measure-narrow);
     color: var(--text-secondary);
     font-size: var(--text-sm);
     line-height: var(--leading-body);
   }
-  @media (min-width: 900px) {
-    .faq__list { grid-template-columns: repeat(2, 1fr); column-gap: var(--space-10); }
+
+  /* Mobile: the same list becomes a horizontal row of colored, collapsible
+     strips — collapsed items show a rotated label; the open one widens into
+     a plain content panel. Generous min-height + wrap keep long questions
+     from clipping inside the rotated text block. */
+  @media (max-width: 859.98px) {
+    .faq__accordion {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 4px;
+      min-height: 28rem;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      padding-bottom: var(--space-2);
+    }
+    .faq__item {
+      position: relative;
+      flex: 0 0 60px;
+      scroll-snap-align: start;
+      border: none;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      padding-left: 0;
+      background: var(--item-bg);
+      transition: flex-basis var(--duration-slow) var(--ease-out);
+    }
+    .faq__item[open] {
+      flex: 0 0 300px;
+      background: var(--surface-card);
+    }
+    .faq__summary {
+      position: absolute;
+      inset: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: var(--space-4);
+    }
+    .faq__item[open] .faq__summary { display: none; }
+    .faq__num { color: var(--item-text); }
+    .faq__question {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: var(--text-sm);
+      line-height: 1.3;
+      color: var(--item-text);
+      white-space: normal;
+      word-break: keep-all;
+    }
+    .faq__icon { display: none; }
+    .faq__answer {
+      display: none;
+      max-width: none;
+    }
+    .faq__item[open] .faq__answer {
+      display: block;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-6);
+      border-left: 4px solid var(--item-bg);
+    }
+    .faq__item[open] .faq__answer-num {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--item-bg);
+    }
+    .faq__item[open] .faq__answer-q {
+      display: block;
+      margin-top: var(--space-2);
+      margin-bottom: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-xl);
+      color: var(--color-brunswick);
+    }
   }
 </style>

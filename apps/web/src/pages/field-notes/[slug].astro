@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -9,6 +10,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 ---
 <BaseLayout
   title={entry.data.title}
@@ -21,9 +23,18 @@ const { Content } = await render(entry);
     description: entry.data.excerpt,
   }]}
 >
+  <section class="fn-masthead">
+    <div class="topo-field" aria-hidden="true">
+      <img src="/images/brand/topo-lines.svg" alt="" />
+    </div>
+    <div class="container fn-masthead__inner">
+      <SectionLabel label="Field Notes" />
+      <h1>{entry.data.title}</h1>
+      {entry.data.publishedDate && <p class="fn-masthead__date">{fmt(entry.data.publishedDate)}</p>}
+    </div>
+  </section>
+
   <article class="container fn-article">
-    <p class="eyebrow">Field Notes</p>
-    <h1>{entry.data.title}</h1>
     {entry.data.status === 'placeholder' && (
       <p class="fn-article__flag">This piece is a launch placeholder — the full essay hasn't been written yet.</p>
     )}
@@ -35,10 +46,30 @@ const { Content } = await render(entry);
 </BaseLayout>
 
 <style>
+  .fn-masthead {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-kraft-paper);
+    padding-block: var(--space-16) var(--space-12);
+  }
+  .fn-masthead .topo-field { opacity: 0.4; }
+  .fn-masthead__inner { position: relative; z-index: 1; max-width: 42rem; }
+  .fn-masthead h1 {
+    margin-top: var(--space-3);
+    font-size: clamp(2rem, 5vw, var(--text-5xl));
+    color: var(--color-brunswick);
+  }
+  .fn-masthead__date {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
   .fn-article { max-width: 42rem; padding-block: var(--space-16) var(--space-24); }
-  .fn-article h1 { margin-top: var(--space-3); font-size: var(--text-3xl); }
   .fn-article__flag {
-    margin-top: var(--space-5);
     padding: var(--space-4);
     background: var(--surface-buff-subtle);
     border: 1px solid var(--border-subtle);

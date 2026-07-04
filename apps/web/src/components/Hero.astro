@@ -1,5 +1,6 @@
 ---
 import SubscribeForm from './SubscribeForm.astro';
+import SectionLabel from './SectionLabel.astro';
 ---
 <section class="hero">
   <div class="topo-field" aria-hidden="true">
@@ -7,7 +8,7 @@ import SubscribeForm from './SubscribeForm.astro';
   </div>
   <div class="container hero__inner">
     <div class="hero__copy">
-      <p class="eyebrow hero__eyebrow">A Publication, Not a Platform</p>
+      <SectionLabel label="A Publication, Not a Platform" reveal={false} class="hero__eyebrow" />
       <h1 class="hero__headline">Road trips for people who want more than a list.</h1>
       <p class="hero__sub">
         Opinionated, verified, beautifully built travel guides for national parks, coast
