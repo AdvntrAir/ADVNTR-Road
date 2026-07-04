@@ -1,37 +1,341 @@
 ---
-import GuideCard from './GuideCard.astro';
 import { launchLibrary } from '../data/guides';
+
+const total = launchLibrary.length;
+const first = launchLibrary[0];
+const stackOrder = launchLibrary.slice(1);
 ---
-<section class="launch-library" id="guides">
+<section class="launch-sequence" id="guides">
   <div class="container">
     <p class="eyebrow" data-reveal>The Launch Sequence</p>
     <h2 data-reveal>Six guides. One region, built out properly.</h2>
-    <p class="launch-library__sub" data-reveal>
+    <p class="launch-sequence__sub" data-reveal>
       Pacific Northwest first — a drivable map, not a scattered list of unrelated parks.
+      Click through the sequence.
     </p>
-    <div class="launch-library__grid">
-      {launchLibrary.map((guide) => <GuideCard guide={guide} />)}
+
+    <div class="launch-stage" data-reveal data-launch-stage>
+      <div class="launch-stage__frame" data-stage-frame>
+        <img data-stage-img src={first.coverImage} alt={`${first.title} guide cover`} />
+        <div class="launch-stage__scrim" aria-hidden="true"></div>
+        <div class="launch-stage__content">
+          <p class="eyebrow launch-stage__region" data-stage-region>{first.region}</p>
+          <h3 class="launch-stage__title" data-stage-title>{first.title}</h3>
+          <p class="launch-stage__desc" data-stage-desc>{first.description}</p>
+          <p class="launch-stage__meta" data-stage-meta>{first.format} · {first.statusLabel}</p>
+          <a
+            class={`btn ${first.ctaExternal ? 'btn--primary' : 'btn--ghost'} launch-stage__cta`}
+            data-stage-cta
+            href={first.ctaHref}
+            target={first.ctaExternal ? '_blank' : undefined}
+            rel={first.ctaExternal ? 'noopener noreferrer' : undefined}
+          >
+            <span data-stage-cta-label>{first.ctaLabel}</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="launch-stage__stack" data-stage-stack role="list" aria-label="Other guides in the launch sequence">
+        {stackOrder.map((guide) => (
+          <button
+            type="button"
+            class="launch-stage__stack-card"
+            data-stack-card
+            data-index={guide.launchOrder - 1}
+            aria-label={`Show ${guide.title}`}
+            role="listitem"
+          >
+            <img src={guide.coverImage} alt="" loading="lazy" width="200" height="260" />
+            <span class={`tag tag--${guide.status} launch-stage__stack-tag`}>{guide.region}</span>
+            <span class="launch-stage__stack-title">{guide.title}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="launch-stage__controls">
+      <button type="button" class="launch-stage__nav-btn" data-stage-prev aria-label="Previous guide">&larr;</button>
+      <p class="launch-stage__index" data-stage-index aria-live="polite">
+        01 / {String(total).padStart(2, '0')}
+      </p>
+      <button type="button" class="launch-stage__nav-btn" data-stage-next aria-label="Next guide">&rarr;</button>
     </div>
   </div>
 </section>
 
+<script type="application/json" data-launch-sequence-data is:inline set:html={JSON.stringify(launchLibrary)} />
+
+<script>
+  interface LaunchGuide {
+    title: string;
+    region: string;
+    format: string;
+    status: string;
+    statusLabel: string;
+    description: string;
+    coverImage: string;
+    ctaLabel: string;
+    ctaHref: string;
+    ctaExternal: boolean;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-launch-stage]');
+  const dataScript = document.querySelector('[data-launch-sequence-data]');
+
+  if (root && dataScript?.textContent) {
+    const guides: LaunchGuide[] = JSON.parse(dataScript.textContent);
+    const total = guides.length;
+    let activeIndex = 0;
+
+    // Astro's scoped-style attribute (data-astro-cid-*) is only applied at
+    // build time, so elements created via innerHTML below need it copied on
+    // manually or they silently fall outside this component's <style> rules.
+    const scopeAttr = [...root.attributes].map((a) => a.name).find((n) => n.startsWith('data-astro-cid'));
+    const scopeAttrHtml = scopeAttr ? ` ${scopeAttr}` : '';
+
+    const frame = root.querySelector<HTMLElement>('[data-stage-frame]');
+    const img = root.querySelector<HTMLImageElement>('[data-stage-img]');
+    const region = root.querySelector<HTMLElement>('[data-stage-region]');
+    const title = root.querySelector<HTMLElement>('[data-stage-title]');
+    const desc = root.querySelector<HTMLElement>('[data-stage-desc]');
+    const meta = root.querySelector<HTMLElement>('[data-stage-meta]');
+    const cta = root.querySelector<HTMLAnchorElement>('[data-stage-cta]');
+    const ctaLabel = root.querySelector<HTMLElement>('[data-stage-cta-label]');
+    const stack = root.querySelector<HTMLElement>('[data-stage-stack]');
+    const indexEl = document.querySelector<HTMLElement>('[data-stage-index]');
+    const prevBtn = document.querySelector<HTMLButtonElement>('[data-stage-prev]');
+    const nextBtn = document.querySelector<HTMLButtonElement>('[data-stage-next]');
+
+    function renderStage() {
+      const guide = guides[activeIndex];
+      if (!img || !region || !title || !desc || !meta || !cta || !ctaLabel) return;
+      img.src = guide.coverImage;
+      img.alt = `${guide.title} guide cover`;
+      region.textContent = guide.region;
+      title.textContent = guide.title;
+      desc.textContent = guide.description;
+      meta.textContent = `${guide.format} · ${guide.statusLabel}`;
+      ctaLabel.textContent = guide.ctaLabel;
+      cta.href = guide.ctaHref;
+      cta.className = `btn ${guide.ctaExternal ? 'btn--primary' : 'btn--ghost'} launch-stage__cta`;
+      if (guide.ctaExternal) {
+        cta.target = '_blank';
+        cta.rel = 'noopener noreferrer';
+      } else {
+        cta.removeAttribute('target');
+        cta.removeAttribute('rel');
+      }
+      if (indexEl) {
+        indexEl.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      }
+    }
+
+    function renderStack() {
+      if (!stack) return;
+      stack.innerHTML = '';
+      for (let offset = 1; offset < total; offset += 1) {
+        const guideIndex = (activeIndex + offset) % total;
+        const guide = guides[guideIndex];
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'launch-stage__stack-card';
+        card.dataset.index = String(guideIndex);
+        card.setAttribute('aria-label', `Show ${guide.title}`);
+        card.setAttribute('role', 'listitem');
+        if (scopeAttr) card.setAttribute(scopeAttr, '');
+        card.innerHTML = `
+          <img${scopeAttrHtml} src="${guide.coverImage}" alt="" loading="lazy" width="200" height="260" />
+          <span${scopeAttrHtml} class="tag tag--${guide.status} launch-stage__stack-tag">${guide.region}</span>
+          <span${scopeAttrHtml} class="launch-stage__stack-title">${guide.title}</span>
+        `;
+        card.addEventListener('click', () => setActive(guideIndex));
+        stack.appendChild(card);
+      }
+    }
+
+    function setActive(index: number) {
+      const next = ((index % total) + total) % total;
+      if (next === activeIndex) return;
+      activeIndex = next;
+      frame?.classList.add('is-transitioning');
+      window.setTimeout(() => {
+        renderStage();
+        renderStack();
+        frame?.classList.remove('is-transitioning');
+      }, 160);
+    }
+
+    prevBtn?.addEventListener('click', () => setActive(activeIndex - 1));
+    nextBtn?.addEventListener('click', () => setActive(activeIndex + 1));
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') setActive(activeIndex - 1);
+      if (event.key === 'ArrowRight') setActive(activeIndex + 1);
+    });
+
+    renderStack();
+  }
+</script>
+
 <style>
-  .launch-library { padding-block: var(--space-20); background: var(--surface-buff-subtle); }
-  .launch-library__sub {
+  .launch-sequence { padding-block: var(--space-20); background: var(--surface-buff-subtle); }
+  .launch-sequence__sub {
     margin-top: var(--space-4);
     max-width: var(--measure-narrow);
     color: var(--text-secondary);
     font-size: var(--text-lg);
   }
-  .launch-library__grid {
+
+  .launch-stage {
     margin-top: var(--space-10);
-    display: grid;
-    gap: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
-  @media (min-width: 640px) {
-    .launch-library__grid { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 860px) {
+    .launch-stage { flex-direction: row; align-items: stretch; }
   }
-  @media (min-width: 1024px) {
-    .launch-library__grid { grid-template-columns: repeat(3, 1fr); }
+
+  .launch-stage__frame {
+    position: relative;
+    flex: 1 1 58%;
+    min-height: clamp(380px, 46vw, 520px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: var(--shadow-lg);
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .launch-stage__frame.is-transitioning { opacity: 0.2; }
+  .launch-stage__frame img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .launch-stage__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, rgba(18, 45, 36, 0.92) 0%, rgba(18, 45, 36, 0.6) 45%, rgba(18, 45, 36, 0.05) 80%);
+  }
+  .launch-stage__content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    justify-content: flex-end;
+    padding: var(--space-8);
+    color: var(--text-on-dark);
+  }
+  .launch-stage__region { color: var(--color-buff-light); }
+  .launch-stage__title {
+    font-size: clamp(1.75rem, 3.2vw, var(--text-4xl));
+    color: var(--text-on-dark);
+    max-width: 18ch;
+  }
+  .launch-stage__desc {
+    max-width: var(--measure-narrow);
+    color: var(--text-on-dark-secondary);
+    line-height: var(--leading-body);
+  }
+  .launch-stage__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-on-dark-secondary);
+  }
+  .launch-stage__cta { margin-top: var(--space-3); align-self: flex-start; }
+
+  .launch-stage__stack {
+    flex: 1 1 42%;
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    padding-block: var(--space-1);
+    scroll-snap-type: x proximity;
+  }
+  .launch-stage__stack-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(120px, 22vw, 168px);
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    border: var(--border-thin) solid var(--border-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface-gray-subtle);
+    cursor: pointer;
+    scroll-snap-align: start;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .launch-stage__stack-card + .launch-stage__stack-card { margin-left: -1.75rem; }
+  .launch-stage__stack-card:hover,
+  .launch-stage__stack-card:focus-visible {
+    transform: translateY(-6px);
+    z-index: 2;
+  }
+  .launch-stage__stack-card img { width: 100%; height: 100%; object-fit: cover; }
+  .launch-stage__stack-tag {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    right: var(--space-2);
+    max-width: calc(100% - var(--space-4));
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: rgba(255, 255, 255, 0.92);
+  }
+  .launch-stage__stack-title {
+    position: absolute;
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: var(--space-2);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-sm);
+    color: #fff;
+    text-align: left;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+  }
+  @media (max-width: 859.98px) {
+    .launch-stage__stack-card + .launch-stage__stack-card { margin-left: var(--space-3); }
+  }
+
+  .launch-stage__controls {
+    margin-top: var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+  }
+  .launch-stage__nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-pill);
+    border: var(--border-base) solid var(--color-brunswick);
+    background: transparent;
+    color: var(--color-brunswick);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  }
+  .launch-stage__nav-btn:hover { background: var(--color-brunswick); color: var(--color-champagne); }
+  .launch-stage__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+    min-width: 6ch;
+    text-align: center;
   }
 </style>

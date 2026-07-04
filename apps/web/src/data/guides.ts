@@ -105,7 +105,7 @@ export const guides: Guide[] = [
     teaser: 'The volcano that dominates the horizon from three states.',
     description:
       'Drafted and built, but 2026 brought real changes — the Fairfax Bridge closure, a dropped timed-entry system, an Ohanapecosh rehab. We hold this one back from sale until every closure line is re-verified against current NPS sources.',
-    coverImage: '/images/guides/mount-rainier-np.png',
+    coverImage: '/images/guides/mount-rainier-np.jpg',
     ctaLabel: 'Verification in progress',
     ctaHref: '#subscribe',
     ctaExternal: false,

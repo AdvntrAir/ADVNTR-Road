@@ -164,8 +164,8 @@ button { font-family: inherit; }
 .tag--free { color: var(--color-moss-green-dark); }
 .tag--available { color: var(--color-paynes-gray-dark); }
 .tag--coming-soon { color: var(--color-buff-dark); }
-.tag--paid-coming { color: var(--color-rust); }
-.tag--pending { color: var(--text-muted); }
+.tag--paid-guide-coming { color: var(--color-rust); }
+.tag--pending-verification { color: var(--text-muted); }
 
 /* motion-safe fade/slide-up reveal, used by [data-reveal] via ScrollReveal.astro */
 [data-reveal] {

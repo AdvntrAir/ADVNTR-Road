@@ -23,8 +23,8 @@
   --color-rust: #FF6A21;
 
   --text-primary: var(--color-brunswick);
-  --text-secondary: var(--color-paynes-gray);
-  --text-muted: #8FA0A8;
+  --text-secondary: var(--color-paynes-gray-dark);
+  --text-muted: var(--color-paynes-gray-dark);
   --text-accent: var(--color-buff-dark);
   --text-verified: var(--color-moss-green-dark);
   --text-on-dark: var(--color-champagne);
