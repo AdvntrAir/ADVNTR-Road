@@ -4,6 +4,7 @@ import { launchLibrary } from '../data/guides';
 const total = launchLibrary.length;
 const first = launchLibrary[0];
 const stackOrder = launchLibrary.slice(1);
+const firstDisabled = !first.ctaExternal && first.status !== 'free';
 ---
 <section class="launch-sequence" id="guides">
   <div class="container">
@@ -15,25 +16,26 @@ const stackOrder = launchLibrary.slice(1);
     </p>
 
     <div class="launch-stage" data-reveal data-launch-stage>
-      <div class="launch-stage__frame" data-stage-frame>
-        <img data-stage-img src={first.coverImage} alt={`${first.title} guide cover`} />
-        <div class="launch-stage__scrim" aria-hidden="true"></div>
-        <div class="launch-stage__content">
-          <p class="eyebrow launch-stage__region" data-stage-region>{first.region}</p>
-          <h3 class="launch-stage__title" data-stage-title>{first.title}</h3>
-          <p class="launch-stage__desc" data-stage-desc>{first.description}</p>
-          <p class="launch-stage__meta" data-stage-meta>{first.format} · {first.statusLabel}</p>
-          <a
-            class={`btn ${first.ctaExternal ? 'btn--primary' : 'btn--ghost'} launch-stage__cta`}
-            data-stage-cta
-            href={first.ctaHref}
-            target={first.ctaExternal ? '_blank' : undefined}
-            rel={first.ctaExternal ? 'noopener noreferrer' : undefined}
-          >
-            <span data-stage-cta-label>{first.ctaLabel}</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
+      <img class="launch-stage__bg" data-stage-img src={first.coverImage} alt={`${first.title} guide cover`} />
+      <div class="launch-stage__scrim" aria-hidden="true"></div>
+
+      <div class="launch-stage__content">
+        <p class="eyebrow launch-stage__region" data-stage-region>{first.region}</p>
+        <h3 class="launch-stage__title" data-stage-title>{first.title}</h3>
+        <p class="launch-stage__desc" data-stage-desc>{first.description}</p>
+        <p class="launch-stage__meta" data-stage-meta>{first.format} · {first.statusLabel}</p>
+        <a
+          class="launch-stage__cta"
+          data-stage-cta
+          href={first.ctaHref}
+          target={first.ctaExternal ? '_blank' : undefined}
+          rel={first.ctaExternal ? 'noopener noreferrer' : undefined}
+          aria-disabled={firstDisabled ? 'true' : undefined}
+        >
+          <span class="launch-stage__cta-circle" aria-hidden="true">&rarr;</span>
+          <span data-stage-cta-label>{first.ctaLabel}</span>
+        </a>
+        <p class="launch-stage__coords" data-stage-coords>{first.coordinates}</p>
       </div>
 
       <div class="launch-stage__stack" data-stage-stack role="list" aria-label="Other guides in the launch sequence">
@@ -41,13 +43,13 @@ const stackOrder = launchLibrary.slice(1);
           <button
             type="button"
             class="launch-stage__stack-card"
-            data-stack-card
             data-index={guide.launchOrder - 1}
             aria-label={`Show ${guide.title}`}
             role="listitem"
           >
             <img src={guide.coverImage} alt="" loading="lazy" width="200" height="260" />
-            <span class={`tag tag--${guide.status} launch-stage__stack-tag`}>{guide.region}</span>
+            <span class="launch-stage__stack-scrim" aria-hidden="true"></span>
+            <span class={`launch-stage__stack-tag launch-stage__stack-tag--${guide.status}`}>{guide.region}</span>
             <span class="launch-stage__stack-title">{guide.title}</span>
           </button>
         ))}
@@ -78,6 +80,7 @@ const stackOrder = launchLibrary.slice(1);
     ctaLabel: string;
     ctaHref: string;
     ctaExternal: boolean;
+    coordinates: string;
   }
 
   const root = document.querySelector<HTMLElement>('[data-launch-stage]');
@@ -94,12 +97,12 @@ const stackOrder = launchLibrary.slice(1);
     const scopeAttr = [...root.attributes].map((a) => a.name).find((n) => n.startsWith('data-astro-cid'));
     const scopeAttrHtml = scopeAttr ? ` ${scopeAttr}` : '';
 
-    const frame = root.querySelector<HTMLElement>('[data-stage-frame]');
     const img = root.querySelector<HTMLImageElement>('[data-stage-img]');
     const region = root.querySelector<HTMLElement>('[data-stage-region]');
     const title = root.querySelector<HTMLElement>('[data-stage-title]');
     const desc = root.querySelector<HTMLElement>('[data-stage-desc]');
     const meta = root.querySelector<HTMLElement>('[data-stage-meta]');
+    const coords = root.querySelector<HTMLElement>('[data-stage-coords]');
     const cta = root.querySelector<HTMLAnchorElement>('[data-stage-cta]');
     const ctaLabel = root.querySelector<HTMLElement>('[data-stage-cta-label]');
     const stack = root.querySelector<HTMLElement>('[data-stage-stack]');
@@ -109,22 +112,28 @@ const stackOrder = launchLibrary.slice(1);
 
     function renderStage() {
       const guide = guides[activeIndex];
-      if (!img || !region || !title || !desc || !meta || !cta || !ctaLabel) return;
+      if (!img || !region || !title || !desc || !meta || !coords || !cta || !ctaLabel) return;
       img.src = guide.coverImage;
       img.alt = `${guide.title} guide cover`;
       region.textContent = guide.region;
       title.textContent = guide.title;
       desc.textContent = guide.description;
       meta.textContent = `${guide.format} · ${guide.statusLabel}`;
+      coords.textContent = guide.coordinates;
       ctaLabel.textContent = guide.ctaLabel;
       cta.href = guide.ctaHref;
-      cta.className = `btn ${guide.ctaExternal ? 'btn--primary' : 'btn--ghost'} launch-stage__cta`;
       if (guide.ctaExternal) {
         cta.target = '_blank';
         cta.rel = 'noopener noreferrer';
       } else {
         cta.removeAttribute('target');
         cta.removeAttribute('rel');
+      }
+      const disabled = !guide.ctaExternal && guide.status !== 'free';
+      if (disabled) {
+        cta.setAttribute('aria-disabled', 'true');
+      } else {
+        cta.removeAttribute('aria-disabled');
       }
       if (indexEl) {
         indexEl.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
@@ -146,7 +155,8 @@ const stackOrder = launchLibrary.slice(1);
         if (scopeAttr) card.setAttribute(scopeAttr, '');
         card.innerHTML = `
           <img${scopeAttrHtml} src="${guide.coverImage}" alt="" loading="lazy" width="200" height="260" />
-          <span${scopeAttrHtml} class="tag tag--${guide.status} launch-stage__stack-tag">${guide.region}</span>
+          <span${scopeAttrHtml} class="launch-stage__stack-scrim" aria-hidden="true"></span>
+          <span${scopeAttrHtml} class="launch-stage__stack-tag launch-stage__stack-tag--${guide.status}">${guide.region}</span>
           <span${scopeAttrHtml} class="launch-stage__stack-title">${guide.title}</span>
         `;
         card.addEventListener('click', () => setActive(guideIndex));
@@ -158,11 +168,11 @@ const stackOrder = launchLibrary.slice(1);
       const next = ((index % total) + total) % total;
       if (next === activeIndex) return;
       activeIndex = next;
-      frame?.classList.add('is-transitioning');
+      root?.classList.add('is-transitioning');
       window.setTimeout(() => {
         renderStage();
         renderStack();
-        frame?.classList.remove('is-transitioning');
+        root?.classList.remove('is-transitioning');
       }, 160);
     }
 
@@ -187,27 +197,21 @@ const stackOrder = launchLibrary.slice(1);
   }
 
   .launch-stage {
+    position: relative;
+    isolation: isolate;
     margin-top: var(--space-10);
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
-  }
-  @media (min-width: 860px) {
-    .launch-stage { flex-direction: row; align-items: stretch; }
-  }
-
-  .launch-stage__frame {
-    position: relative;
-    flex: 1 1 58%;
-    min-height: clamp(380px, 46vw, 520px);
+    gap: var(--space-8);
+    min-height: clamp(480px, 44vw, 640px);
+    padding: var(--space-8);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    isolation: isolate;
     box-shadow: var(--shadow-lg);
     transition: opacity var(--duration-base) var(--ease-out);
   }
-  .launch-stage__frame.is-transitioning { opacity: 0.2; }
-  .launch-stage__frame img {
+  .launch-stage.is-transitioning { opacity: 0.35; }
+  .launch-stage__bg {
     position: absolute;
     inset: 0;
     z-index: -2;
@@ -219,26 +223,45 @@ const stackOrder = launchLibrary.slice(1);
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(0deg, rgba(18, 45, 36, 0.92) 0%, rgba(18, 45, 36, 0.6) 45%, rgba(18, 45, 36, 0.05) 80%);
+    background: linear-gradient(180deg, rgba(18, 45, 36, 0.9) 0%, rgba(18, 45, 36, 0.62) 42%, rgba(18, 45, 36, 0.38) 100%);
   }
+  @media (min-width: 860px) {
+    .launch-stage { flex-direction: row; align-items: center; padding: var(--space-10); }
+    .launch-stage__scrim {
+      background: linear-gradient(100deg, rgba(18, 45, 36, 0.92) 0%, rgba(18, 45, 36, 0.72) 32%, rgba(18, 45, 36, 0.24) 58%, rgba(18, 45, 36, 0.05) 76%);
+    }
+  }
+
   .launch-stage__content {
     position: relative;
-    height: 100%;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    justify-content: flex-end;
-    padding: var(--space-8);
+    gap: var(--space-4);
     color: var(--text-on-dark);
   }
-  .launch-stage__region { color: var(--color-buff-light); }
+  @media (min-width: 860px) {
+    .launch-stage__content { width: min(28rem, 38%); flex-shrink: 0; }
+  }
+  .launch-stage__region {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-buff-light);
+  }
+  .launch-stage__region::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    flex-shrink: 0;
+  }
   .launch-stage__title {
-    font-size: clamp(1.75rem, 3.2vw, var(--text-4xl));
+    font-size: clamp(1.75rem, 3vw, var(--text-4xl));
     color: var(--text-on-dark);
-    max-width: 18ch;
+    max-width: 16ch;
   }
   .launch-stage__desc {
-    max-width: var(--measure-narrow);
     color: var(--text-on-dark-secondary);
     line-height: var(--leading-body);
   }
@@ -249,48 +272,123 @@ const stackOrder = launchLibrary.slice(1);
     text-transform: uppercase;
     color: var(--text-on-dark-secondary);
   }
-  .launch-stage__cta { margin-top: var(--space-3); align-self: flex-start; }
+  .launch-stage__cta {
+    margin-top: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    width: fit-content;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-on-dark);
+  }
+  .launch-stage__cta-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: var(--radius-pill);
+    background: var(--color-buff);
+    color: var(--color-brunswick-dark);
+    font-size: var(--text-lg);
+    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  }
+  .launch-stage__cta:hover .launch-stage__cta-circle {
+    transform: translateX(4px);
+    background: var(--color-buff-light);
+  }
+  .launch-stage__cta[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .launch-stage__coords {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-on-dark-secondary);
+  }
+  .launch-stage__coords::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: var(--space-2);
+    background: var(--color-buff-light);
+  }
 
   .launch-stage__stack {
-    flex: 1 1 42%;
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    gap: var(--space-5);
     overflow-x: auto;
-    padding-block: var(--space-1);
-    scroll-snap-type: x proximity;
+    padding-block: var(--space-2);
+    padding-inline: var(--space-1);
   }
   .launch-stage__stack-card {
     position: relative;
     flex: 0 0 auto;
-    width: clamp(120px, 22vw, 168px);
+    width: clamp(130px, 13vw, 172px);
     aspect-ratio: 3 / 4;
     padding: 0;
-    border: var(--border-thin) solid var(--border-card);
-    border-radius: var(--radius-md);
+    border: none;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    background: var(--surface-gray-subtle);
     cursor: pointer;
-    scroll-snap-align: start;
-    transition: transform var(--duration-base) var(--ease-out);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
   }
-  .launch-stage__stack-card + .launch-stage__stack-card { margin-left: -1.75rem; }
   .launch-stage__stack-card:hover,
   .launch-stage__stack-card:focus-visible {
     transform: translateY(-6px);
-    z-index: 2;
+    box-shadow: var(--shadow-lg);
   }
   .launch-stage__stack-card img { width: 100%; height: 100%; object-fit: cover; }
+  .launch-stage__stack-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0) 48%);
+    pointer-events: none;
+  }
   .launch-stage__stack-tag {
     position: absolute;
     top: var(--space-2);
     left: var(--space-2);
     right: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     max-width: calc(100% - var(--space-4));
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background: rgba(255, 255, 255, 0.92);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    padding: var(--space-1) var(--space-2);
+    background: rgba(18, 45, 36, 0.55);
+    backdrop-filter: blur(2px);
   }
+  .launch-stage__stack-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .launch-stage__stack-tag--free { color: var(--color-moss-green-light); }
+  .launch-stage__stack-tag--coming-soon { color: var(--color-buff-light); }
+  .launch-stage__stack-tag--paid-guide-coming { color: var(--color-rust); }
+  .launch-stage__stack-tag--pending-verification { color: var(--color-paynes-gray-light); }
   .launch-stage__stack-title {
     position: absolute;
     left: var(--space-2);
@@ -301,10 +399,6 @@ const stackOrder = launchLibrary.slice(1);
     font-size: var(--text-sm);
     color: #fff;
     text-align: left;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
-  }
-  @media (max-width: 859.98px) {
-    .launch-stage__stack-card + .launch-stage__stack-card { margin-left: var(--space-3); }
   }
 
   .launch-stage__controls {

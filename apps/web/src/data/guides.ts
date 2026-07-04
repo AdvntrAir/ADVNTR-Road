@@ -20,6 +20,7 @@ export interface Guide {
   ctaExternal: boolean;
   secondaryLabel?: string;
   launchOrder: number;
+  coordinates: string;
 }
 
 /**
@@ -45,6 +46,7 @@ export const guides: Guide[] = [
     ctaExternal: true,
     secondaryLabel: 'PDF · Field Edition 2026',
     launchOrder: 1,
+    coordinates: '47.8021° N, 123.6044° W',
   },
   {
     slug: 'oregon-coast',
@@ -62,6 +64,7 @@ export const guides: Guide[] = [
     ctaExternal: true,
     secondaryLabel: 'PDF · Field Edition 2026',
     launchOrder: 2,
+    coordinates: '44.6365° N, 124.0535° W',
   },
   {
     slug: 'north-cascades-national-park',
@@ -78,6 +81,7 @@ export const guides: Guide[] = [
     ctaHref: '#subscribe',
     ctaExternal: false,
     launchOrder: 3,
+    coordinates: '48.7718° N, 121.2985° W',
   },
   {
     slug: 'olympic-peninsula-loop',
@@ -94,6 +98,7 @@ export const guides: Guide[] = [
     ctaHref: '#subscribe',
     ctaExternal: false,
     launchOrder: 4,
+    coordinates: '48.1181° N, 123.4307° W',
   },
   {
     slug: 'mount-rainier-national-park',
@@ -110,6 +115,7 @@ export const guides: Guide[] = [
     ctaHref: '#subscribe',
     ctaExternal: false,
     launchOrder: 5,
+    coordinates: '46.8523° N, 121.7603° W',
   },
   {
     slug: 'columbia-river-gorge',
@@ -126,6 +132,7 @@ export const guides: Guide[] = [
     ctaHref: '#subscribe',
     ctaExternal: false,
     launchOrder: 6,
+    coordinates: '45.5762° N, 122.1158° W',
   },
 ];
 
