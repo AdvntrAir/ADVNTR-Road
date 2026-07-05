@@ -3,10 +3,22 @@ import SectionLabel from './SectionLabel.astro';
 ---
 <section class="manifesto" id="why">
   <div class="container manifesto__inner">
-    <SectionLabel label="Why ADVNTR Road Exists" index={2} />
-    <h2 class="manifesto__lead" data-reveal>
-      The internet gives travelers more information than ever and less judgment than ever.
-    </h2>
+    <div class="manifesto__header">
+      <div>
+        <SectionLabel label="Why ADVNTR Road Exists" index={2} />
+        <h2 class="manifesto__lead" data-reveal>
+          The internet gives travelers more information than ever and less judgment than ever.
+        </h2>
+      </div>
+      <img
+        class="manifesto__mark"
+        src="/images/brand/advntr-road-logo-horizontal-rust.png"
+        alt=""
+        width="640"
+        height="320"
+        data-reveal
+      />
+    </div>
     <div class="manifesto__grid">
       <p class="manifesto__dropcap" data-reveal>
         Every trip-planning search now returns the same flattened pile: a hundred "top 10"
@@ -34,6 +46,21 @@ import SectionLabel from './SectionLabel.astro';
     padding-block: var(--space-20);
   }
   .manifesto .eyebrow { color: var(--color-buff); }
+  .manifesto__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-10);
+  }
+  .manifesto__mark {
+    display: none;
+    width: 220px;
+    height: auto;
+    flex-shrink: 0;
+  }
+  @media (min-width: 1100px) {
+    .manifesto__mark { display: block; }
+  }
   .manifesto__lead {
     font-size: clamp(1.75rem, 4vw, var(--text-4xl));
     max-width: 20ch;
