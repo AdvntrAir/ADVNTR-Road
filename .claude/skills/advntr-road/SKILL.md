@@ -1,155 +1,64 @@
 ---
 name: advntr-road
 description: >-
-  Build ADVNTR Road travel guide PDFs — Stage 3 of the four-gate pipeline, where a Gate-2-passed
-  content.yaml plus prose file set is rendered to PDF, HTML, QR codes, and a redirects fragment
-  via WeasyPrint. Use whenever the work touches an ADVNTR Road guide build — running or debugging
-  build.py, a failed Gate 3 QA item, WeasyPrint or font errors, QR generation, a v1→v2 guide
-  migration, or a named guide (Olympic, Oregon Coast, Mount Rainier, North Cascades, Route 66
-  West). Also use when WeasyPrint, pdftoppm, poppler, fonttools, segno, or _redirects come up in
-  a guide context, and when the user says "build the guide" or "the pipeline" — even if they
-  never say "ADVNTR Road" by name.
+  ADVNTR Road Stage 3 — two sub-steps: (3a) one-time renderer build when build.py needs
+  to be written or fixed, and (3b) production builds where build.py runs autonomously as
+  a Python script with no AI involvement. Trigger on: "build the guide", "run the build",
+  "build.py failed", "fix the renderer", "Stage 3", or any named guide (Olympic, Oregon
+  Coast, Mount Rainier, North Cascades, Crater Lake, Route 66 West). Do NOT trigger on
+  BUILD DESTINATION:, FILL GAP:, VERIFY FIELD:, or REBUILD: commands — those are Stage 2
+  and run in the Claude project chat, no repo required. If a Stage-2-shaped input arrives
+  with no repo present, redirect to the project chat and stop.
 ---
 
-# ADVNTR Road — Stage 3 Build
+# ADVNTR Road — Stage 3
 
-This is **Stage 3** of a four-gate pipeline. Its entire job is to turn a build-ready package into
-a finished guide. Nothing more.
+Stage 3 has two sub-steps with completely different scopes.
 
-```
-Gemini Gem ──GATE 1──▶ Claude Bridge ──GATE 2──▶ [ YOU ARE HERE ] ──GATE 3──▶ Manual QA ──GATE 4──▶ Publish
- research               content.yaml               PDF · HTML                   Matt reads it        Netlify
-                        + prose set                QR · _redirects
-```
+## Step 3a — Renderer Build (one-time, not per guide)
 
-## Read the specs first — they are authoritative, this file is not
+Spec files — load ONLY what the specific task requires:
 
-Before rendering anything, read both, from the repo:
+| Problem type | Load this file | Do NOT load |
+|---|---|---|
+| Layout bug, component rendering | references/spec-components.md | all others |
+| Brand color, font, typography | references/spec-design.md | all others |
+| Schema field, YAML parsing | references/spec-schema.md | all others |
+| Build system, QA checklist | references/spec-build.md | all others |
 
-- **`ADVNTR_Road_Claude_Code_Build_Instructions_v2_0.md`** — input contract, schema 3.0 renderer
-  expectations, v2.0 components, QR system, the Gate 3 QA checklist, build summary format
-- **`ADVNTR_Road_Build_Spec_FINAL.md`** — design tokens, fonts, base components, typography,
-  page-break conventions, WeasyPrint invocation
+NEVER load ADVNTR_Road_Build_Spec_FINAL.md directly. That file is 112KB.
+Loading it caused 16.7M cache-read tokens and $4 per session.
+Read spec docs once at session start. Do not re-read them mid-session.
 
-**This skill deliberately does not restate their contents.** The QA checklist, the schema, the
-word budgets, the component specs — all live there and get revised there. A copy in this file
-would be a second source of truth that silently drifts out of date, which is worse than no copy
-at all. If the specs and this file ever disagree about the *build*, the specs win.
+## Step 3b — Production Build (every guide, no AI)
 
-What this file carries is the stuff that exists nowhere else: the machine's failure modes, and
-the line Stage 3 must not cross.
+./build.sh [slug]
 
-## The line: Stage 3 builds, it does not author
+Zero AI tokens. No decisions required.
 
-`content.yaml` and the prose files are **produced at Gate 2** by Claude Bridge Prompt v3.0, in a
-Claude project chat. They arrive here finished.
+If build.py exits non-zero:
+- Read output/build_summary.md for the specific failing item
+- Load ONLY the spec file relevant to that failure (see table above)
+- Fix the specific bug
+- Re-run ./build.sh [slug]
+- Do not edit content.yaml or prose files
 
-**Never hand-edit `content.yaml` or a prose file to make a build pass.** Not to add a missing
-section, not to fill an empty field, not to fix a word count, not to soften a QA failure. Every
-one of those edits smuggles in content that never passed word-budget checks, never got an
-opinionated `take`, never got a verified link registry entry, never got a photo credit. It
-produces a guide that renders correctly and is editorially unfit — the exact failure the gates
-exist to prevent.
+The only question to ask: permission to drop --no-maps.
 
-When content is missing or wrong, the build **fails backward**: report the specific gap and say
-it belongs at Gate 2. Matt takes it to the project chat and runs `FILL GAP: [item]`.
+## The line that never moves
 
-The one thing you may edit is a **template**, when the template is the actual bug — e.g. an
-optional field's wrapper rendering unconditionally and producing an empty page. That's a Stage 3
-defect and fixing it is Stage 3's job.
+content.yaml and prose files are produced at Gate 2. Never edit them.
+A content gap bounces to Gate 2: FILL GAP: [item].
 
-This line holds inside the autonomous build loop below exactly as it holds in a manual session —
-see `references/build-loop.md` for how the loop is worded to keep it that way.
-
-## Before rendering: check the input contract
-
-Per Build Instructions §1. Verify all four, in order, and stop on the first failure:
-
-1. `content.yaml` parses and validates against schema 3.0
-2. Every prose file referenced in `sections:` exists on disk
-3. Every `photos[].file` path exists in `assets/photos/`
-4. **`build_report.md` shows `GATE 2 STATUS: PASS`**
-
-A FAIL on any of these is not something to work around. Do not omit a section to route around a
-missing prose file. Report the specific failure and stop.
-
-## Running the build
-
-Always invoke Python through the venv binary. `python3` alone silently uses the system
-interpreter with none of the dependencies.
-
-```bash
-.venv/bin/python build.py --guide <slug> --no-maps
-```
-
-`--no-maps` is the working default. Use it for every iteration, every debug loop, every QA pass.
-
-```bash
-.venv/bin/python build.py --guide <slug>
-```
-
-Dropping `--no-maps` calls the **paid** Google Maps Static API, which bills per request — and a
-guide has many locations, and a debug loop multiplies them. **Never run this on your own
-initiative.** Ask Matt, in this conversation, for this guide. Permission does not carry over from
-a previous guide, a previous session, or a stated intent to "finish the guide." This holds inside
-an active `/goal` loop too — a loop running unattended is not standing permission to drop
-`--no-maps`; the loop must stop and ask, same as a manual session would.
-
-`GOOGLE_MAPS_API_KEY` lives in `.env`.
-
-## Gate 3
-
-`build.py` runs the automated QA checklist (Build Instructions §7) and exits non-zero if any item
-fails. Read `output/build_summary.md` for `GATE 3 STATUS`.
-
-**Do not hand a FAIL to Matt.** A failing build is not a build with caveats — it's a build that
-doesn't ship. Report the blocking items and fix them, or bounce them back to Gate 2 if they're
-content gaps rather than render defects.
-
-A PASS is not the same as "looks right." Gate 3 is automated and it does not have eyes. Rasterize
-and look at the pages before handing off — the environment reference explains what to look for
-and why a clean exit code proves less than it seems.
-
-## Autonomous build loop (recommended default)
-
-Gate 3's automated checklist is data-driven — it has no eyes and no ear for voice. Two subagents
-close that gap without crossing the authorship line above, and `/goal` runs the whole
-render → check → fix → re-render cycle without a prompt between every step:
-
-- `visual-qa` (`.claude/agents/visual-qa.md`) — rasterizes the rendered PDF and reviews it
-  against the design spec and known failure modes, especially empty-furniture pages (a heading
-  with nothing under it — this has shipped before, in North Cascades v1). Read-only; reports to
-  `output/visual_qa_report.md`.
-- `voice-risk` (`.claude/agents/voice-risk.md`) — reads the prose set against the voice standard
-  and flags generic or padded language, especially in the itineraries, the component the System
-  Spec already identifies as carrying the most voice risk. Read-only, advisory only; reports to
-  `output/voice_risk_report.md`. A flag here is a Gate 2 bounce candidate, never something this
-  skill edits into shape.
-
-Full setup, the exact `/goal` command, and why it's worded the way it is (particularly why
-voice-risk is deliberately non-blocking in the completion condition): `references/build-loop.md`.
-
-Manual, single-shot builds still work exactly as documented above — the loop is a wrapper around
-the same `build.py` invocation and the same Gate 3 check, not a replacement for either.
+Stage 3 may only write:
+- build.py, guide_template.html, build.sh (3a only)
+- Everything under output/
+- assets/photos/ and photo_manifest.json
+- content.yaml photos[] block only (from photo_manifest.json)
 
 ## Environment
+Read references/environment.md before debugging any font or render issue.
 
-WeasyPrint fails in ways that don't look like WeasyPrint failing. Two known traps account for
-most lost time, and a third — the silent Chrome fallback — will ship a guide that doesn't match
-the design system while looking fine.
-
-**Read `references/environment.md` before debugging any build failure, font oddity, or venv
-weirdness.** It is short, and it will save an hour.
-
-## v1 → v2 migration
-
-Migration order (System Spec Part 6): Olympic → Oregon Coast → Mount Rainier → North Cascades.
-
-A v1 guide lacks `itineraries:`, a 12-row `seasonal:`, `drive_times:`, most `trails:`, and
-`links:` entirely. These are REQUIRED in v2.0. **The build must fail Gate 3 until Gate 2 supplies
-them** — even when the old guide "looks done" by v1 standards, and even when shipping is close.
-Do not relax a requirement to get an old guide through the new pipeline faster. That is the one
-shortcut that quietly undoes the whole upgrade.
-
-`campgrounds:` is a deprecated alias for `lodging:` — accept it, emit a deprecation warning, flag
-it for migration. Don't require a rewrite before the build will run.
+## Is this actually Stage 3?
+Check for build.py, .venv, or content.yaml on disk. If none present:
+redirect to the ADVNTR Road project chat. Do not offer to draft content.
