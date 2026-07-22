@@ -219,6 +219,12 @@ places:
     guide_status: roadmap
     region: desert-southwest
 
+  - slug: canyonlands-national-park
+    label: Canyonlands National Park
+    aliases: ["Canyonlands", "Island in the Sky", "The Needles", "Moab"]
+    guide_status: roadmap
+    region: desert-southwest
+
   - slug: yosemite-national-park
     label: Yosemite National Park
     aliases: ["Yosemite", "Tioga Pass", "Half Dome"]

@@ -73,9 +73,6 @@ for each story:
         score[place] += weight
 ```
 
-Only `places[0]` (primary) accrues full weight; secondary places accrue half,
-rounded down. This stops a place mentioned in passing from hijacking the edition.
-
 ### 3.2 Suppress
 
 A place is **ineligible to anchor the CTA** if its highest-weighted story matches

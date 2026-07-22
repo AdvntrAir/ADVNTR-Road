@@ -1,0 +1,176 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionLabel from '../../../components/SectionLabel.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getPlaceRegistry } from '../../../lib/intel-registry';
+
+const MAX_STORIES = 25;
+
+type TaggedStory = {
+  entry: CollectionEntry<'intel'>;
+  story: CollectionEntry<'intel'>['data']['topStories'][number];
+};
+
+export async function getStaticPaths() {
+  // Topic slugs are a small closed vocabulary (see intel-place-registry.yaml
+  // `topics:`), which carries no display labels — humanize them here rather
+  // than duplicating a second copy of the list. Defined inside
+  // getStaticPaths, not at module scope: Astro extracts this function into
+  // its own build-time chunk and does not reliably capture outer closures.
+  const humanize = (slug: string) => slug.replace(/-/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
+
+  const entries = await getCollection('intel');
+  const registry = getPlaceRegistry();
+
+  const byPlace = new Map<string, TaggedStory[]>();
+  const byTopic = new Map<string, TaggedStory[]>();
+
+  for (const entry of entries) {
+    for (const story of entry.data.topStories) {
+      const tagged: TaggedStory = { entry, story };
+      if (!byPlace.has(story.placeSlug)) byPlace.set(story.placeSlug, []);
+      byPlace.get(story.placeSlug)!.push(tagged);
+
+      if (!byTopic.has(story.topicSlug)) byTopic.set(story.topicSlug, []);
+      byTopic.get(story.topicSlug)!.push(tagged);
+    }
+  }
+
+  const sortReverseChron = (items: TaggedStory[]) =>
+    [...items].sort((a, b) => b.story.storyDate.getTime() - a.story.storyDate.getTime());
+
+  const paths: Array<{ params: { slug: string }; props: Record<string, unknown> }> = [];
+  const seenSlugs = new Set<string>();
+
+  // Places take priority on a slug collision — the vocabularies shouldn't
+  // overlap in practice, but this keeps getStaticPaths from ever emitting
+  // two entries for the same params.
+  for (const [slug, items] of byPlace) {
+    seenSlugs.add(slug);
+    const place = registry.get(slug);
+    paths.push({
+      params: { slug },
+      props: {
+        kind: 'place',
+        label: place?.label ?? items[0].story.parkOrRegion,
+        guideUrl: place?.guide_status === 'published' || place?.guide_status === 'in-progress' ? place.guide_url : undefined,
+        stories: sortReverseChron(items),
+      },
+    });
+  }
+
+  for (const [slug, items] of byTopic) {
+    if (seenSlugs.has(slug)) continue;
+    paths.push({
+      params: { slug },
+      props: {
+        kind: 'topic',
+        label: humanize(slug),
+        guideUrl: undefined,
+        stories: sortReverseChron(items),
+      },
+    });
+  }
+
+  return paths;
+}
+
+const { kind, label, guideUrl, stories } = Astro.props as {
+  kind: 'place' | 'topic';
+  label: string;
+  guideUrl?: string;
+  stories: TaggedStory[];
+};
+
+const { slug } = Astro.params;
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const shown = stories.slice(0, MAX_STORIES);
+---
+<BaseLayout
+  title={`${label} — Intel`}
+  description={`Every Trailhead story tagged ${label}, reverse chronological.`}
+  canonicalPath={`/intel/tag/${slug}`}
+>
+  <section class="intel-masthead">
+    <div class="topo-field" aria-hidden="true">
+      <img src="/images/brand/topo-lines.svg" alt="" />
+    </div>
+    <div class="container intel-masthead__inner">
+      <SectionLabel label={kind === 'place' ? 'Place' : 'Topic'} />
+      <h1>{label}</h1>
+      <p class="intel-masthead__window">{stories.length} {stories.length === 1 ? 'story' : 'stories'} tagged, newest first</p>
+    </div>
+  </section>
+
+  <div class="container tag-hub">
+    {guideUrl && (
+      <p class="tag-hub__guide-link"><a href={guideUrl}>Read the {label} guide &rarr;</a></p>
+    )}
+
+    <ul class="tag-hub__list">
+      {shown.map(({ entry, story }) => (
+        <li class="tag-hub__item">
+          <a class="tag-hub__entry" href={`/intel/${entry.id}`}>
+            <span class="tag-hub__date">{fmt(story.storyDate)}</span>
+            <h2>{story.parkOrRegion} &mdash; {story.topic}</h2>
+            <p>{story.take}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {stories.length > MAX_STORIES && (
+      <p class="tag-hub__more">Showing the latest {MAX_STORIES} of {stories.length} stories.</p>
+    )}
+
+    <p class="tag-hub__back"><a href="/intel">&larr; All Trailhead issues</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .intel-masthead {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-paynes-gray-dark);
+    color: var(--text-on-dark);
+    padding-block: var(--space-16) var(--space-12);
+  }
+  .intel-masthead .eyebrow { color: var(--color-champagne); }
+  .intel-masthead__inner { position: relative; z-index: 1; max-width: 42rem; }
+  .intel-masthead h1 { margin-top: var(--space-3); font-size: clamp(1.75rem, 4.5vw, var(--text-4xl)); color: var(--text-on-dark); }
+  .intel-masthead__window {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-buff);
+  }
+
+  .tag-hub { max-width: 42rem; padding-block: var(--space-16) var(--space-24); }
+  .tag-hub__guide-link { font-family: var(--font-mono); font-size: var(--text-sm); }
+  .tag-hub__guide-link a { color: var(--color-rust); font-weight: var(--weight-semibold); }
+
+  .tag-hub__list { margin: var(--space-8) 0 0; padding: 0; list-style: none; }
+  .tag-hub__list li { border-top: var(--border-thin) solid var(--border-card); }
+  .tag-hub__list li:last-child { border-bottom: var(--border-thin) solid var(--border-card); }
+  .tag-hub__entry { display: block; padding-block: var(--space-6); text-decoration: none; }
+  .tag-hub__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .tag-hub__entry h2 {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    color: var(--color-brunswick);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .tag-hub__entry:hover h2 { color: var(--color-rust); }
+  .tag-hub__entry p { margin-top: var(--space-2); color: var(--text-secondary); line-height: var(--leading-body); }
+
+  .tag-hub__more { margin-top: var(--space-6); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-muted); }
+  .tag-hub__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>

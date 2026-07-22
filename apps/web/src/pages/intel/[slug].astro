@@ -10,13 +10,14 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const stories = [...entry.data.topStories].sort((a, b) => a.storyRank - b.storyRank);
 ---
 <BaseLayout
   title={entry.data.title}
   description={entry.data.trailheadSummary}
   canonicalPath={`/intel/${entry.id}`}
+  noindexFollow
 >
   <section class="intel-masthead">
     <div class="topo-field" aria-hidden="true">
@@ -41,8 +42,14 @@ const stories = [...entry.data.topStories].sort((a, b) => a.storyRank - b.storyR
           <span class="intel-article__feed-rank">{String(s.storyRank).padStart(2, '0')}</span>
           <div class="intel-article__feed-content">
             <p class="intel-article__feed-heading"><strong>{s.parkOrRegion}</strong> &mdash; {s.topic}</p>
-            {s.explorerImpact && <p class="intel-article__feed-impact">{s.explorerImpact}</p>}
-            {s.adventureRoadAngle && <p class="intel-article__feed-angle">Angle: {s.adventureRoadAngle}</p>}
+            {s.confidence === 'reported' && (
+              <span class="intel-article__feed-reported">Reported, not yet confirmed</span>
+            )}
+            <p class="intel-article__feed-take">{s.take}</p>
+            {s.tier !== 'brief' && s.explorerImpact && <p class="intel-article__feed-impact">{s.explorerImpact}</p>}
+            <p class="intel-article__feed-source">
+              <a href={s.primarySourceUrl} target="_blank" rel="noopener noreferrer">{s.primarySourcePublisher}</a>
+            </p>
           </div>
         </li>
       ))}
@@ -102,8 +109,29 @@ const stories = [...entry.data.topStories].sort((a, b) => a.storyRank - b.storyR
     color: var(--color-rust);
   }
   .intel-article__feed-heading { color: var(--text-primary); }
-  .intel-article__feed-impact { margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); line-height: var(--leading-body); }
-  .intel-article__feed-angle { margin-top: var(--space-2); color: var(--text-muted); font-size: var(--text-sm); font-style: italic; }
+  .intel-article__feed-reported {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 2px var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-rust);
+    border: var(--border-thin) solid var(--color-rust);
+  }
+  .intel-article__feed-take {
+    margin-top: var(--space-3);
+    color: var(--text-primary);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-body);
+    border-left: var(--border-thick) solid var(--color-rust);
+    padding-left: var(--space-4);
+  }
+  .intel-article__feed-impact { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--text-sm); line-height: var(--leading-body); }
+  .intel-article__feed-source { margin-top: var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .intel-article__feed-source a { color: var(--text-muted); }
   .intel-article__guides { margin-top: var(--space-6); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-muted); }
   .intel-article__body { margin-top: var(--space-8); color: var(--text-secondary); line-height: var(--leading-body); }
   .intel-article__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }

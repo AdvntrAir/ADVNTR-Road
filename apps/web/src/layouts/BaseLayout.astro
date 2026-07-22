@@ -10,6 +10,7 @@ interface Props {
   canonicalPath?: string;
   ogImage?: string;
   noindex?: boolean;
+  noindexFollow?: boolean;
   structuredData?: Record<string, unknown>[];
 }
 
@@ -19,6 +20,7 @@ const {
   canonicalPath = '/',
   ogImage = 'https://media.beehiiv.com/cdn-cgi/image/fit=scale-down,format=auto,onerror=redirect,quality=80/uploads/publication/thumbnail/deb2e42d-316d-4040-aad7-01ca6aa0189e/ADVNTR_Road_Logo_-_1200x630.png',
   noindex = false,
+  noindexFollow = false,
   structuredData = [],
 } = Astro.props;
 
@@ -52,7 +54,8 @@ const baseStructuredData = [
   <title>{title} · {site.name}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
-  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  {noindexFollow && <meta name="robots" content="noindex, follow" />}
+  {noindex && !noindexFollow && <meta name="robots" content="noindex, nofollow" />}
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />

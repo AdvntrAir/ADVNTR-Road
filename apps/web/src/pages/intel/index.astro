@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 const entries = (await getCollection('intel')).sort(
   (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
 );
-const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 <BaseLayout title="The Trailhead — Archive" description="Weekly national park intel from ADVNTR Road." canonicalPath="/intel">
   <section class="intel-masthead">
@@ -16,25 +16,34 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'n
     <div class="container intel-masthead__inner">
       <SectionLabel label="The Trailhead" />
       <h1>Weekly intel archive.</h1>
-      <p class="intel-masthead__live"><span class="intel-masthead__dot" aria-hidden="true"></span>Updated weekly</p>
+      {entries.length > 0 && (
+        <p class="intel-masthead__live"><span class="intel-masthead__dot" aria-hidden="true"></span>Updated weekly</p>
+      )}
     </div>
   </section>
 
   <div class="container intel-index">
-    <ul class="intel-index__list">
-      {entries.map((entry, i) => (
-        <li>
-          <a class="intel-index__entry" href={`/intel/${entry.id}`}>
-            <div class="intel-index__meta">
-              <span class="intel-index__num">{String(i + 1).padStart(2, '0')}</span>
-              <span class="intel-index__window">{fmt(entry.data.coverageWindowStart)} &ndash; {fmt(entry.data.coverageWindowEnd)}</span>
-            </div>
-            <h2>{entry.data.title}</h2>
-            <p>{entry.data.trailheadSummary}</p>
-          </a>
-        </li>
-      ))}
-    </ul>
+    {entries.length > 0 ? (
+      <ul class="intel-index__list">
+        {entries.map((entry, i) => (
+          <li>
+            <a class="intel-index__entry" href={`/intel/${entry.id}`}>
+              <div class="intel-index__meta">
+                <span class="intel-index__num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="intel-index__window">{fmt(entry.data.coverageWindowStart)} &ndash; {fmt(entry.data.coverageWindowEnd)}</span>
+              </div>
+              <h2>{entry.data.title}</h2>
+              <p>{entry.data.trailheadSummary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="intel-index__empty">
+        The first Trailhead issue is still in the field. Check back soon, or
+        <a href="/#subscribe">subscribe</a> to get it the week it ships.
+      </p>
+    )}
     <p class="intel-index__back"><a href="/#trailhead">&larr; Back to ADVNTR Road</a></p>
   </div>
 </BaseLayout>
@@ -100,5 +109,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'n
   }
   .intel-index__entry:hover h2 { color: var(--color-rust); }
   .intel-index__entry p { margin-top: var(--space-2); color: var(--text-secondary); line-height: var(--leading-body); }
+  .intel-index__empty { color: var(--text-secondary); line-height: var(--leading-body); padding-block: var(--space-8); border-top: var(--border-thin) solid var(--border-card); border-bottom: var(--border-thin) solid var(--border-card); }
+  .intel-index__empty a { color: var(--color-brunswick); }
   .intel-index__back { margin-top: var(--space-12); font-family: var(--font-mono); font-size: var(--text-sm); }
 </style>

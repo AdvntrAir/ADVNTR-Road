@@ -2,7 +2,7 @@
 import SectionLabel from './SectionLabel.astro';
 import { getLatestTrailhead } from '../lib/content-adapter';
 const issue = await getLatestTrailhead();
-const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 <section class="trailhead" id="trailhead">
   <div class="topo-field" aria-hidden="true">
