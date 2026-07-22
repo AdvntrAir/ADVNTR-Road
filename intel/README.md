@@ -39,11 +39,21 @@ python intel/validate.py \
   --report ./intel/out/intel_build_report.md
 ```
 
-Runs every gate in order — schema, tags (`placeSlug`/`affectsGuides.guideSlug`
-against the registry and `guides.ts`), date window, URL resolution, tier
+Runs every gate in order — schema, tags, date window, URL resolution, tier
 constraints, cross-edition dedupe — and writes `intel/out/intel_build_report.md`
 with counts at each step. Exits non-zero on any failure; the report is
 written either way, so a failed run still leaves something to read.
+
+The tag gate checks `placeSlug` and `affectsGuides.guideSlug` against
+**`intel-place-registry.yaml`**, not `guides.ts` — the registry is the
+pipeline's source of truth and includes guides that are `in-progress` or
+otherwise real but not yet on the public site (Crater Lake, for example).
+A `guideSlug` is a hard error unless its registry `guide_status` is
+`published`, `paid-guide-coming`, `pending-verification`, or `in-progress`
+— `roadmap`/`coming-soon`/`out-of-scope` means there's no guide to update
+yet, which is a real mistake, not a lag. `--guides` is only used for a
+**warning** when a registry-valid slug hasn't reached `guides.ts` yet;
+that's expected for in-progress guides and never fails the build.
 
 Add `--skip-url-check` to skip the live HTTP HEAD/GET checks for fast local
 iteration. **Never use this in CI** — dead-link detection is a real gate,

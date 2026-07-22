@@ -89,7 +89,8 @@ def main() -> int:
                     help="Directory containing exactly one Stage-A edition .md file")
     ap.add_argument("--registry", type=pathlib.Path, required=True)
     ap.add_argument("--guides", type=pathlib.Path, default=None,
-                    help="apps/web/src/data/guides.ts, for affectsGuides.guideSlug cross-check")
+                    help="apps/web/src/data/guides.ts, for a soft warning when a registry-valid "
+                         "affectsGuides.guideSlug hasn't reached the site's public list yet")
     ap.add_argument("--archive", type=pathlib.Path, required=True,
                     help="apps/web/src/content/intel/, for cross-edition dedupe")
     ap.add_argument("--report", type=pathlib.Path, required=True)

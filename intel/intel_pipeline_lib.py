@@ -341,11 +341,24 @@ def _validate_story_schema(story: dict, index: int) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# Gate 2 — tags (placeSlug against the registry, guideSlug against guides.ts)
+# Gate 2 — tags (placeSlug against the registry, guideSlug against the
+# registry's guide_status — NOT against guides.ts, which is the site's public
+# display list and deliberately lags the registry for in-progress guides)
 # ---------------------------------------------------------------------------
 
-def run_tag_gate(stories: list[dict], registry: dict, guide_slugs: Optional[set[str]]) -> list[str]:
+# guide_status values that mean "there is an actual guide to update" —
+# roadmap/coming-soon/out-of-scope places have no guide yet, so a story
+# pointing affectsGuides at one of those is a real error, not a lag.
+GUIDE_UPDATE_ELIGIBLE_STATUSES = {
+    "published", "paid-guide-coming", "pending-verification", "in-progress",
+}
+
+
+def run_tag_gate(
+    stories: list[dict], registry: dict, guide_slugs: Optional[set[str]]
+) -> tuple[list[str], list[str]]:
     errors: list[str] = []
+    warnings: list[str] = []
     places = places_index(registry)
 
     for s in stories:
@@ -354,14 +367,28 @@ def run_tag_gate(stories: list[dict], registry: dict, guide_slugs: Optional[set[
                 f"{s['storyId']}: placeSlug '{s['placeSlug']}' is not in intel-place-registry.yaml "
                 "(unknown place — Stage A may only propose, never mint, a slug)"
             )
-        if guide_slugs is not None:
-            for ag in s.get("affectsGuides", []) or []:
-                if ag["guideSlug"] not in guide_slugs:
-                    errors.append(
-                        f"{s['storyId']}: affectsGuides.guideSlug '{ag['guideSlug']}' "
-                        "not found in apps/web/src/data/guides.ts"
-                    )
-    return errors
+
+        for ag in s.get("affectsGuides", []) or []:
+            guide_slug = ag["guideSlug"]
+            place = places.get(guide_slug)
+            if place is None or place.get("guide_status") not in GUIDE_UPDATE_ELIGIBLE_STATUSES:
+                errors.append(
+                    f"{s['storyId']}: affectsGuides.guideSlug '{guide_slug}' is not a registry "
+                    "place with an active guide (guide_status must be published, "
+                    "paid-guide-coming, pending-verification, or in-progress)"
+                )
+                continue
+            # Registry says this guide is real; guides.ts is just the site's
+            # public list and legitimately hasn't caught up yet for
+            # in-progress guides (Crater Lake is the live example) — warn,
+            # don't fail.
+            if guide_slugs is not None and guide_slug not in guide_slugs:
+                warnings.append(
+                    f"guideSlug '{guide_slug}' is in the registry but not yet in guides.ts "
+                    "(expected for in-progress guides)"
+                )
+
+    return errors, warnings
 
 
 # ---------------------------------------------------------------------------
@@ -478,8 +505,9 @@ def run_gates(
     if fm.get("sourceUrls"):
         report.warnings.append("sourceUrls is non-empty; primarySourceUrl per story supersedes it now")
 
-    tag_errors = run_tag_gate(stories, registry, guide_slugs)
+    tag_errors, tag_warnings = run_tag_gate(stories, registry, guide_slugs)
     report.errors.extend(tag_errors)
+    report.warnings.extend(tag_warnings)
     report.counts["tag_errors"] = len(tag_errors)
 
     window_start = fm.get("coverageWindowStart")
