@@ -9,10 +9,19 @@
 name: Intel Pack
 
 on:
-  schedule:
-    # Monday 14:00 UTC (~09:00 CT). Avoid :00 exactly if you ever see
-    # scheduler contention — GitHub cron is best-effort, not exact.
-    - cron: "0 14 * * 1"
+  # DISABLED until Stage B exists.
+  #
+  # The steps below call intel/validate.py, intel/render_web.py, and
+  # intel/render_guide_updates.py, none of which are built yet. A scheduled
+  # run would burn a full Stage A research call (real API spend) and then
+  # fail at the Validate step, every Monday, unattended.
+  #
+  # Re-enable by uncommenting once those three scripts land.
+  #
+  # schedule:
+  #   # Monday 14:00 UTC (~09:00 CT). Avoid :00 exactly if you ever see
+  #   # scheduler contention — GitHub cron is best-effort, not exact.
+  #   - cron: "0 14 * * 1"
   workflow_dispatch:
     inputs:
       edition_date:
