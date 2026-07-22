@@ -88,7 +88,7 @@ const intel = defineCollection({
         corroboratingUrls: z.array(z.string().url()).default([]),
 
         // ---- new: CTA suppression ----
-        severity: z.enum(['low', 'moderate', 'high']).default('low'),
+        severity: z.enum(['low', 'medium', 'high']).default('low'),
         involvesFatality: z.boolean().default(false),
         involvesInjury: z.boolean().default(false),
         involvesSearchAndRescue: z.boolean().default(false),

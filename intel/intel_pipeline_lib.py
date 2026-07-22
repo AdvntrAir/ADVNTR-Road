@@ -42,7 +42,7 @@ TOPIC_SLUGS = {
     "conservation", "safety", "access",
 }
 CONFIDENCE_VALUES = {"confirmed", "reported"}
-SEVERITY_VALUES = {"low", "moderate", "high"}
+SEVERITY_VALUES = {"low", "medium", "high"}
 IMPACT_VALUES = {"content-stale", "fee-changed", "access-changed", "link-broken", "monitor"}
 WATCHLIST_REASONS = {
     "single-source", "date-unverifiable", "url-unresolvable",
@@ -518,7 +518,7 @@ def run_gates(
 # ---------------------------------------------------------------------------
 
 def _story_matches_condition(story: dict, cond: dict) -> bool:
-    severity_order = {"low": 0, "moderate": 1, "high": 2}
+    severity_order = {"low": 0, "medium": 1, "high": 2}
     for key, expected in cond.items():
         if key == "severity_gte":
             if severity_order.get(story.get("severity", "low"), 0) < severity_order.get(expected, 0):

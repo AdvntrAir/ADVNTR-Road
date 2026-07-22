@@ -66,7 +66,7 @@ def test_suppression_is_per_place_not_global():
     stories = fm["topStories"]
 
     # Remove the safety flags on the Zion lead story...
-    stories[0]["severity"] = "moderate"
+    stories[0]["severity"] = "medium"
     stories[0]["involvesSearchAndRescue"] = False
     # ...and move the feature story to a real, cta_eligible place scoring
     # lower than Zion's lead weight (2 vs 3), so Zion should still win, now

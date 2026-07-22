@@ -207,6 +207,12 @@ Set `sensitivity.involves_fatality`, `involves_injury`,
 `involves_search_and_rescue`, `involves_active_evacuation`, and `severity`
 accurately on every story.
 
+Allowed `severity` values: `low`, `medium`, `high`. Allowed `confidence`
+values: `confirmed`, `reported`. Allowed `tier` values: `lead`, `feature`,
+`brief`. Allowed `action` values: `plan-change`, `book-now`,
+`awareness-only`. Any other value fails validation and the edition does
+not build.
+
 These drive automatic suppression of the guide call-to-action downstream. A
 promotional CTA rendered beside a story about someone's death is unrecoverable brand
 damage, and the only thing preventing it is you setting these flags correctly. When
