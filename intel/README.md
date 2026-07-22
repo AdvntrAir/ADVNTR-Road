@@ -21,12 +21,47 @@ pip install -r intel/requirements.txt
 Needs Python 3.9+ (matches the `python-version: "3.12"` pinned in
 `.github/workflows/intel-pipeline.yml`; anything 3.9+ works locally).
 
-## Running Stage B locally
+## Running Stage B locally — for zero dollars
+
+```bash
+intel/test_fixture.sh          # fast, no live HTTP checks
+intel/test_fixture.sh --live   # also exercises the real URL-resolution gate
+```
+
+Copies the committed [`fixtures/sample-edition.md`](fixtures/sample-edition.md)
+— real, once-published Stage A output (the July 20, 2026 edition, pulled
+from the `intel-raw-5` CI artifact) — into `intel/incoming/`, then runs both
+`validate.py` and `write_edition.py` against it. No `ANTHROPIC_API_KEY`, no
+network by default, instant feedback. This is how a schema, gate, CTA, or
+template change gets tested: only a genuine research change needs a real
+Stage A run.
+
+`write_edition.py` writes to `intel/out/fixture-content/` here, **never**
+`apps/web/src/content/intel/` — `sample-edition.md` is a test asset, not
+content, and must never reach the real collection. The gate logic runs
+entirely against the fixture's own embedded `coverageWindowStart`/`End`, not
+today's actual date, so this works identically no matter when it's run.
+
+The same path exists in CI: the `use_fixture` workflow input skips Stage A,
+copies the fixture in, and redirects `write_edition.py`'s `--out` to
+`intel/out/fixture-content/` — the "Commit edition" step stages
+`apps/web/src/content/intel/` specifically, so with output redirected there
+it naturally has nothing to commit, regardless of `dry_run`.
+
+## Running Stage B against a real edition
 
 Stage A's job is to drop a `YYYY-MM-DD-weekly-intel.md` file into
-`intel/incoming/`. For local Stage B work you can either run Stage A for
-real (needs `ANTHROPIC_API_KEY`) or hand-place a fixture there — the
-`--skip-research` workflow input does the latter in CI.
+`intel/incoming/`. You can either run Stage A for real (needs
+`ANTHROPIC_API_KEY`) or hand-place an edition there — the `--skip-research`
+workflow input does the latter in CI, for reusing a real edition already
+sitting in `intel/incoming/` from a prior run in the same environment.
+
+**`--skip-research` doesn't help in CI on its own** — `intel/incoming/` is
+gitignored and every workflow run starts from a fresh checkout, so there is
+never a prior edition sitting there to reuse; `skip_research: true` with
+nothing in `incoming/` just fails at `find_edition_file()`. That gap is
+exactly why every Stage B bug in this pipeline's first weeks cost a full
+Opus research run to surface — `use_fixture` above is the actual fix.
 
 ### Validate
 
@@ -138,6 +173,8 @@ directly with `python3`.
 | `intel-run-prompt.md` | Stage A's system prompt — voice, verification rules, output format. |
 | `intel-render-spec.md` | The contract Stage B builds against. |
 | `tests/` | `test_cta_suppression.py` + its fixture. |
+| `fixtures/sample-edition.md` | Real Stage A output (July 20, 2026 edition), committed for zero-cost local/CI testing. Test asset, never content. |
+| `test_fixture.sh` | Runs `validate.py` + `write_edition.py` against the fixture, no GitHub Actions, no API key. |
 | `incoming/`, `out/` | Gitignored working directories — Stage A drops, Stage B reports. |
 
 ## What this validator can't check

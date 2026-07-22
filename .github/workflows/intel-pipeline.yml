@@ -33,6 +33,11 @@ on:
         required: false
         type: boolean
         default: false
+      use_fixture:
+        description: "Skip Stage A entirely and run Stage B against intel/fixtures/sample-edition.md (zero cost, no API key). Writes to a scratch dir, never apps/web/src/content/intel/, and never commits."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -54,12 +59,24 @@ jobs:
       - name: Install dependencies
         run: pip install -r intel/requirements.txt
 
+      # Zero-cost path for testing Stage B (schema/gate/CTA/template changes):
+      # copies the committed fixture in place of a real Stage A run. Named to
+      # its own embedded edition date (July 20, 2026), not today's — the gate
+      # logic is entirely self-contained against the frontmatter's own
+      # coverage window, so this works identically no matter when it's run.
+      - name: Use fixture edition
+        if: ${{ inputs.use_fixture == true }}
+        run: |
+          mkdir -p ./intel/incoming/
+          rm -f ./intel/incoming/*.md
+          cp ./intel/fixtures/sample-edition.md ./intel/incoming/2026-07-20-weekly-intel.md
+
       # ---------------------------------------------------------------
       # STAGE A — the only LLM call in this pipeline
       # ---------------------------------------------------------------
       - name: Stage A — research
         id: research
-        if: ${{ inputs.skip_research != true }}
+        if: ${{ inputs.skip_research != true && inputs.use_fixture != true }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           INTEL_MODEL: ${{ vars.INTEL_MODEL || 'claude-opus-4-8' }}
@@ -91,13 +108,25 @@ jobs:
             --report ./intel/out/intel_build_report.md
 
       # Resolves ctaPlaceSlug / ctaSuppressed and writes the final content file.
+      #
+      # use_fixture routes --out to a scratch dir under intel/out/ (already
+      # gitignored) instead of the real content collection — sample-edition.md
+      # is a test asset and must never land in apps/web/src/content/intel/,
+      # where "Commit edition" below would push it live as if it were a real
+      # draft. That step stages apps/web/src/content/intel/ specifically, so
+      # with output redirected here it naturally has nothing to commit.
       - name: Resolve CTA and write content file
         id: write_edition
         run: |
+          if [ "${{ inputs.use_fixture }}" = "true" ]; then
+            OUT_DIR="./intel/out/fixture-content/"
+          else
+            OUT_DIR="./apps/web/src/content/intel/"
+          fi
           python intel/write_edition.py \
             --edition ./intel/incoming/ \
             --registry ./intel/intel-place-registry.yaml \
-            --out ./apps/web/src/content/intel/ \
+            --out "$OUT_DIR" \
             --queue ./intel/out/intel_guide_updates.md
 
       - name: Upload build report
