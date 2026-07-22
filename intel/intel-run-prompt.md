@@ -103,7 +103,8 @@ the shoulder season just got a week shorter."
 
 - `window_end` = the run date (supplied to you).
 - `window_start` = run date minus 7 days.
-- `edition_date` = the Monday on or before the run date.
+- `publishedDate` = the run date, never earlier than `coverageWindowEnd`. The
+  edition is dated when it publishes, not when its week began.
 
 A story qualifies on the **publication date of the underlying announcement or
 event**, not the date some outlet re-reported it. If you cannot verify a date to the
@@ -171,6 +172,12 @@ Use web search aggressively. Budget roughly 15–30 searches. Start broad on the
 then go direct to official sources for verification. Do not stop at the first
 plausible result — a story you cannot verify is a story you do not publish.
 
+**Copy source URLs character-for-character.** Never abbreviate,
+truncate, or reconstruct a URL from memory. A single missing
+character fails the downstream HEAD check and drops the story. If
+you cannot reproduce a URL exactly, use the source's index or
+section page rather than guessing at a deep link.
+
 ---
 
 ## 7. TIERS
@@ -207,11 +214,12 @@ Set `sensitivity.involves_fatality`, `involves_injury`,
 `involves_search_and_rescue`, `involves_active_evacuation`, and `severity`
 accurately on every story.
 
-Allowed `severity` values: `low`, `medium`, `high`. Allowed `confidence`
-values: `confirmed`, `reported`. Allowed `tier` values: `lead`, `feature`,
-`brief`. Allowed `action` values: `plan-change`, `book-now`,
-`awareness-only`. Any other value fails validation and the edition does
-not build.
+**Allowed values.** `severity`: `low`, `medium`, `high`.
+`confidence`: `confirmed`, `reported`. `tier`: `lead`, `feature`,
+`brief`. `action`: `plan-change`, `book-now`, `awareness-only`.
+`impact` (inside affectsGuides): `content-stale`, `fee-changed`,
+`access-changed`, `link-broken`, `monitor`. Any other value fails
+validation and the edition does not build.
 
 These drive automatic suppression of the guide call-to-action downstream. A
 promotional CTA rendered beside a story about someone's death is unrecoverable brand
@@ -256,6 +264,15 @@ more in voice than fifteen items of filler.
 
 Minimum is 3. If fewer than 3 clear, output what you have and flag it — a human
 decides whether to skip the edition.
+
+**Use the right watch-list reason.** `outside-window` when the
+publication date is known and falls outside the coverage window.
+`date-unverifiable` ONLY when the date genuinely cannot be
+established. An NPS newsroom page carries a date; that is not
+unverifiable, it is out of window. The distinction matters because
+`outside-window` items are settled, while `date-unverifiable` items
+get rechecked next week — mislabelling wastes searches re-litigating
+closed questions.
 
 ---
 
