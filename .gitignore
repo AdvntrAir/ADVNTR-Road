@@ -13,6 +13,8 @@ graphical-inspiration/
 # Root-level mount-rainier-np/ is a separate web project, not part of this pipeline
 /mount-rainier-np/
 
-# Intel Pack — Stage A drops the raw edition JSON here mid-run. The validated
-# copy is committed to intel/archive/ instead; incoming/ is scratch.
+# Intel Pack — Stage A drops the raw edition file here mid-run; incoming/ is
+# scratch. The validated edition is committed straight into the Astro
+# collection at apps/web/src/content/intel/, which is the archive now.
 intel/incoming/
+intel/out/

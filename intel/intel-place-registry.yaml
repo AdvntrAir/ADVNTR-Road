@@ -36,17 +36,28 @@ cta_rules:
     tiebreak: guide_status_rank
 
   ladder:
+    # guide_status values MIRROR apps/web/src/data/guides.ts exactly.
     - status: published
       guide_type: free
-      cta_kind: email_capture
-      copy_hint: "Free guide, email-gated download. Never ask for money on a free anchor."
+      cta_kind: free_guide
+      copy_hint: "Route to cta_href (/r/ redirect). No purchase ask on a free anchor."
     - status: published
       guide_type: paid
       cta_kind: gumroad
-      copy_hint: "Direct to the Gumroad product."
+      copy_hint: "Only valid once a real Gumroad URL exists. None do today."
+    - status: paid-guide-coming
+      cta_kind: waitlist
+      copy_hint: "Guide is built. Ask for the email, not the sale."
+    - status: pending-verification
+      cta_kind: waitlist
+      copy_hint: >
+        Held from sale deliberately. Honest framing only — do not imply it is
+        purchasable. Saying why it is held is on-brand.
     - status: in-progress
       cta_kind: waitlist_dated
-      copy_hint: "Name the ship month honestly. Do not imply it's available."
+      copy_hint: "Name the ship month honestly."
+    - status: coming-soon
+      cta_kind: waitlist
     - status: roadmap
       cta_kind: waitlist
       copy_hint: >
@@ -90,13 +101,22 @@ cta_rules:
 # ---------------------------------------------------------------------------
 places:
 
-  # --- PUBLISHED (v1 architecture; all flagged for v2.0 rebuild) -----------
+  # --- LIVE ON SITE ---------------------------------------------------------
+  # guide_status MUST mirror apps/web/src/data/guides.ts. When a status changes
+  # there, change it here. This is the CTA source of truth.
+  #
+  # NOTE: no Gumroad products exist yet. Every paid guide currently routes to
+  # #subscribe on the site, so cta_kind: gumroad must not be used until a real
+  # product URL exists.
+
   - slug: olympic-national-park
     label: Olympic National Park
-    aliases: ["Olympic NP", "Olympic Peninsula", "Hoh Rainforest", "Hurricane Ridge"]
+    aliases: ["Olympic NP", "Olympic Peninsula", "Hoh Rainforest", "Hurricane Ridge", "Rialto"]
     guide_status: published
-    guide_type: free            # free-forever anchor — never retroactively paywalled
+    guide_type: free            # free-forever anchor
     guide_url: /guides/olympic-national-park/
+    cta_href: /r/olympic-np-free-guide   # matches guides.ts; no email gate exists yet
+    build_dir: olympic-np       # PDF repo dir — differs from slug
     region: pacific-northwest
 
   - slug: oregon-coast
@@ -105,44 +125,53 @@ places:
     guide_status: published
     guide_type: free            # free-forever anchor
     guide_url: /guides/oregon-coast/
+    cta_href: /r/oregon-coast-free-guide
+    build_dir: oregon-coast
     region: pacific-northwest
 
   - slug: north-cascades-national-park
     label: North Cascades National Park
-    aliases: ["North Cascades", "Highway 20", "Diablo Lake"]
-    guide_status: published
-    guide_type: paid
+    aliases: ["North Cascades", "Highway 20", "Diablo Lake", "Stehekin", "Cascade Pass"]
+    guide_status: paid-guide-coming    # built and verified; no purchase link yet
     guide_url: /guides/north-cascades-national-park/
+    cta_href: "#subscribe"
+    build_dir: north-cascades
     region: pacific-northwest
 
   - slug: mount-rainier-national-park
     label: Mount Rainier National Park
-    aliases: ["Mount Rainier", "Mt Rainier", "Paradise", "Sunrise"]
-    guide_status: published
-    guide_type: paid
+    aliases: ["Mount Rainier", "Mt Rainier", "Paradise", "Sunrise", "Ohanapecosh", "Fairfax Bridge"]
+    guide_status: pending-verification  # held from sale pending 2026 closure re-verification
     guide_url: /guides/mount-rainier-national-park/
+    cta_href: "#subscribe"
+    build_dir: mount-rainier-np
     region: pacific-northwest
 
-  # --- IN PROGRESS ---------------------------------------------------------
-  - slug: crater-lake-national-park
-    label: Crater Lake National Park
-    aliases: ["Crater Lake", "Rim Drive"]
-    guide_status: in-progress
-    ship_month: "2026-08"       # UPDATE ON PUBLISH → status: published
-    region: pacific-northwest
-
-  # --- ROADMAP — near-term (named in launch sequence) ----------------------
   - slug: olympic-peninsula-loop
     label: Olympic Peninsula Loop
-    guide_status: roadmap
+    guide_status: coming-soon
+    guide_url: /guides/olympic-peninsula-loop/
+    cta_href: "#subscribe"
     region: pacific-northwest
 
   - slug: columbia-river-gorge
     label: Columbia River Gorge
-    aliases: ["Historic Columbia River Highway", "Multnomah Falls"]
-    guide_status: roadmap
+    aliases: ["Historic Columbia River Highway", "Multnomah Falls", "Hood River"]
+    guide_status: coming-soon
+    guide_url: /guides/columbia-river-gorge/
+    cta_href: "#subscribe"
     region: pacific-northwest
 
+  # --- IN PROGRESS (not yet on the site) -----------------------------------
+  - slug: crater-lake-national-park
+    label: Crater Lake National Park
+    aliases: ["Crater Lake", "Rim Drive"]
+    guide_status: in-progress
+    ship_month: "2026-08"
+    build_dir: crater-lake-np
+    region: pacific-northwest
+
+  # --- ROADMAP -------------------------------------------------------------
   - slug: route-66-west
     label: Route 66 West
     aliases: ["Route 66", "Historic Route 66", "Mother Road"]

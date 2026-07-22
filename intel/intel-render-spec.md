@@ -21,14 +21,15 @@ schema or the registry, not in the renderer.
 
 | Input | Source | Notes |
 |---|---|---|
-| `intel-YYYY-MM-DD.json` | `intel/incoming/` | Written by Stage A earlier in the same workflow run |
+| `YYYY-MM-DD-weekly-intel.md` | `intel/incoming/` | Markdown + YAML frontmatter, written by Stage A earlier in the same workflow run |
 | `intel-place-registry.yaml` | Repo | Single source of truth for places, tags, CTA rules |
-| `intel-schema.json` | Repo | Validation contract |
-| Last 4 edition JSONs | `intel/archive/` | Dedupe reference, passed into Stage A |
+| Astro `intel` collection schema | `apps/web/src/content.config.ts` | Validation contract — there is no second schema. `intel-schema.json` is retired; the Zod schema on the live collection is authoritative |
+| Last 4 published editions | `apps/web/src/content/intel/` | Dedupe reference, passed into Stage A. This is also the site's own archive — there is no separate `intel/archive/` for validated output |
 
 **No Google Drive.** Stage A and Stage B run in the same GitHub Actions job, so the
-edition JSON is passed on disk. There is no message queue, no indexing lag, and no
-exact-path fetch logic to get wrong.
+edition file is passed on disk. There is no message queue, no indexing lag, and no
+exact-path fetch logic to get wrong. Google Drive is out of this pipeline entirely —
+it was never wired in and nothing here depends on it.
 
 **Fetch discipline:** read the file matching the edition date. If it is not there,
 fail with "edition not found for YYYY-MM-DD" — never fall back to the most recent

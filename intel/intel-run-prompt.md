@@ -1,10 +1,15 @@
 # ADVNTR Road — Weekly Intel Pack · Stage A Run Prompt
-**v0.2 · July 2026 · SELF-CONTAINED — used as the system prompt in an API call**
+**v0.3 · July 2026 · SELF-CONTAINED — used as the system prompt in an API call**
 
-> **Changed from v0.1:** this version assumes NO project knowledge. Brand context,
-> voice standard, and content rules are written inline, because an API call has no
-> access to the Claude project. If you change the publication's voice standard
-> elsewhere, change §2 here too — they are no longer linked.
+> **Changed from v0.2:** output format is now a **Markdown file with YAML
+> frontmatter** matching the site's Astro `intel` content collection — not a
+> standalone JSON object. The site already owns `/intel/`; this writes into it
+> rather than around it.
+>
+> **Carried from v0.2:** this prompt assumes NO project knowledge. Brand context,
+> voice standard, and content rules are inline, because an API call has no access
+> to the Claude project. If the publication's voice standard changes elsewhere,
+> change §2 here too — they are no longer linked.
 
 ---
 
@@ -270,11 +275,98 @@ the guides.
 
 ---
 
-## 15. OUTPUT
+## 15. OUTPUT FORMAT
 
-Emit **one** JSON object conforming to the supplied schema. Nothing before it,
-nothing after it, no markdown fences, no commentary, no preamble.
+Emit **one Markdown file** — YAML frontmatter, then a short body. Nothing before
+it, nothing after it, no code fences, no commentary.
 
-Populate `harvest_stats` honestly. It is the audit trail for whether the funnel is
+This goes into the site's Astro `intel` content collection, so the frontmatter
+must validate against the supplied schema exactly. Field names are camelCase.
+
+```
+---
+title: "The Trailhead — Week of [Month D, YYYY]"
+coverageWindowStart: YYYY-MM-DD
+coverageWindowEnd: YYYY-MM-DD
+publishedDate: YYYY-MM-DD
+thinWeek: false
+trailheadSummary: >
+  [120-220 words per section 13]
+topStories:
+  - storyRank: 1
+    storyId: short-stable-slug
+    parkOrRegion: "Olympic National Park"      # display label
+    placeSlug: olympic-national-park           # registry slug — must match
+    topic: "Hoh trailhead closure"             # display label
+    topicSlug: closures                        # closed vocabulary
+    tier: lead                                 # lead | feature | brief
+    action: plan-change
+    take: >
+      [<=40 words. THE PRODUCT. Public-facing. See section 3.]
+    explorerImpact: >
+      [80-150 words. lead and feature ONLY — omit entirely for brief.]
+    adventureRoadAngle: >
+      [INTERNAL editorial note. Not rendered publicly. Omit if none.]
+    confidence: confirmed
+    storyDate: YYYY-MM-DD
+    primarySourceUrl: "https://www.nps.gov/..."
+    primarySourcePublisher: "National Park Service"
+    primarySourceConfirmed: true
+    corroboratingUrls: []
+    severity: low
+    involvesFatality: false
+    involvesInjury: false
+    involvesSearchAndRescue: false
+    involvesActiveEvacuation: false
+    relevanceScore: 8
+    impactScore: 7
+    urgencyScore: 6
+    visitorValueScore: 9
+    affectsGuides:
+      - guideSlug: olympic-national-park
+        impact: content-stale
+        note: "Arrival-time guidance in the Hoh section is now wrong."
+affectedGuides:
+  - olympic-national-park
+recommendedContentAngles:
+  - "[Field Notes essay angle, if one emerged. Omit the list if none did.]"
+sourceUrls: []
+status: "draft"
+harvestStats:
+  candidatesFound: 34
+  clearedVerification: 9
+  droppedSingleSource: 11
+  droppedOutsideWindow: 8
+  droppedDuplicate: 6
+  droppedPriorEdition: 0
+watchList:
+  - storyId: some-unverified-item
+    headline: "..."
+    reason: single-source
+    sourceUrl: "https://..."
+    firstSeen: YYYY-MM-DD
+    weeksCarried: 1
+---
+
+[Body: 2-4 sentences of closing editorial. Optional. Not a summary of the
+stories above — the reader just read them. Use it for the thing that didn't
+fit anywhere else, or leave it empty.]
+```
+
+**Format rules:**
+
+- `status` is always `"draft"`. A human promotes it to `"published"`. You never
+  publish yourself.
+- `sourceUrls` stays empty — per-story `primarySourceUrl` supersedes it.
+- `affectedGuides` is the deduplicated list of `guideSlug` values across all
+  stories' `affectsGuides`.
+- Omit `explorerImpact` entirely on `brief` tier. Do not include it empty.
+- Use YAML block scalars (`>`) for anything multi-sentence.
+- Do NOT set `ctaPlaceSlug` or `ctaSuppressed`. Those are derived downstream from
+  your tier and sensitivity values. Setting them is a scope violation.
+- Every `placeSlug` and `topicSlug` must exist in the supplied registry. Unknown
+  values fail validation and the edition does not build.
+
+Populate `harvestStats` honestly. It is the audit trail for whether the funnel is
 working, and a run that claims 40 candidates and 15 publications every single week
 is a run that has stopped verifying.

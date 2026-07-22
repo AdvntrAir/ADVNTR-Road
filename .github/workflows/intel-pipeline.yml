@@ -1,27 +1,22 @@
 # .github/workflows/intel-pipeline.yml
 #
-# ADVNTR Road — Weekly Intel Pack, single-workflow pipeline.
-# Stage A (research, one API call) and Stage B (render, zero AI) in one run.
-# No Drive handoff, no second scheduler, no dependency on Matt's laptop.
+# ADVNTR Road — Weekly Intel Pack.
 #
-# Fails closed at every gate. Publishes to a staged draft, never sends.
+# ARCHITECTURE (v0.3): this workflow does NOT deploy. It writes a content file
+# into the Astro intel collection and commits it. Astro builds, Netlify deploys
+# on push — the same path the site already uses.
+#
+# This deliberately removes the `netlify deploy --prod` step from earlier
+# versions. A --prod deploy REPLACES the entire published site; it does not add
+# pages at a path. That was a defect, and it also collided with preview.yml.
 
 name: Intel Pack
 
 on:
-  # DISABLED until Stage B exists.
-  #
-  # The steps below call intel/validate.py, intel/render_web.py, and
-  # intel/render_guide_updates.py, none of which are built yet. A scheduled
-  # run would burn a full Stage A research call (real API spend) and then
-  # fail at the Validate step, every Monday, unattended.
-  #
-  # Re-enable by uncommenting once those three scripts land.
-  #
+  # DISABLED until Stage B exists. Uncomment when validate.py and
+  # write_edition.py are built and one edition has published cleanly.
   # schedule:
-  #   # Monday 14:00 UTC (~09:00 CT). Avoid :00 exactly if you ever see
-  #   # scheduler contention — GitHub cron is best-effort, not exact.
-  #   - cron: "0 14 * * 1"
+  #   - cron: "0 14 * * 1"   # Mondays 14:00 UTC (~09:00 CT)
   workflow_dispatch:
     inputs:
       edition_date:
@@ -29,23 +24,23 @@ on:
         required: false
         type: string
       dry_run:
-        description: "Research + validate + render, but do NOT deploy or stage draft"
+        description: "Research + validate, but do NOT commit the content file"
         required: false
         type: boolean
         default: true
       skip_research:
-        description: "Reuse the last incoming/ JSON instead of a fresh API call (saves cost while debugging Stage B)"
+        description: "Reuse intel/incoming/ instead of a fresh API call (free debugging)"
         required: false
         type: boolean
         default: false
 
 permissions:
-  contents: write        # needed to commit the archive
+  contents: write
 
 jobs:
   intel:
     runs-on: ubuntu-latest
-    timeout-minutes: 45   # Stage A research is the long pole
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +54,7 @@ jobs:
         run: pip install -r intel/requirements.txt
 
       # ---------------------------------------------------------------
-      # STAGE A — the only LLM call in the pipeline
+      # STAGE A — the only LLM call in this pipeline
       # ---------------------------------------------------------------
       - name: Stage A — research
         id: research
@@ -70,12 +65,11 @@ jobs:
         run: |
           python intel/stage_a_research.py \
             --out ./intel/incoming/ \
-            --archive ./intel/archive/ \
+            --archive ./apps/web/src/content/intel/ \
             --edition-date "${{ inputs.edition_date }}"
 
-      # Raw research output is uploaded BEFORE validation, so a failed
-      # validation run still leaves you something to read.
-      - name: Upload raw edition JSON
+      # Uploaded BEFORE validation, so a failed run still leaves something to read.
+      - name: Upload raw edition
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -91,25 +85,20 @@ jobs:
           python intel/validate.py \
             --edition ./intel/incoming/ \
             --registry ./intel/intel-place-registry.yaml \
-            --schema ./intel/intel-schema.json \
-            --archive ./intel/archive/ \
+            --guides ./apps/web/src/data/guides.ts \
+            --archive ./apps/web/src/content/intel/ \
             --report ./intel/out/intel_build_report.md
 
-      - name: Render web edition + tag hubs
+      # Resolves ctaPlaceSlug / ctaSuppressed and writes the final content file.
+      - name: Resolve CTA and write content file
         run: |
-          python intel/render_web.py \
+          python intel/write_edition.py \
             --edition ./intel/incoming/ \
             --registry ./intel/intel-place-registry.yaml \
-            --archive ./intel/archive/ \
-            --out ./intel/out/site/
+            --out ./apps/web/src/content/intel/ \
+            --queue ./intel/out/intel_guide_updates.md
 
-      - name: Guide-update queue
-        run: |
-          python intel/render_guide_updates.py \
-            --edition ./intel/incoming/ \
-            --out ./intel/out/intel_guide_updates.md
-
-      - name: Upload build artifacts
+      - name: Upload build report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -118,45 +107,21 @@ jobs:
           retention-days: 30
 
       # ---------------------------------------------------------------
-      # PUBLISH — skipped entirely on dry_run
+      # PUBLISH — commit only. Astro + Netlify handle the rest.
+      # The file lands with status: "draft"; a human promotes it.
       # ---------------------------------------------------------------
-      - name: Deploy to Netlify
-        if: ${{ inputs.dry_run != true }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          npx netlify-cli deploy \
-            --dir=./intel/out/site \
-            --prod \
-            --message "Intel Pack ${{ steps.research.outputs.edition_date }}"
-
-      # MUST follow the Netlify deploy. The newsletter links to the web
-      # edition; staging it first points every subscriber at a 404.
-      - name: Stage Beehiiv draft (NEVER sends)
-        if: ${{ inputs.dry_run != true }}
-        env:
-          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
-          BEEHIIV_PUB_ID: pub_deb2e42d-316d-4040-aad7-01ca6aa0189e
-        run: |
-          python intel/stage_beehiiv.py \
-            --edition ./intel/incoming/ \
-            --status draft
-
-      - name: Archive edition
+      - name: Commit edition
         if: ${{ inputs.dry_run != true }}
         run: |
-          mkdir -p intel/archive
-          cp intel/incoming/*.json intel/archive/
           git config user.name  "intel-bot"
           git config user.email "intel@advntr.io"
-          git add intel/archive/
-          git commit -m "Archive intel edition ${{ steps.research.outputs.edition_date }}" \
+          git add apps/web/src/content/intel/
+          git commit -m "Intel Pack: edition ${{ steps.research.outputs.edition_date }} (draft)" \
             || echo "nothing to commit"
           git push
 
       - name: Failure notice
         if: failure()
         run: |
-          echo "::error::Intel pipeline failed. Download the intel-raw-${{ github.run_number }}"
-          echo "::error::and intel-build-${{ github.run_number }} artifacts to diagnose."
+          echo "::error::Intel pipeline failed. Download intel-raw-${{ github.run_number }}"
+          echo "::error::and intel-build-${{ github.run_number }} to diagnose."
