@@ -13,10 +13,13 @@
 name: Intel Pack
 
 on:
-  # DISABLED until Stage B exists. Uncomment when validate.py and
-  # write_edition.py are built and one edition has published cleanly.
-  # schedule:
-  #   - cron: "0 14 * * 1"   # Mondays 14:00 UTC (~09:00 CT)
+  # Stage B is built and the July 20, 2026 edition published cleanly, so
+  # this is live. GitHub Actions cron is fixed UTC with no DST awareness:
+  # 12:00 UTC is 6am CST (UTC-6) as requested, but during CDT (UTC-5,
+  # roughly March-November) it will fire at 7am local clock time instead.
+  # Revisit this line twice a year if 6am must hold exactly through DST.
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays 12:00 UTC = 6am CST
   workflow_dispatch:
     inputs:
       edition_date:
