@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
 import { getCollection } from 'astro:content';
 
-const entries = (await getCollection('intel')).sort(
+const entries = (await getCollection('intel', (entry) => entry.data.status === 'published')).sort(
   (a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime()
 );
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });

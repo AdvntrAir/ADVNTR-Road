@@ -36,6 +36,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   intel:
@@ -91,6 +92,7 @@ jobs:
 
       # Resolves ctaPlaceSlug / ctaSuppressed and writes the final content file.
       - name: Resolve CTA and write content file
+        id: write_edition
         run: |
           python intel/write_edition.py \
             --edition ./intel/incoming/ \
@@ -111,14 +113,93 @@ jobs:
       # The file lands with status: "draft"; a human promotes it.
       # ---------------------------------------------------------------
       - name: Commit edition
+        id: commit_edition
         if: ${{ inputs.dry_run != true }}
         run: |
           git config user.name  "intel-bot"
           git config user.email "intel@advntr.io"
           git add apps/web/src/content/intel/
-          git commit -m "Intel Pack: edition ${{ steps.research.outputs.edition_date }} (draft)" \
-            || echo "nothing to commit"
-          git push
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Intel Pack: edition ${{ steps.write_edition.outputs.edition_date }} (draft)"
+            git push
+            echo "committed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ---------------------------------------------------------------
+      # NOTIFY — only after a real commit, never on a dry run. The issue
+      # is the human trigger for Gate 4 (read the takes, flip draft ->
+      # published); the pipeline itself never promotes an edition.
+      # ---------------------------------------------------------------
+      - name: Open draft-ready issue
+        if: ${{ inputs.dry_run != true && steps.commit_edition.outputs.committed == 'true' }}
+        uses: actions/github-script@v7
+        env:
+          SUMMARY_JSON: ${{ steps.write_edition.outputs.summary_json }}
+        with:
+          script: |
+            const summary = JSON.parse(process.env.SUMMARY_JSON);
+            const { owner, repo } = context.repo;
+
+            const label = "intel";
+            try {
+              await github.rest.issues.createLabel({
+                owner, repo, name: label,
+                color: "0E8A16",
+                description: "Weekly Intel Pack edition ready for human review",
+              });
+            } catch (e) {
+              if (e.status !== 422) throw e; // 422 = label already exists, fine
+            }
+
+            const tiers = summary.tier_counts || {};
+            const tierLine = `lead: ${tiers.lead || 0}, feature: ${tiers.feature || 0}, brief: ${tiers.brief || 0}`;
+
+            const ctaLine = summary.cta_suppressed
+              ? "**Suppressed** — every candidate place this week was flagged (safety/fatality/injury/SAR/evacuation). No CTA renders."
+              : summary.cta_place_slug
+                ? `\`${summary.cta_place_slug}\``
+                : "(none scored)";
+
+            const hs = summary.harvest_stats || {};
+            const harvestLines = [
+              `- Candidates found: ${hs.candidatesFound ?? "?"}`,
+              `- Cleared verification: ${hs.clearedVerification ?? "?"}`,
+              `- Dropped, single source: ${hs.droppedSingleSource ?? "?"}`,
+              `- Dropped, outside window: ${hs.droppedOutsideWindow ?? "?"}`,
+              `- Dropped, duplicate: ${hs.droppedDuplicate ?? "?"}`,
+              `- Dropped, prior edition: ${hs.droppedPriorEdition ?? "?"}`,
+            ].join("\n");
+
+            const fileUrl = `https://github.com/${owner}/${repo}/blob/main/${summary.content_file_path}`;
+
+            const body = [
+              `**${summary.title}**`,
+              "",
+              "| | |",
+              "|---|---|",
+              `| Stories by tier | ${tierLine} |`,
+              `| CTA place | ${ctaLine} |`,
+              `| Thin week | ${summary.thin_week ? "yes" : "no"} |`,
+              "",
+              "**Harvest funnel**",
+              harvestLines,
+              "",
+              `**File:** ${fileUrl}`,
+              "",
+              "- [ ] Read the takes — do they still pass the swap test?",
+              "- [ ] Check any affectsGuides entries",
+              "- [ ] Flip status: draft -> published",
+            ].join("\n");
+
+            await github.rest.issues.create({
+              owner, repo,
+              title: `Intel Pack draft ready — ${summary.edition_date}`,
+              body,
+              labels: [label],
+            });
 
       - name: Failure notice
         if: failure()

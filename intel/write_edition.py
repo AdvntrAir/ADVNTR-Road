@@ -18,6 +18,8 @@ Usage:
 """
 
 import argparse
+import json
+import os
 import pathlib
 import sys
 
@@ -27,6 +29,7 @@ from intel_pipeline_lib import (
     EditionError,
     append_guide_update_queue,
     build_guide_update_rows,
+    edition_date_from_filename,
     find_edition_file,
     load_archive_story_ids,
     load_registry,
@@ -113,6 +116,7 @@ def main() -> int:
         fm, body = parse_edition(edition_path)
         registry = load_registry(args.registry)
         archive_ids = load_archive_story_ids(args.out)
+        edition_date = edition_date_from_filename(edition_path)
     except EditionError as e:
         print(f"WRITE_EDITION FAILED (before gates could run): {e}", file=sys.stderr)
         return 1
@@ -134,7 +138,10 @@ def main() -> int:
 
     cta_place_slug, cta_suppressed = resolve_cta(report.kept_stories, registry)
 
-    edition_date = fm["publishedDate"].isoformat()
+    # edition_date came from the filename above, not fm["publishedDate"]:
+    # the filename/URL slug stay on the Monday edition date Stage A already
+    # assigned, while publishedDate is the run date (intel-run-prompt.md
+    # section 4) and can fall later in the week.
     out_fm = build_output_frontmatter(fm, report.kept_stories, cta_place_slug, cta_suppressed)
     out_path = write_edition_file(args.out, edition_date, out_fm, body)
 
@@ -147,6 +154,27 @@ def main() -> int:
     print(f"  ctaSuppressed:  {cta_suppressed}")
     print(f"  written to:     {out_path}")
     print(f"  guide updates:  {len(rows)} row(s) appended to {args.queue}")
+
+    if gh_out := os.environ.get("GITHUB_OUTPUT"):
+        tier_counts = {"lead": 0, "feature": 0, "brief": 0}
+        for s in report.kept_stories:
+            tier_counts[s["tier"]] = tier_counts.get(s["tier"], 0) + 1
+        summary = {
+            "edition_date": edition_date,
+            "title": fm.get("title", ""),
+            "tier_counts": tier_counts,
+            "cta_place_slug": cta_place_slug,
+            "cta_suppressed": cta_suppressed,
+            "thin_week": bool(fm.get("thinWeek", False)),
+            "harvest_stats": fm.get("harvestStats") or {},
+            "content_file_path": str(out_path),
+        }
+        with open(gh_out, "a") as f:
+            f.write(f"edition_date={edition_date}\n")
+            f.write("summary_json<<GHADELIM\n")
+            f.write(json.dumps(summary))
+            f.write("\nGHADELIM\n")
+
     return 0
 
 

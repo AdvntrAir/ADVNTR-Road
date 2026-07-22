@@ -4,7 +4,7 @@ import SectionLabel from '../../components/SectionLabel.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('intel');
+  const entries = await getCollection('intel', (entry) => entry.data.status === 'published');
   return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 

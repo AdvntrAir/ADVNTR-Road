@@ -77,6 +77,24 @@ def find_edition_file(edition_dir: Path) -> Path:
     return files[0]
 
 
+EDITION_FILENAME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})-weekly-intel\.md$")
+
+
+def edition_date_from_filename(path: Path) -> str:
+    """The Monday edition date, from the filename Stage A already assigned —
+    not from the frontmatter's publishedDate, which (per intel-run-prompt.md
+    section 4) is the run date and can fall later in the week. The
+    filename/URL slug are meant to stay on the Monday date regardless of
+    when publishedDate says the edition actually went out."""
+    m = EDITION_FILENAME_RE.match(path.name)
+    if not m:
+        raise EditionError(
+            f"{path.name}: filename doesn't match YYYY-MM-DD-weekly-intel.md, "
+            "can't derive the edition date"
+        )
+    return m.group(1)
+
+
 def parse_edition(path: Path) -> tuple[dict, str]:
     text = path.read_text(encoding="utf-8")
     m = re.match(r"^---\n(.*?)\n---\s*\n?(.*)$", text, re.DOTALL)

@@ -79,7 +79,7 @@ export async function getLatestTrailhead(): Promise<TrailheadPreview | null> {
     };
   }
 
-  const local = await getCollection('intel');
+  const local = await getCollection('intel', (entry) => entry.data.status === 'published');
   if (local.length === 0) return null;
   const latest = local.sort((a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime())[0];
   return {

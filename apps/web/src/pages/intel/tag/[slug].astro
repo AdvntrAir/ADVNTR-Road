@@ -19,7 +19,7 @@ export async function getStaticPaths() {
   // its own build-time chunk and does not reliably capture outer closures.
   const humanize = (slug: string) => slug.replace(/-/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
 
-  const entries = await getCollection('intel');
+  const entries = await getCollection('intel', (entry) => entry.data.status === 'published');
   const registry = getPlaceRegistry();
 
   const byPlace = new Map<string, TaggedStory[]>();
