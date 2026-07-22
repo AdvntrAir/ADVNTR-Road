@@ -18,6 +18,7 @@ import os
 import pathlib
 import re
 import sys
+import time
 
 import anthropic
 import yaml
@@ -27,6 +28,35 @@ MODEL = os.environ.get("INTEL_MODEL", "claude-opus-4-8")
 MAX_TOKENS = 32000
 MAX_CONTINUATIONS = 20   # ceiling on pause_turn resumes; a runaway loop is a cost bug
 ARCHIVE_LOOKBACK = 4
+
+# Transient-failure retry policy for the streaming call (on top of whatever
+# the SDK's own max_retries already absorbed before ever raising to us).
+# Anthropic capacity issues, not our code -- but an unattended weekly run
+# has to survive them. Sum of delays is ~185s (~3 min), comfortably inside
+# the "~10 minutes of added wait" budget against the 45-minute job timeout.
+TRANSIENT_BACKOFF_SECONDS = [5, 15, 45, 120]
+TRANSIENT_STATUS_CODES = {429, 529}
+TRANSIENT_ERROR_TYPES = {"overloaded_error", "rate_limit_error"}
+
+
+def is_transient_error(exc: BaseException) -> bool:
+    """Anthropic capacity/rate-limit issues worth retrying ourselves.
+
+    Deliberately an allowlist, not a denylist: authentication errors,
+    invalid_request_error, and billing/insufficient-credits errors don't
+    match anything here and so are never retried -- they won't fix
+    themselves, and retrying just burns the backoff budget. Anything
+    unrecognized also falls through to "not transient" and fails fast,
+    which is the safe default.
+    """
+    if isinstance(exc, anthropic.APIConnectionError):
+        return True
+    if isinstance(exc, anthropic.APIStatusError):
+        if exc.status_code in TRANSIENT_STATUS_CODES:
+            return True
+        if exc.type in TRANSIENT_ERROR_TYPES:
+            return True
+    return False
 
 
 def monday_on_or_before(d: dt.date) -> dt.date:
@@ -104,6 +134,54 @@ def validate_frontmatter_parses(md: str) -> dict:
     return fm
 
 
+def stream_once(client: anthropic.Anthropic, **kwargs) -> tuple["anthropic.types.Message", int]:
+    """One client.messages.stream(...) call: drains it, prints the
+    search-count heartbeat, and returns (final_message, searches). Raises
+    on any error, transient or not — retry policy lives in the caller."""
+    searches = 0
+    with client.messages.stream(**kwargs) as stream:
+        for event in stream:
+            # Heartbeat so a 10-15 minute run doesn't look hung in the
+            # Actions log, and so search volume is visible live.
+            if event.type == "content_block_start":
+                block_type = getattr(event.content_block, "type", None)
+                if block_type == "server_tool_use":
+                    searches += 1
+                    print(f"  search {searches}...", file=sys.stderr, flush=True)
+        return stream.get_final_message(), searches
+
+
+def stream_with_retry(client: anthropic.Anthropic, **kwargs) -> tuple["anthropic.types.Message", int]:
+    """Runs stream_once, retrying from scratch on a transient failure with
+    TRANSIENT_BACKOFF_SECONDS backoff. Never resumes a partial stream — a
+    transient failure restarts the whole request, discarding that attempt's
+    partial search count entirely. Losing a couple of searches to a retry
+    is cheap next to failing an unattended weekly run. Non-transient errors
+    (auth, invalid request, billing) propagate on the first attempt."""
+    last_exc: BaseException | None = None
+    total_attempts = 1 + len(TRANSIENT_BACKOFF_SECONDS)
+
+    for attempt_num in range(total_attempts):
+        if attempt_num > 0:
+            delay = TRANSIENT_BACKOFF_SECONDS[attempt_num - 1]
+            print(
+                f"  transient error ({last_exc!r}), retrying in {delay}s "
+                f"(attempt {attempt_num + 1}/{total_attempts})...",
+                file=sys.stderr, flush=True,
+            )
+            time.sleep(delay)
+        try:
+            return stream_once(client, **kwargs)
+        except Exception as e:
+            if not is_transient_error(e):
+                raise
+            last_exc = e
+
+    raise RuntimeError(
+        f"exhausted {total_attempts} attempts after repeated transient API errors: {last_exc!r}"
+    ) from last_exc
+
+
 def run(edition_date: dt.date, out_dir: pathlib.Path, archive_dir: pathlib.Path) -> pathlib.Path:
     window_end = dt.date.today()
     window_start = window_end - dt.timedelta(days=7)
@@ -130,7 +208,12 @@ PLACE REGISTRY — authoritative. placeSlug and topicSlug must come from here:
 Research the window, verify against primary sources, and emit the Markdown file
 with YAML frontmatter per section 15. Nothing before it, nothing after it."""
 
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    # max_retries=5: explicit and generous. The SDK retries some errors
+    # (connection issues, 429, 5xx) itself before ever raising to us;
+    # stream_with_retry above is the second layer, for a stream that dies
+    # after already starting to receive events, which the SDK's own
+    # pre-request retry doesn't cover.
+    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"], max_retries=5)
     messages = [{"role": "user", "content": user_msg}]
     tools = [{"type": "web_search_20250305", "name": "web_search", "max_uses": 40}]
 
@@ -140,24 +223,17 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
     # Server-side tools execute inside the API. The only continuation case is
     # stop_reason == "pause_turn" on a long-running search sequence: send the
     # assistant content straight back, with no synthetic user turn.
-    searches = 0
+    total_searches = 0
     for attempt in range(MAX_CONTINUATIONS):
-        with client.messages.stream(
+        resp, searches = stream_with_retry(
+            client,
             model=MODEL,
             max_tokens=MAX_TOKENS,
             system=system_prompt,
             messages=messages,
             tools=tools,
-        ) as stream:
-            for event in stream:
-                # Heartbeat so a 10-15 minute run doesn't look hung in the
-                # Actions log, and so search volume is visible live.
-                if event.type == "content_block_start":
-                    block_type = getattr(event.content_block, "type", None)
-                    if block_type == "server_tool_use":
-                        searches += 1
-                        print(f"  search {searches}...", file=sys.stderr, flush=True)
-            resp = stream.get_final_message()
+        )
+        total_searches += searches
 
         if resp.stop_reason == "pause_turn":
             messages.append({"role": "assistant", "content": resp.content})
@@ -171,7 +247,7 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
             )
 
         text = "".join(b.text for b in resp.content if b.type == "text")
-        print(f"  research complete — {searches} searches", file=sys.stderr, flush=True)
+        print(f"  research complete — {total_searches} searches", file=sys.stderr, flush=True)
         break
     else:
         raise RuntimeError(f"hit MAX_CONTINUATIONS ({MAX_CONTINUATIONS}) without completing")
