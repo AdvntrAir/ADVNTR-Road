@@ -108,17 +108,30 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
     messages = [{"role": "user", "content": user_msg}]
     tools = [{"type": "web_search_20250305", "name": "web_search", "max_uses": 40}]
 
+    # STREAMING IS REQUIRED. The SDK rejects a non-streaming request whose
+    # max_tokens implies a possible >10 minute response, which this always does.
+    #
     # Server-side tools execute inside the API. The only continuation case is
     # stop_reason == "pause_turn" on a long-running search sequence: send the
     # assistant content straight back, with no synthetic user turn.
+    searches = 0
     for attempt in range(MAX_CONTINUATIONS):
-        resp = client.messages.create(
+        with client.messages.stream(
             model=MODEL,
             max_tokens=MAX_TOKENS,
             system=system_prompt,
             messages=messages,
             tools=tools,
-        )
+        ) as stream:
+            for event in stream:
+                # Heartbeat so a 10-15 minute run doesn't look hung in the
+                # Actions log, and so search volume is visible live.
+                if event.type == "content_block_start":
+                    block_type = getattr(event.content_block, "type", None)
+                    if block_type == "server_tool_use":
+                        searches += 1
+                        print(f"  search {searches}...", file=sys.stderr, flush=True)
+            resp = stream.get_final_message()
 
         if resp.stop_reason == "pause_turn":
             messages.append({"role": "assistant", "content": resp.content})
@@ -132,6 +145,7 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
             )
 
         text = "".join(b.text for b in resp.content if b.type == "text")
+        print(f"  research complete — {searches} searches", file=sys.stderr, flush=True)
         break
     else:
         raise RuntimeError(f"hit MAX_CONTINUATIONS ({MAX_CONTINUATIONS}) without completing")
