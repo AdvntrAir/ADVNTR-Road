@@ -54,18 +54,44 @@ def load_recent_story_ids(archive_dir: pathlib.Path, n: int) -> list[str]:
 
 def extract_markdown(text: str) -> str:
     """
-    The prompt says emit a bare Markdown file. Models sometimes fence it anyway.
-    Strip any wrapper, then require frontmatter.
+    The prompt says emit a bare Markdown file. Models wrap it in fences anyway,
+    sometimes with a preamble line. Be maximally forgiving: throw away anything
+    that isn't the frontmatter block and what follows it.
     """
-    text = text.strip()
-    text = re.sub(r"^```(?:markdown|md|yaml)?\s*\n", "", text)
-    text = re.sub(r"\n```\s*$", "", text)
-    if not text.startswith("---"):
-        idx = text.find("\n---\n")
-        if idx == -1:
-            raise ValueError("no YAML frontmatter found in model output")
-        text = text[idx + 1:]
-    return text.strip() + "\n"
+    lines = text.strip().split("\n")
+
+    def is_fence(s: str) -> bool:
+        return s.strip().startswith("```")
+
+    # Drop leading fences, blanks, and any preamble prose before the opening ---
+    while lines and lines[0].strip() != "---":
+        if is_fence(lines[0]) or not lines[0].strip() or not any(
+            l.strip() == "---" for l in lines[1:]
+        ):
+            if not any(l.strip() == "---" for l in lines):
+                raise ValueError("no YAML frontmatter delimiter found in output")
+        lines.pop(0)
+
+    if not lines:
+        raise ValueError("no YAML frontmatter found in output")
+
+    # Drop trailing fences and blanks
+    while lines and (is_fence(lines[-1]) or not lines[-1].strip()):
+        lines.pop()
+
+    # Locate the closing delimiter
+    close_idx = None
+    for i, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            close_idx = i
+            break
+    if close_idx is None:
+        raise ValueError("frontmatter opened but never closed")
+
+    # Strip any stray fence lines from the body
+    body = [l for l in lines[close_idx + 1:] if not is_fence(l)]
+
+    return "\n".join(lines[: close_idx + 1] + body).strip() + "\n"
 
 
 def validate_frontmatter_parses(md: str) -> dict:
@@ -150,6 +176,14 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
     else:
         raise RuntimeError(f"hit MAX_CONTINUATIONS ({MAX_CONTINUATIONS}) without completing")
 
+    # Save the raw model output FIRST. If parsing then fails, the run still
+    # leaves an artifact to read — a failed parse should never cost the
+    # research that produced it.
+    out_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = out_dir / f"RAW-{edition_date.isoformat()}.txt"
+    raw_path.write_text(text)
+    print(f"  raw output saved: {raw_path}", file=sys.stderr, flush=True)
+
     md = extract_markdown(text)
     fm = validate_frontmatter_parses(md)
 
@@ -157,7 +191,6 @@ with YAML frontmatter per section 15. Nothing before it, nothing after it."""
     if not stories:
         raise RuntimeError("output contains no topStories")
 
-    out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"{edition_date.isoformat()}-weekly-intel.md"
     out_path.write_text(md)
 
