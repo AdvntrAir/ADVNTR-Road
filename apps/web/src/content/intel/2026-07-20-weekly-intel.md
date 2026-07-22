@@ -139,7 +139,7 @@ recommendedContentAngles:
   Arches, and Glacier is actually producing on the ground, told through the people
   who didn''t choose to be in that Mist Trail video.'
 sourceUrls: []
-status: draft
+status: published
 harvestStats:
   candidatesFound: 30
   clearedVerification: 4
