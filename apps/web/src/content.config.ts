@@ -73,7 +73,7 @@ const intel = defineCollection({
         action: z.enum(['plan-change', 'book-now', 'awareness-only']),
 
         // ---- new: THE PRODUCT ----
-        take: z.string().max(260),
+        take: z.string().max(340),
 
         // ---- new: verification ----
         confidence: z.enum(['confirmed', 'reported']),

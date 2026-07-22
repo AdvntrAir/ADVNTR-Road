@@ -53,6 +53,11 @@ STATUS_VALUES = {"placeholder", "draft", "published"}
 DEAD_URL_ABORT_PCT = 0.30
 MIN_STORIES_AFTER_FILTERING = 3
 HTTP_TIMEOUT_SECONDS = 10
+# Backstop against runaway output, not the editorial rule — that's <=40 words,
+# enforced by the prompt (intel-run-prompt.md section 3). A take over this
+# drops just that story, same treatment as a dead primary source; it never
+# fails the whole edition on its own.
+TAKE_MAX_LENGTH = 340
 
 
 class EditionError(Exception):
@@ -294,11 +299,12 @@ def _validate_story_schema(story: dict, index: int) -> list[str]:
     req_enum("tier", TIER_VALUES)
     req_enum("action", ACTION_VALUES)
 
+    # Length is NOT checked here: a too-long take drops just that story
+    # (run_take_length_gate, gate 3.5) rather than failing schema validation
+    # outright — see TAKE_MAX_LENGTH.
     take = story.get("take")
     if not isinstance(take, str) or not take.strip():
         errors.append(f"{story_id_for_messages}: take required non-empty string")
-    elif len(take) > 260:
-        errors.append(f"{story_id_for_messages}: take exceeds 260 characters ({len(take)})")
 
     req_enum("confidence", CONFIDENCE_VALUES)
 
@@ -402,6 +408,26 @@ def run_date_window_gate(
     for s in stories:
         d = s["storyDate"]
         if d is None or d < window_start or d > window_end:
+            dropped.append(s["storyId"])
+        else:
+            kept.append(s)
+    return kept, dropped
+
+
+# ---------------------------------------------------------------------------
+# Gate 3.5 — take length
+#
+# A too-long take drops just that story (with a warning), the same
+# treatment as a dead primary source in the URL gate below — it does not
+# fail the edition on its own. The edition still fails if the drop takes
+# the story count below MIN_STORIES_AFTER_FILTERING or removes the only
+# lead; the tier and final-count checks already cover that.
+# ---------------------------------------------------------------------------
+
+def run_take_length_gate(stories: list[dict]) -> tuple[list[dict], list[str]]:
+    kept, dropped = [], []
+    for s in stories:
+        if len(s.get("take") or "") > TAKE_MAX_LENGTH:
             dropped.append(s["storyId"])
         else:
             kept.append(s)
@@ -522,6 +548,14 @@ def run_gates(
         report.drop("outside_window", sid)
     report.counts["dropped_outside_window"] = len(dropped_window)
     report.counts["kept_after_date_window"] = len(kept)
+
+    kept, dropped_take_length = run_take_length_gate(kept)
+    for sid in dropped_take_length:
+        report.drop("take_too_long", sid)
+        report.warnings.append(
+            f"{sid}: take exceeds {TAKE_MAX_LENGTH} characters, dropped"
+        )
+    report.counts["dropped_take_too_long"] = len(dropped_take_length)
 
     if check_urls:
         kept, dropped_dead, dead_count, total_count = run_url_gate(kept, head_fn)

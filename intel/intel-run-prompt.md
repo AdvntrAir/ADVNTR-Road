@@ -86,6 +86,9 @@ Every story gets a `take`. Every tier. No exceptions.
 ≤40 words. The ceiling is doing work — compression forces a position, because there
 is no room to hedge.
 
+Hard ceiling: 340 characters. The 40-word rule is the editorial standard;
+the character count is what validation enforces.
+
 **Not a take:** "Wildfire has closed trail access on the north side of the park."
 That is the headline again, wearing a hat.
 

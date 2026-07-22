@@ -44,6 +44,7 @@ def build_report(edition_path: pathlib.Path, report) -> str:
         f"- Tag/registry errors: {report.counts.get('tag_errors', '?')}",
         f"- Dropped, outside coverage window: {report.counts.get('dropped_outside_window', '?')}",
         f"- Kept after date window: {report.counts.get('kept_after_date_window', '?')}",
+        f"- Dropped, take too long: {report.counts.get('dropped_take_too_long', '?')}",
     ]
     if "urls_checked" in report.counts:
         lines += [
