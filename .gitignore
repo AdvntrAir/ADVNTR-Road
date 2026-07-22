@@ -12,3 +12,7 @@ graphical-inspiration/
 
 # Root-level mount-rainier-np/ is a separate web project, not part of this pipeline
 /mount-rainier-np/
+
+# Intel Pack — Stage A drops the raw edition JSON here mid-run. The validated
+# copy is committed to intel/archive/ instead; incoming/ is scratch.
+intel/incoming/

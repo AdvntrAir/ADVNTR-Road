@@ -1,0 +1,153 @@
+# .github/workflows/intel-pipeline.yml
+#
+# ADVNTR Road — Weekly Intel Pack, single-workflow pipeline.
+# Stage A (research, one API call) and Stage B (render, zero AI) in one run.
+# No Drive handoff, no second scheduler, no dependency on Matt's laptop.
+#
+# Fails closed at every gate. Publishes to a staged draft, never sends.
+
+name: Intel Pack
+
+on:
+  schedule:
+    # Monday 14:00 UTC (~09:00 CT). Avoid :00 exactly if you ever see
+    # scheduler contention — GitHub cron is best-effort, not exact.
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      edition_date:
+        description: "Edition date (YYYY-MM-DD). Blank = Monday on or before today."
+        required: false
+        type: string
+      dry_run:
+        description: "Research + validate + render, but do NOT deploy or stage draft"
+        required: false
+        type: boolean
+        default: true
+      skip_research:
+        description: "Reuse the last incoming/ JSON instead of a fresh API call (saves cost while debugging Stage B)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write        # needed to commit the archive
+
+jobs:
+  intel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45   # Stage A research is the long pole
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r intel/requirements.txt
+
+      # ---------------------------------------------------------------
+      # STAGE A — the only LLM call in the pipeline
+      # ---------------------------------------------------------------
+      - name: Stage A — research
+        id: research
+        if: ${{ inputs.skip_research != true }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INTEL_MODEL: ${{ vars.INTEL_MODEL || 'claude-opus-4-8' }}
+        run: |
+          python intel/stage_a_research.py \
+            --out ./intel/incoming/ \
+            --archive ./intel/archive/ \
+            --edition-date "${{ inputs.edition_date }}"
+
+      # Raw research output is uploaded BEFORE validation, so a failed
+      # validation run still leaves you something to read.
+      - name: Upload raw edition JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intel-raw-${{ github.run_number }}
+          path: intel/incoming/
+          retention-days: 30
+
+      # ---------------------------------------------------------------
+      # STAGE B — deterministic. Zero AI tokens past this point.
+      # ---------------------------------------------------------------
+      - name: Validate
+        run: |
+          python intel/validate.py \
+            --edition ./intel/incoming/ \
+            --registry ./intel/intel-place-registry.yaml \
+            --schema ./intel/intel-schema.json \
+            --archive ./intel/archive/ \
+            --report ./intel/out/intel_build_report.md
+
+      - name: Render web edition + tag hubs
+        run: |
+          python intel/render_web.py \
+            --edition ./intel/incoming/ \
+            --registry ./intel/intel-place-registry.yaml \
+            --archive ./intel/archive/ \
+            --out ./intel/out/site/
+
+      - name: Guide-update queue
+        run: |
+          python intel/render_guide_updates.py \
+            --edition ./intel/incoming/ \
+            --out ./intel/out/intel_guide_updates.md
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intel-build-${{ github.run_number }}
+          path: intel/out/
+          retention-days: 30
+
+      # ---------------------------------------------------------------
+      # PUBLISH — skipped entirely on dry_run
+      # ---------------------------------------------------------------
+      - name: Deploy to Netlify
+        if: ${{ inputs.dry_run != true }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx netlify-cli deploy \
+            --dir=./intel/out/site \
+            --prod \
+            --message "Intel Pack ${{ steps.research.outputs.edition_date }}"
+
+      # MUST follow the Netlify deploy. The newsletter links to the web
+      # edition; staging it first points every subscriber at a 404.
+      - name: Stage Beehiiv draft (NEVER sends)
+        if: ${{ inputs.dry_run != true }}
+        env:
+          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
+          BEEHIIV_PUB_ID: pub_deb2e42d-316d-4040-aad7-01ca6aa0189e
+        run: |
+          python intel/stage_beehiiv.py \
+            --edition ./intel/incoming/ \
+            --status draft
+
+      - name: Archive edition
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          mkdir -p intel/archive
+          cp intel/incoming/*.json intel/archive/
+          git config user.name  "intel-bot"
+          git config user.email "intel@advntr.io"
+          git add intel/archive/
+          git commit -m "Archive intel edition ${{ steps.research.outputs.edition_date }}" \
+            || echo "nothing to commit"
+          git push
+
+      - name: Failure notice
+        if: failure()
+        run: |
+          echo "::error::Intel pipeline failed. Download the intel-raw-${{ github.run_number }}"
+          echo "::error::and intel-build-${{ github.run_number }} artifacts to diagnose."

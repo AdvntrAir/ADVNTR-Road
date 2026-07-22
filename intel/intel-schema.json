@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://road.advntr.io/schema/intel-pack/v1.json",
+  "title": "ADVNTR Road Intel Pack",
+  "description": "Canonical weekly artifact. Authored by Stage A, validated and rendered by Stage B. This is the ONLY thing Stage A produces — prose lives inside it as fields. Never author a separate web version and newsletter version.",
+  "type": "object",
+  "required": ["edition_date", "window_start", "window_end", "generated_at", "trailhead", "stories", "harvest_stats"],
+  "additionalProperties": false,
+
+  "properties": {
+    "edition_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The Monday of the edition week. Drives filename, URL path, and utm_campaign."
+    },
+    "window_start": { "type": "string", "format": "date" },
+    "window_end": { "type": "string", "format": "date" },
+    "generated_at": { "type": "string", "format": "date-time" },
+
+    "trailhead": {
+      "type": "object",
+      "description": "The executive summary. Written LAST, after stories are ranked. It is an argument about the week, not a list of what follows.",
+      "required": ["body"],
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string",
+          "minLength": 200,
+          "maxLength": 1400,
+          "description": "120-220 words. Names the through-line of the week. If there is no through-line, say so plainly rather than inventing one."
+        },
+        "thin_week": {
+          "type": "boolean",
+          "default": false,
+          "description": "Set true when fewer than 5 stories cleared verification. Renderer adjusts layout and copy; it does NOT trigger padding."
+        }
+      }
+    },
+
+    "stories": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 15,
+      "description": "PUBLISHED stories only — everything that cleared verification. Harvest was wider; see watch_list for what did not clear.",
+      "items": { "$ref": "#/definitions/story" }
+    },
+
+    "watch_list": {
+      "type": "array",
+      "description": "single-source or unverified candidates. Never rendered publicly. Carried forward and rechecked next week.",
+      "items": { "$ref": "#/definitions/watch_item" }
+    },
+
+    "proposed_tags": {
+      "type": "array",
+      "description": "Places or topics Stage A encountered that are not in the registry. PROPOSAL ONLY — Stage B logs these for human review and does NOT mint them. A story whose only place is unregistered is tagged national-park-system or dropped.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "value", "rationale"],
+        "properties": {
+          "kind": { "enum": ["place", "topic"] },
+          "value": { "type": "string" },
+          "rationale": { "type": "string", "maxLength": 300 }
+        }
+      }
+    },
+
+    "harvest_stats": {
+      "type": "object",
+      "description": "Transparency on the harvest-wide / publish-narrow funnel. Rendered internally only.",
+      "required": ["candidates_found", "cleared_verification", "dropped_single_source", "dropped_outside_window", "dropped_duplicate"],
+      "properties": {
+        "candidates_found": { "type": "integer", "minimum": 0 },
+        "cleared_verification": { "type": "integer", "minimum": 0 },
+        "dropped_single_source": { "type": "integer", "minimum": 0 },
+        "dropped_outside_window": { "type": "integer", "minimum": 0 },
+        "dropped_duplicate": { "type": "integer", "minimum": 0 },
+        "dropped_prior_edition": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+
+  "definitions": {
+
+    "story": {
+      "type": "object",
+      "required": ["id", "tier", "headline", "take", "confidence", "primary_source", "published_date", "places", "topics", "action"],
+      "additionalProperties": false,
+      "properties": {
+
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable slug. Used for cross-edition dedupe. Never reused for a different story."
+        },
+
+        "tier": {
+          "enum": ["lead", "feature", "brief"],
+          "description": "Drives CTA weighting (lead=3, feature=2, brief=1) and which surfaces render `context`. Exactly one story per edition may be `lead`."
+        },
+
+        "headline": {
+          "type": "string",
+          "maxLength": 110,
+          "description": "What happened. Original wording — never the source outlet's headline verbatim."
+        },
+
+        "take": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 260,
+          "description": "REQUIRED ON EVERY TIER. <=40 words. What it means for someone who is going there. If it would be equally true of any park in the system, it is not a take and must be rewritten. See intel-run-prompt.md section 5 for the ban list."
+        },
+
+        "context": {
+          "type": "string",
+          "minLength": 400,
+          "maxLength": 1000,
+          "description": "80-150 words. REQUIRED for tier lead and feature. MUST BE ABSENT for tier brief. Original prose; no quotation beyond a few words."
+        },
+
+        "confidence": {
+          "enum": ["confirmed", "reported"],
+          "description": "confirmed = traces to a primary source AND date verified. reported = 2+ independent secondary outlets, no primary yet; renderer applies visible hedging. single-source never reaches this array — it goes to watch_list."
+        },
+
+        "primary_source": {
+          "type": "object",
+          "description": "REQUIRED. Every published story must anchor to a primary source, not merely to coverage of one. For confidence=reported this may be the closest official page (e.g. a park alerts index) with primary_confirmed=false.",
+          "required": ["url", "publisher", "primary_confirmed"],
+          "properties": {
+            "url": { "type": "string", "format": "uri" },
+            "publisher": { "type": "string" },
+            "primary_confirmed": { "type": "boolean" }
+          }
+        },
+
+        "corroborating_sources": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["url", "publisher"],
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "publisher": { "type": "string" }
+            }
+          }
+        },
+
+        "published_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Publication date of the underlying event/announcement. Stage B HARD-FILTERS anything outside [window_start, window_end]. Do not guess — if unverifiable, the story goes to watch_list."
+        },
+
+        "places": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": { "type": "string" },
+          "description": "Registry slugs only. Stage B fails validation on unknown values. Order matters — first is primary."
+        },
+
+        "topics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": { "type": "string" },
+          "description": "From the closed topics vocabulary in intel-place-registry.yaml."
+        },
+
+        "action": {
+          "enum": ["plan-change", "book-now", "awareness-only"],
+          "description": "What the reader does about it. The sortable axis competitors do not have."
+        },
+
+        "severity": {
+          "enum": ["low", "moderate", "high"],
+          "default": "low",
+          "description": "Drives CTA suppression when combined with topic=safety."
+        },
+
+        "sensitivity": {
+          "type": "object",
+          "description": "CTA suppression flags. Stage A MUST set these honestly — a CTA attached to a fatality story is unrecoverable brand damage.",
+          "properties": {
+            "involves_fatality": { "type": "boolean", "default": false },
+            "involves_injury": { "type": "boolean", "default": false },
+            "involves_search_and_rescue": { "type": "boolean", "default": false },
+            "involves_active_evacuation": { "type": "boolean", "default": false }
+          }
+        },
+
+        "affects_guides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["guide_slug", "impact"],
+            "properties": {
+              "guide_slug": { "type": "string" },
+              "impact": {
+                "enum": ["content-stale", "link-broken", "fee-changed", "access-changed", "monitor"],
+                "description": "Drives the guide-update queue. content-stale and fee-changed generate a task; monitor does not."
+              },
+              "note": { "type": "string", "maxLength": 300 }
+            }
+          },
+          "description": "Derived by Stage A from places[] where guide_status is published or in-progress. This is the living-edition mechanism."
+        },
+
+        "effective_dates": {
+          "type": "object",
+          "description": "When the thing actually takes effect, if different from published_date. Powers the longitudinal archive.",
+          "properties": {
+            "start": { "type": "string", "format": "date" },
+            "end": { "type": "string", "format": "date" }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "tier": { "const": "brief" } } },
+          "then": { "not": { "required": ["context"] } }
+        },
+        {
+          "if": { "properties": { "tier": { "enum": ["lead", "feature"] } } },
+          "then": { "required": ["context"] }
+        }
+      ]
+    },
+
+    "watch_item": {
+      "type": "object",
+      "required": ["id", "headline", "reason", "first_seen"],
+      "properties": {
+        "id": { "type": "string" },
+        "headline": { "type": "string", "maxLength": 110 },
+        "reason": {
+          "enum": ["single-source", "date-unverifiable", "url-unresolvable", "outside-window", "awaiting-primary"]
+        },
+        "source_url": { "type": "string", "format": "uri" },
+        "first_seen": { "type": "string", "format": "date" },
+        "weeks_carried": { "type": "integer", "minimum": 1, "default": 1 }
+      }
+    }
+  }
+}

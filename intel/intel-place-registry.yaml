@@ -1,0 +1,250 @@
+# ADVNTR Road — Intel Pack Place Registry
+# v0.1 · July 2026
+#
+# ONE FILE, FOUR JOBS:
+#   1. Tag hub generation      → /intel/tag/[slug]/
+#   2. affects_guides matching → which published guides a story touches
+#   3. Guide-update queue      → tasks generated when a story hits a published guide
+#   4. CTA resolution          → which guide/waitlist a weekly edition points at
+#
+# GOVERNANCE
+#   The weekly Stage A run may PROPOSE new places via `proposed_tags`.
+#   It may NOT mint them. Stage B fails validation on an unknown place slug.
+#   Additions to this file are deliberate, in-repo, human commits.
+#   Expected cadence: ~4 edits/year.
+#
+# SLUG RULE
+#   Where a guide exists, `slug` MUST equal the guide slug exactly.
+#   This is what makes one lookup serve all four jobs. Do not diverge.
+
+meta:
+  version: "0.1"
+  updated: "2026-07-22"
+
+# ---------------------------------------------------------------------------
+# CTA FALLBACK LADDER
+# Stage B walks this top-down. First match wins.
+# ---------------------------------------------------------------------------
+cta_rules:
+  selection:
+    # Weighted by story tier, summed per place. Highest total anchors the edition.
+    tier_weights:
+      lead: 3
+      feature: 2
+      brief: 1
+    # Ties break toward the higher rung of the ladder (published > in-progress > roadmap).
+    tiebreak: guide_status_rank
+
+  ladder:
+    - status: published
+      guide_type: free
+      cta_kind: email_capture
+      copy_hint: "Free guide, email-gated download. Never ask for money on a free anchor."
+    - status: published
+      guide_type: paid
+      cta_kind: gumroad
+      copy_hint: "Direct to the Gumroad product."
+    - status: in-progress
+      cta_kind: waitlist_dated
+      copy_hint: "Name the ship month honestly. Do not imply it's available."
+    - status: roadmap
+      cta_kind: waitlist
+      copy_hint: >
+        Waitlist capture, NOT a generic guides link. A generic link from a
+        place-heavy edition converts near zero. The waitlist converts AND
+        produces roadmap demand data.
+    - status: out-of-scope
+      cta_kind: generic
+    - status: _no_place_tag
+      cta_kind: generic
+
+  # HARD SUPPRESSION — brand protection, not a preference.
+  suppression:
+    # A place cannot anchor the edition CTA if its highest-weighted story
+    # matches any of these. Selection falls through to the next-highest place.
+    conditions:
+      - topic: safety
+        severity_gte: high
+      - involves_fatality: true
+      - involves_injury: true
+      - involves_search_and_rescue: true
+      - involves_active_evacuation: true
+    # If EVERY candidate place is suppressed, the edition renders with NO CTA.
+    # This is a valid, expected outcome. Do not fall back to generic.
+    all_suppressed_behavior: omit_cta
+
+  placement:
+    max_cta_per_edition: 1
+    web_positions: [after_lead_story, edition_footer]   # same CTA, two placements
+    newsletter_positions: [footer]
+    social_positions: []   # social CTA is always just the web edition link
+
+  utm:
+    template: "?utm_source=intel&utm_medium={surface}&utm_campaign=intel-{edition_date}&utm_content={place_slug}"
+    surfaces: [web, newsletter, social]
+
+# ---------------------------------------------------------------------------
+# PLACES
+# guide_status: published | in-progress | roadmap | out-of-scope
+# guide_type:   free | paid          (required when status = published)
+# ---------------------------------------------------------------------------
+places:
+
+  # --- PUBLISHED (v1 architecture; all flagged for v2.0 rebuild) -----------
+  - slug: olympic-national-park
+    label: Olympic National Park
+    aliases: ["Olympic NP", "Olympic Peninsula", "Hoh Rainforest", "Hurricane Ridge"]
+    guide_status: published
+    guide_type: free            # free-forever anchor — never retroactively paywalled
+    guide_url: /guides/olympic-national-park/
+    region: pacific-northwest
+
+  - slug: oregon-coast
+    label: Oregon Coast (US-101)
+    aliases: ["US-101", "Highway 101 Oregon", "Cannon Beach", "Astoria"]
+    guide_status: published
+    guide_type: free            # free-forever anchor
+    guide_url: /guides/oregon-coast/
+    region: pacific-northwest
+
+  - slug: north-cascades-national-park
+    label: North Cascades National Park
+    aliases: ["North Cascades", "Highway 20", "Diablo Lake"]
+    guide_status: published
+    guide_type: paid
+    guide_url: /guides/north-cascades-national-park/
+    region: pacific-northwest
+
+  - slug: mount-rainier-national-park
+    label: Mount Rainier National Park
+    aliases: ["Mount Rainier", "Mt Rainier", "Paradise", "Sunrise"]
+    guide_status: published
+    guide_type: paid
+    guide_url: /guides/mount-rainier-national-park/
+    region: pacific-northwest
+
+  # --- IN PROGRESS ---------------------------------------------------------
+  - slug: crater-lake-national-park
+    label: Crater Lake National Park
+    aliases: ["Crater Lake", "Rim Drive"]
+    guide_status: in-progress
+    ship_month: "2026-08"       # UPDATE ON PUBLISH → status: published
+    region: pacific-northwest
+
+  # --- ROADMAP — near-term (named in launch sequence) ----------------------
+  - slug: olympic-peninsula-loop
+    label: Olympic Peninsula Loop
+    guide_status: roadmap
+    region: pacific-northwest
+
+  - slug: columbia-river-gorge
+    label: Columbia River Gorge
+    aliases: ["Historic Columbia River Highway", "Multnomah Falls"]
+    guide_status: roadmap
+    region: pacific-northwest
+
+  - slug: route-66-west
+    label: Route 66 West
+    aliases: ["Route 66", "Historic Route 66", "Mother Road"]
+    guide_status: roadmap
+    ship_month: "2026-11"       # HARD DEADLINE — centennial, Nov 11 2026
+    region: southwest
+
+  # --- ROADMAP — high-news-volume parks -----------------------------------
+  # These generate intel traffic whether or not a guide exists. Registering
+  # them early means their tag hubs start accumulating authority NOW, and a
+  # waitlist starts collecting demand data before the guide is scheduled.
+  - slug: yellowstone-national-park
+    label: Yellowstone National Park
+    aliases: ["Yellowstone", "Old Faithful", "Lamar Valley"]
+    guide_status: roadmap
+    region: greater-yellowstone
+
+  - slug: grand-teton-national-park
+    label: Grand Teton National Park
+    aliases: ["Grand Teton", "Tetons", "Jackson Hole"]
+    guide_status: roadmap
+    region: greater-yellowstone
+
+  - slug: glacier-national-park
+    label: Glacier National Park
+    aliases: ["Glacier NP", "Going-to-the-Sun Road"]
+    guide_status: roadmap
+    region: northern-rockies
+
+  - slug: zion-national-park
+    label: Zion National Park
+    aliases: ["Zion", "Angels Landing", "The Narrows"]
+    guide_status: roadmap
+    region: desert-southwest
+
+  - slug: grand-canyon-national-park
+    label: Grand Canyon National Park
+    aliases: ["Grand Canyon", "South Rim", "North Rim"]
+    guide_status: roadmap
+    region: desert-southwest
+
+  - slug: arches-national-park
+    label: Arches National Park
+    aliases: ["Arches", "Delicate Arch", "Moab"]
+    guide_status: roadmap
+    region: desert-southwest
+
+  - slug: yosemite-national-park
+    label: Yosemite National Park
+    aliases: ["Yosemite", "Tioga Pass", "Half Dome"]
+    guide_status: roadmap
+    region: sierra-nevada
+
+  - slug: rocky-mountain-national-park
+    label: Rocky Mountain National Park
+    aliases: ["Rocky Mountain NP", "RMNP", "Trail Ridge Road"]
+    guide_status: roadmap
+    region: southern-rockies
+
+  - slug: great-smoky-mountains-national-park
+    label: Great Smoky Mountains National Park
+    aliases: ["Great Smokies", "Smoky Mountains", "Cades Cove"]
+    guide_status: roadmap
+    region: appalachia
+
+  - slug: acadia-national-park
+    label: Acadia National Park
+    aliases: ["Acadia", "Cadillac Mountain"]
+    guide_status: roadmap
+    region: northeast
+
+  # --- SYSTEM-WIDE ---------------------------------------------------------
+  # Stories about the park system as a whole: NPS budget, federal fee policy,
+  # America the Beautiful pass changes, agency staffing, public lands bills.
+  # These are frequently the most important stories of a given week but have
+  # no single place anchor. They CANNOT anchor a CTA — they fall through.
+  - slug: national-park-system
+    label: National Park System
+    aliases: ["NPS", "National Park Service", "public lands", "Department of the Interior"]
+    guide_status: out-of-scope
+    region: system-wide
+    cta_eligible: false
+
+# ---------------------------------------------------------------------------
+# CLOSED TAG VOCABULARIES
+# Stage B fails validation on any value not listed here.
+# ---------------------------------------------------------------------------
+topics:
+  - closures
+  - wildfire
+  - weather
+  - wildlife
+  - fees
+  - reservations
+  - legislation
+  - infrastructure
+  - crowding
+  - conservation
+  - safety
+  - access
+
+actions:
+  - plan-change      # reader must change an existing plan
+  - book-now         # time-sensitive booking window
+  - awareness-only   # context, no action required
