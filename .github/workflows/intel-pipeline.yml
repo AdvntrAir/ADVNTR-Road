@@ -98,28 +98,42 @@ jobs:
       # ---------------------------------------------------------------
       # STAGE B — deterministic. Zero AI tokens past this point.
       # ---------------------------------------------------------------
+      #
+      # use_fixture skips the live URL-resolution gate on both scripts below:
+      # sample-edition.md's links were already verified live when it was
+      # captured, and the fixture exists to test schema/gate/CTA/template
+      # logic for zero dollars, not to re-verify links on every run. Fixture
+      # runs are fully offline and deterministic.
       - name: Validate
         run: |
+          SKIP_URL_FLAG=""
+          if [ "${{ inputs.use_fixture }}" = "true" ]; then
+            SKIP_URL_FLAG="--skip-url-check"
+          fi
           python intel/validate.py \
             --edition ./intel/incoming/ \
             --registry ./intel/intel-place-registry.yaml \
             --guides ./apps/web/src/data/guides.ts \
             --archive ./apps/web/src/content/intel/ \
-            --report ./intel/out/intel_build_report.md
+            --report ./intel/out/intel_build_report.md \
+            $SKIP_URL_FLAG
 
       # Resolves ctaPlaceSlug / ctaSuppressed and writes the final content file.
       #
-      # use_fixture routes --out to a scratch dir under intel/out/ (already
-      # gitignored) instead of the real content collection — sample-edition.md
-      # is a test asset and must never land in apps/web/src/content/intel/,
-      # where "Commit edition" below would push it live as if it were a real
-      # draft. That step stages apps/web/src/content/intel/ specifically, so
-      # with output redirected here it naturally has nothing to commit.
+      # use_fixture also routes --out to a scratch dir under intel/out/
+      # (already gitignored) instead of the real content collection —
+      # sample-edition.md is a test asset and must never land in
+      # apps/web/src/content/intel/, where "Commit edition" below would push
+      # it live as if it were a real draft. That step stages
+      # apps/web/src/content/intel/ specifically, so with output redirected
+      # here it naturally has nothing to commit.
       - name: Resolve CTA and write content file
         id: write_edition
         run: |
+          SKIP_URL_FLAG=""
           if [ "${{ inputs.use_fixture }}" = "true" ]; then
             OUT_DIR="./intel/out/fixture-content/"
+            SKIP_URL_FLAG="--skip-url-check"
           else
             OUT_DIR="./apps/web/src/content/intel/"
           fi
@@ -127,7 +141,8 @@ jobs:
             --edition ./intel/incoming/ \
             --registry ./intel/intel-place-registry.yaml \
             --out "$OUT_DIR" \
-            --queue ./intel/out/intel_guide_updates.md
+            --queue ./intel/out/intel_guide_updates.md \
+            $SKIP_URL_FLAG
 
       - name: Upload build report
         if: always()

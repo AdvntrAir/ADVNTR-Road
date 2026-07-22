@@ -90,9 +90,25 @@ yet, which is a real mistake, not a lag. `--guides` is only used for a
 **warning** when a registry-valid slug hasn't reached `guides.ts` yet;
 that's expected for in-progress guides and never fails the build.
 
-Add `--skip-url-check` to skip the live HTTP HEAD/GET checks for fast local
-iteration. **Never use this in CI** — dead-link detection is a real gate,
-not decoration.
+**URL resolution is tri-state, not a bool.** Every `primarySourceUrl` and
+`corroboratingUrl` gets HEAD'd with a browser-like User-Agent (following
+redirects), retrying with GET on a 403/405/429 — but only a hard 404/410,
+DNS failure, or connection refusal counts as **dead**. A 5xx, a persistent
+403/429, a timeout, or an SSL quirk is **inconclusive** and gets logged,
+never treated as a kill signal — news sites and CDNs routinely bot-block a
+bare request from a CI IP, and that isn't the same as the article being
+gone. A dead `primarySourceUrl` drops that story (same treatment as an
+over-length take); a dead `corroboratingUrl` just gets stripped from the
+story with a warning, the story itself survives. There's no aggregate
+dead-link percentage that fails the whole edition — per-story handling
+does that job instead, so one flaky outlet doesn't take four unrelated
+stories down with it.
+
+Add `--skip-url-check` to skip live checks entirely for fast local
+iteration. **Never use this in CI for a real edition** — dead-link
+detection is a real gate, not decoration. (The `use_fixture` path is the
+one exception: `sample-edition.md`'s links were already verified when it
+was captured, so its CI run always skips live checks — see below.)
 
 ### Write the edition
 

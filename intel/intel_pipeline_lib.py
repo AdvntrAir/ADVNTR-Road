@@ -50,7 +50,6 @@ WATCHLIST_REASONS = {
 }
 STATUS_VALUES = {"placeholder", "draft", "published"}
 
-DEAD_URL_ABORT_PCT = 0.30
 MIN_STORIES_AFTER_FILTERING = 3
 HTTP_TIMEOUT_SECONDS = 10
 # Backstop against runaway output, not the editorial rule — that's <=40 words,
@@ -436,47 +435,100 @@ def run_take_length_gate(stories: list[dict]) -> tuple[list[dict], list[str]]:
 
 # ---------------------------------------------------------------------------
 # Gate 4 — URL resolution
+#
+# News sites and CDNs routinely 403/429 a bare HEAD request from a
+# datacenter IP with no User-Agent — that is bot-blocking, not evidence the
+# article is gone. Only a hard 404/410, DNS failure, or connection refusal
+# counts as dead. Everything else (persistent 403/429, 5xx, timeouts, SSL
+# quirks) is inconclusive: logged, never treated as a kill signal. There is
+# no aggregate dead-URL threshold — a probe that can't tell one flaky
+# outlet from a real problem shouldn't fail the whole edition; per-story
+# handling below does that job instead.
 # ---------------------------------------------------------------------------
 
-def default_head_check(url: str) -> bool:
-    """True if the URL resolves. Falls back to GET when a host rejects HEAD
-    (NPS.gov and similar CDNs sometimes 403/405 HEAD but serve GET fine)."""
+URL_ALIVE = "alive"
+URL_DEAD = "dead"
+URL_INCONCLUSIVE = "inconclusive"
+
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
+
+
+def default_url_probe(url: str) -> str:
+    """Returns URL_ALIVE, URL_DEAD, or URL_INCONCLUSIVE — never a bare bool,
+    because "the probe failed" and "the resource is gone" are different
+    things and callers need to tell them apart."""
+    headers = {"User-Agent": BROWSER_USER_AGENT}
     try:
-        resp = requests.head(url, allow_redirects=True, timeout=HTTP_TIMEOUT_SECONDS)
-        if resp.status_code in (405, 403):
-            resp = requests.get(url, allow_redirects=True, timeout=HTTP_TIMEOUT_SECONDS, stream=True)
+        resp = requests.head(url, allow_redirects=True, timeout=HTTP_TIMEOUT_SECONDS, headers=headers)
+        if resp.status_code in (403, 405, 429):
+            resp = requests.get(
+                url, allow_redirects=True, timeout=HTTP_TIMEOUT_SECONDS, headers=headers, stream=True
+            )
             resp.close()
-        return resp.status_code < 400
+    except requests.exceptions.SSLError:
+        # Could be a real cert problem or just a quirky environment — not
+        # confidently "the link is dead."
+        return URL_INCONCLUSIVE
+    except requests.exceptions.ConnectionError:
+        # DNS failure or connection refused, per requests/urllib3 — this is
+        # the one exception case that counts as dead.
+        return URL_DEAD
     except requests.RequestException:
-        return False
+        # Timeouts, too-many-redirects, etc. — inconclusive, not dead.
+        return URL_INCONCLUSIVE
+
+    if resp.status_code in (404, 410):
+        return URL_DEAD
+    if resp.status_code >= 500:
+        return URL_INCONCLUSIVE
+    if resp.status_code < 400:
+        return URL_ALIVE
+    # Any other 4xx that survived the GET retry (401, 402, a persistent
+    # 403/429) — bot-blocking or auth-walling, not proof of death.
+    return URL_INCONCLUSIVE
 
 
 def run_url_gate(
-    stories: list[dict], head_fn: Callable[[str], bool] = default_head_check
-) -> tuple[list[dict], list[str], int, int]:
-    """Returns (kept, dropped_dead_primary, dead_url_count, total_url_count)."""
-    kept, dropped = [], []
-    dead_count = 0
-    total_count = 0
+    stories: list[dict], probe_fn: Callable[[str], str] = default_url_probe
+) -> tuple[list[dict], list[str], list[str], dict[str, int]]:
+    """Returns (kept, dropped_dead_primary, warnings, counts).
+
+    A dead primarySourceUrl drops the story (same treatment as an
+    over-length take). A dead corroboratingUrl keeps the story, strips
+    just that URL, and logs a warning. Inconclusive URLs of either kind are
+    left exactly alone — that's the whole point of the tri-state."""
+    kept, dropped_primary = [], []
+    warnings: list[str] = []
+    counts = {"checked": 0, "alive": 0, "dead": 0, "inconclusive": 0}
 
     for s in stories:
-        primary_alive = head_fn(s["primarySourceUrl"])
-        total_count += 1
-        if not primary_alive:
-            dead_count += 1
+        primary_status = probe_fn(s["primarySourceUrl"])
+        counts["checked"] += 1
+        counts[primary_status] += 1
 
-        corroborating = s.get("corroboratingUrls", []) or []
-        for url in corroborating:
-            total_count += 1
-            if not head_fn(url):
-                dead_count += 1
+        if primary_status == URL_DEAD:
+            dropped_primary.append(s["storyId"])
+            continue
 
-        if not primary_alive:
-            dropped.append(s["storyId"])
-        else:
-            kept.append(s)
+        surviving = []
+        for url in s.get("corroboratingUrls", []) or []:
+            status = probe_fn(url)
+            counts["checked"] += 1
+            counts[status] += 1
+            if status == URL_DEAD:
+                warnings.append(
+                    f"{s['storyId']}: corroboratingUrl '{url}' is dead, removed from the rendered story"
+                )
+                continue
+            surviving.append(url)
+        s["corroboratingUrls"] = surviving
 
-    return kept, dropped, dead_count, total_count
+        kept.append(s)
+
+    return kept, dropped_primary, warnings, counts
 
 
 # ---------------------------------------------------------------------------
@@ -517,7 +569,7 @@ def run_gates(
     registry: dict,
     guide_slugs: Optional[set[str]],
     archive_ids: set[str],
-    head_fn: Callable[[str], bool] = default_head_check,
+    probe_fn: Callable[[str], str] = default_url_probe,
     check_urls: bool = True,
 ) -> GateReport:
     report = GateReport()
@@ -558,18 +610,20 @@ def run_gates(
     report.counts["dropped_take_too_long"] = len(dropped_take_length)
 
     if check_urls:
-        kept, dropped_dead, dead_count, total_count = run_url_gate(kept, head_fn)
-        for sid in dropped_dead:
+        kept, dropped_dead_primary, url_warnings, url_counts = run_url_gate(kept, probe_fn)
+        for sid in dropped_dead_primary:
             report.drop("dead_primary_source", sid)
-        report.counts["dropped_dead_primary"] = len(dropped_dead)
-        report.counts["urls_checked"] = total_count
-        report.counts["urls_dead"] = dead_count
-        dead_pct = (dead_count / total_count) if total_count else 0.0
-        report.counts["dead_url_pct"] = round(dead_pct * 100, 1)
-        if total_count and dead_pct > DEAD_URL_ABORT_PCT:
-            report.errors.append(
-                f"{dead_count}/{total_count} URLs ({dead_pct:.0%}) dead, exceeds the 30% threshold"
-            )
+            report.warnings.append(f"{sid}: primarySourceUrl is dead, story dropped")
+        report.warnings.extend(url_warnings)
+        report.counts["dropped_dead_primary"] = len(dropped_dead_primary)
+        report.counts["urls_checked"] = url_counts["checked"]
+        report.counts["urls_alive"] = url_counts["alive"]
+        report.counts["urls_dead"] = url_counts["dead"]
+        report.counts["urls_inconclusive"] = url_counts["inconclusive"]
+        # No aggregate threshold: a probe that can't distinguish bot-blocking
+        # from a real dead link shouldn't fail the whole edition over it.
+        # Per-story handling above (drop on dead primary, strip+warn on dead
+        # corroborating) does that job instead.
     report.counts["kept_after_url_check"] = len(kept)
 
     tier_errors = run_tier_gate(kept)

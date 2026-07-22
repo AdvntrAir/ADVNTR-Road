@@ -49,7 +49,9 @@ def build_report(edition_path: pathlib.Path, report) -> str:
     if "urls_checked" in report.counts:
         lines += [
             f"- URLs checked: {report.counts.get('urls_checked')}",
-            f"- URLs dead: {report.counts.get('urls_dead')} ({report.counts.get('dead_url_pct')}%)",
+            f"- URLs alive: {report.counts.get('urls_alive')}",
+            f"- URLs dead: {report.counts.get('urls_dead')}",
+            f"- URLs inconclusive (bot-blocked, timed out, etc. — not treated as dead): {report.counts.get('urls_inconclusive')}",
             f"- Dropped, dead primary source: {report.counts.get('dropped_dead_primary', '?')}",
         ]
     lines += [

@@ -10,7 +10,7 @@ this doesn't need a framework. Run directly:
 
     python intel/tests/test_cta_suppression.py
 
-Uses a fake head_fn so it never makes a real network call — this test is
+Uses a fake probe_fn so it never makes a real network call — this test is
 about CTA math, not link liveness (that's exercised separately, live,
 by validate.py itself).
 """
@@ -23,6 +23,7 @@ HERE = pathlib.Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 
 from intel_pipeline_lib import (  # noqa: E402
+    URL_ALIVE,
     load_registry,
     parse_edition,
     resolve_cta,
@@ -33,14 +34,14 @@ from write_edition import build_output_frontmatter  # noqa: E402
 FIXTURE = HERE / "fixtures" / "2026-08-03-cta-suppression.md"
 REGISTRY = HERE.parent / "intel-place-registry.yaml"
 
-ALWAYS_ALIVE = lambda url: True  # noqa: E731 — deliberately not testing link liveness here
+ALWAYS_ALIVE = lambda url: URL_ALIVE  # noqa: E731 — deliberately not testing link liveness here
 
 
 def test_all_candidates_suppressed_means_no_cta():
     fm, _ = parse_edition(FIXTURE)
     registry = load_registry(REGISTRY)
 
-    report = run_gates(fm, registry, guide_slugs=None, archive_ids=set(), head_fn=ALWAYS_ALIVE)
+    report = run_gates(fm, registry, guide_slugs=None, archive_ids=set(), probe_fn=ALWAYS_ALIVE)
     assert report.passed, f"fixture should validate cleanly, got errors: {report.errors}"
     assert len(report.kept_stories) == 3, f"expected all 3 stories kept, got {len(report.kept_stories)}"
 
@@ -73,7 +74,7 @@ def test_suppression_is_per_place_not_global():
     # unsuppressed, rather than the edition falling through by accident.
     stories[1]["placeSlug"] = "oregon-coast"
 
-    report = run_gates(fm, registry, guide_slugs=None, archive_ids=set(), head_fn=ALWAYS_ALIVE)
+    report = run_gates(fm, registry, guide_slugs=None, archive_ids=set(), probe_fn=ALWAYS_ALIVE)
     assert report.passed, f"errors: {report.errors}"
 
     cta_place_slug, cta_suppressed = resolve_cta(report.kept_stories, registry)
