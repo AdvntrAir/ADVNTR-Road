@@ -9,12 +9,17 @@
 </head>
 <body>
 
+{# ── Cover ──────────────────────────────────────────────────────────────── #}
 <div class="page-cover guide-title-string poster-cover grain" data-guide-title="{{ guide.title }}">
-  {% if guide.cover_photo_uri %}<img class="poster-cover__image" src="{{ guide.cover_photo_uri }}">{% endif %}
+  {% if guide.cover_photo_uri %}<img class="poster-cover__image" src="{{ guide.cover_photo_uri }}" alt="">{% endif %}
   <div class="poster-cover__wash"></div>
   <img class="brand-logo brand-logo--cover" src="{{ guide.logos.white }}" alt="ADVNTR Road">
   <div class="poster-cover__brand">{{ guide.edition }}</div>
-  <div class="poster-cover__meta">{{ guide.region }}<br>{{ guide.stats[1] if guide.stats }}<br>{{ guide.published }}</div>
+  <div class="poster-cover__meta">
+    {{ guide.region }}<br>
+    {% if guide.stats %}{{ guide.stats[1] }}{% endif %}<br>
+    {{ guide.published }}
+  </div>
   <div class="poster-cover__word-block">
     <h1 class="poster-cover__word">{% for line in guide.cover_word %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</h1>
     {% if guide.designation %}<div class="poster-cover__designation">{{ guide.designation }}</div>{% endif %}
@@ -24,6 +29,7 @@
   <div class="barcode poster-cover__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </div>
 
+{# ── Table of Contents ───────────────────────────────────────────────────── #}
 <div class="page-toc section toc-page grain">
   <div class="toc-page__masthead">
     <img class="brand-logo brand-logo--toc" src="{{ guide.logos.green }}" alt="ADVNTR Road">
@@ -33,27 +39,42 @@
   <h2 class="toc-page__title">Use this like a field card.</h2>
   <div class="toc-page__grid">
     {% for section in guide.sections %}
-    <div class="toc-item">
+    <a class="toc-item toc-item--link" href="#{{ section.section_id }}">
       <span class="toc-item__num">{{ section.display_number }}</span>
       <span class="toc-item__title">{{ section.title }}</span>
       <span class="toc-item__word">{{ section.visual_word }}</span>
-    </div>
+      <span class="toc-item__page"></span>
+    </a>
     {% endfor %}
   </div>
+  {% if guide.stats %}
+  <div class="toc-stats-strip">
+    {% for stat in guide.stats %}
+    <span class="toc-stat">{{ stat }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
 </div>
 
+{# ── Sections ────────────────────────────────────────────────────────────── #}
 {% for section in guide.sections %}
-<div class="section section--{{ section.visual_theme }}" id="section-{{ loop.index }}">
+<div class="section section--{{ section.visual_theme }} section--type-{{ section.section_type }}" id="{{ section.section_id }}">
+
+  {# Section Opener v2 — full-bleed when photo available, compact banner otherwise #}
+  {% set _has_photo = (section.section_type == 'orientation' and guide.cover_photo_uri) or (section.section_type == 'zone' and section.zone and section.zone.get('photo_uri')) %}
+  {% if _has_photo %}
   <div class="visual-opener visual-opener--{{ section.visual_theme }} grain">
-    {% if section.visual_image %}<img class="visual-opener__image" src="{{ section.visual_image }}" alt="">{% endif %}
+    {% if section.section_type == 'orientation' and guide.cover_photo_uri %}
+      <img class="visual-opener__image" src="{{ guide.cover_photo_uri }}" alt="">
+    {% elif section.section_type == 'zone' and section.zone and section.zone.get('photo_uri') %}
+      <img class="visual-opener__image" src="{{ section.zone.photo_uri }}" alt="">
+    {% endif %}
     <div class="visual-opener__wash"></div>
     <div class="visual-opener__label">Section {{ section.display_number }} / {{ section.visual_label }}</div>
-    {% if section.visual_theme in ["photo", "dark"] %}
-    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.white }}" alt="ADVNTR Road">
-    {% elif section.visual_theme == "blue" %}
-    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.rust }}" alt="ADVNTR Road">
+    {% if section.visual_theme in ["photo", "dark", "blue"] %}
+      <img class="brand-logo brand-logo--opener" src="{{ guide.logos.white }}" alt="ADVNTR Road">
     {% else %}
-    <img class="brand-logo brand-logo--opener" src="{{ guide.logos.green }}" alt="ADVNTR Road">
+      <img class="brand-logo brand-logo--opener" src="{{ guide.logos.green }}" alt="ADVNTR Road">
     {% endif %}
     <div class="visual-opener__word">{{ section.visual_word }}</div>
     <div class="visual-opener__content">
@@ -62,148 +83,708 @@
     </div>
     <div class="visual-opener__data">
       <span>{{ guide.region }}</span>
-      <span>{{ section.eyebrow }}</span>
+      {% if section.section_type == 'zone' and section.zone %}
+        <span>{{ section.zone.name }}</span>
+      {% else %}
+        <span>{{ section.eyebrow }}</span>
+      {% endif %}
       <span>{{ guide.published }}</span>
     </div>
     <div class="barcode visual-opener__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </div>
-
-  {% if section.map_key and guide.maps[section.map_key] is defined %}
-  {% set m = guide.maps[section.map_key] %}
-  <div class="map-panel">
-    <div class="map-panel__header">
-      <div>
-        <div class="map-panel__kicker">{{ section.eyebrow }} / Map Reference</div>
-        <h3>{{ section.map_title | default(section.title ~ " Map") }}</h3>
-        {% if section.map_deck %}<p>{{ section.map_deck }}</p>{% endif %}
-      </div>
-      {% if section.map_meta %}
-      <div class="map-panel__meta">
-        {% for item in section.map_meta %}<span>{{ item }}</span>{% endfor %}
-      </div>
-      {% endif %}
+  {% else %}
+  <div class="section-banner section-banner--{{ section.visual_theme }}">
+    <div class="section-banner__meta">
+      <span>Section {{ section.display_number }} / {{ section.visual_label }}</span>
+      <span>{{ guide.region }}&nbsp;&nbsp;{{ guide.published }}</span>
     </div>
-    <div class="map-container">
-      {% if m.image_uri %}
-      <img src="{{ m.image_uri }}" style="display:block;width:100%;height:auto;">
-      {% else %}
-      <div class="map-placeholder">{{ section.eyebrow }} Map Placeholder</div>
-      {% endif %}
-      {% if m.overlay_svg %}
-      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;" viewBox="0 0 {{ m.size.split('x')[0] }} {{ m.size.split('x')[1] }}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        {{ m.overlay_svg | safe }}
-      </svg>
-      {% endif %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if section.callouts %}
-  <div class="callout-grid">
-    {% for callout in section.callouts %}
-    <aside class="guide-callout guide-callout--{{ callout.type | default('tip') }}">
-      <div class="guide-callout__label">{{ callout.label | default('Field Note') }}</div>
-      <div class="guide-callout__title">{{ callout.title }}</div>
-      <p>{{ callout.body }}</p>
-    </aside>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if section.highlights %}
-  <div class="callout-grid">
-    {% for h in section.highlights %}
-    <aside class="guide-callout guide-callout--{{ 'warning' if h.tags and 'heads-up' in h.tags else 'tip' }}">
-      <div class="guide-callout__label">{{ h.tags[0] | replace('-', ' ') | title if h.tags else 'Zone Note' }}</div>
-      <div class="guide-callout__title">{{ h.label }}</div>
-      <p>{{ h.note }}</p>
-    </aside>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if section.image_plates %}
-  <div class="image-plate-grid image-plate-grid--{{ section.image_plates | length }}" data-word="{{ section.visual_word }}">
-    {% for plate in section.image_plates %}
-    <figure class="image-plate">
-      <img src="{{ plate.src }}" alt="{{ plate.alt }}">
-      <figcaption>
-        <span>{{ plate.caption }}</span>
-        {% if plate.credit %}<small>{{ plate.credit }}</small>{% endif %}
-      </figcaption>
-    </figure>
-    {% endfor %}
-  </div>
-  {% endif %}
-
-  {% if section.prose_html %}
-  <div class="section-prose">{{ section.prose_html | safe }}</div>
-  {% endif %}
-
-  {% if section.show_campgrounds %}
-  {% for camp in guide.campgrounds %}
-  <article class="camp-card {% if camp.featured %}camp-card--featured{% endif %}">
-    {% if camp.image %}
-    <img class="camp-card__image" src="{{ camp.image }}" alt="{{ camp.name }}">
+    <div class="section-banner__word">{{ section.visual_word }}</div>
+    <h2 class="section-banner__title">{{ section.title }}</h2>
+    {% if section.section_type == 'zone' and section.zone %}
+    <span class="section-banner__eyebrow">{{ section.zone.name }}</span>
+    {% elif section.eyebrow %}
+    <span class="section-banner__eyebrow">{{ section.eyebrow }}</span>
     {% endif %}
-    <div class="camp-card__region">{{ camp.region }}</div>
-    <h3 class="camp-card__name">{{ camp.name }}</h3>
-    {% if camp.badges %}
-    <div class="camp-card__badges">
-      {% for badge in camp.badges %}
-      <span class="badge badge--{{ badge }}">{{ badge | replace("-", " ") | title }}</span>
+    <div class="barcode section-banner__barcode"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  {% endif %}
+
+  {# ── Orientation (01) ─────────────────────────────────────────────────── #}
+  {% if section.section_type == 'orientation' %}
+
+    {% if guide.stats %}
+    <div class="stats-chip-row">
+      {% for stat in guide.stats %}
+      <div class="stat-chip">{{ stat }}</div>
       {% endfor %}
     </div>
     {% endif %}
-    <hr class="camp-card__divider">
-    <p class="camp-card__description">{{ camp.editorial }}</p>
-    <div class="camp-card__meta">
-      <div><span class="camp-card__meta-label">Reservations</span><span class="camp-card__meta-value">{{ camp.reservations.method }}</span></div>
-      <div><span class="camp-card__meta-label">Hookups</span><span class="camp-card__meta-value">{{ camp.hookups | title }}</span></div>
-      <div><span class="camp-card__meta-label">Max Length</span><span class="camp-card__meta-value">{{ camp.max_length }}</span></div>
-      <div><span class="camp-card__meta-label">Pets</span><span class="camp-card__meta-value">{{ "Yes" if camp.pets.allowed else "No" }}</span></div>
-      <div><span class="camp-card__meta-label">Verified</span><span class="camp-card__meta-value">{{ camp.verified_date }}</span></div>
-    </div>
-    {% if camp.tags %}
-    <div class="camp-card__tags">
-      {% for tag in camp.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+    {% if guide.visual_moments %}
+    <div class="visual-moments">
+      <div class="visual-moments__label">Scenes Worth Waiting For</div>
+      {% for moment in guide.visual_moments %}
+      <div class="visual-moment">
+        <span class="visual-moment__loc">{{ moment.location }}</span>
+        <p>{{ moment.moment }}</p>
+      </div>
+      {% endfor %}
     </div>
     {% endif %}
-    <div class="link-actions">
-      {% if camp.website %}<a class="link-pill" href="{{ camp.website }}">Website</a>{% endif %}
-      {% if camp.reservations.url %}<a class="link-pill" href="{{ camp.reservations.url }}">Book</a>{% endif %}
-      {% if camp.maps_url %}<a class="link-pill" href="{{ camp.maps_url }}">Map</a>{% endif %}
-    </div>
-  </article>
-  {% endfor %}
-  {% endif %}
 
-  {% if section.show_businesses %}
-  {% for biz in guide.businesses %}
-  <div class="business-card">
-    <div>
-      <div class="business-card__name">{{ biz.name }}</div>
-      <div class="business-card__type">{{ biz.type }}</div>
-      <p class="business-card__description">{{ biz.editorial }}</p>
-      <div class="link-actions">
-        {% if biz.website %}<a class="link-pill" href="{{ biz.website }}">Website</a>{% endif %}
-        {% if biz.maps_url %}<a class="link-pill" href="{{ biz.maps_url }}">Map</a>{% endif %}
+  {# ── Before You Arrive (02) ───────────────────────────────────────────── #}
+  {% elif section.section_type == 'before-you-arrive' %}
+
+    {% if guide.fees %}
+    <div class="fees-block">
+      <div class="fees-block__header">
+        <span class="fees-block__kicker">Entrance Fees</span>
+      </div>
+      <div class="fees-block__grid">
+        {% if guide.fees.vehicle_summer %}
+        <div class="fees-row">
+          <span class="fees-row__label">Vehicle (Summer)</span>
+          <span class="fees-row__value">{{ guide.fees.vehicle_summer }}</span>
+        </div>
+        {% endif %}
+        {% if guide.fees.vehicle_winter %}
+        <div class="fees-row">
+          <span class="fees-row__label">Vehicle (Winter)</span>
+          <span class="fees-row__value">{{ guide.fees.vehicle_winter }}</span>
+        </div>
+        {% endif %}
+        {% if guide.fees.motorcycle_summer %}
+        <div class="fees-row">
+          <span class="fees-row__label">Motorcycle (Summer)</span>
+          <span class="fees-row__value">{{ guide.fees.motorcycle_summer }}</span>
+        </div>
+        {% endif %}
+        {% if guide.fees.per_person %}
+        <div class="fees-row">
+          <span class="fees-row__label">Walk-in / Bike</span>
+          <span class="fees-row__value">{{ guide.fees.per_person }}</span>
+        </div>
+        {% endif %}
+        {% if guide.fees.annual_pass %}
+        <div class="fees-row fees-row--highlight">
+          <span class="fees-row__label">America the Beautiful Pass</span>
+          <span class="fees-row__value">{{ guide.fees.annual_pass }}</span>
+        </div>
+        {% endif %}
+        {% if guide.fees.campground_range %}
+        <div class="fees-row">
+          <span class="fees-row__label">Camping</span>
+          <span class="fees-row__value">{{ guide.fees.campground_range }}</span>
+        </div>
+        {% endif %}
+      </div>
+      <div class="fees-block__flags">
+        {% if guide.fees.atb_accepted %}<span class="fees-flag fees-flag--pass">America the Beautiful accepted</span>{% endif %}
+        {% if guide.fees.cashless %}<span class="fees-flag fees-flag--warn">Cashless entrance — card only</span>{% endif %}
       </div>
     </div>
-    <div class="business-card__meta">{% if biz.phone %}<div>{{ biz.phone }}</div>{% endif %}</div>
+    {% endif %}
+
+    {% if guide.permits %}
+    <div class="permits-block">
+      <div class="permits-block__label">Permits & Backcountry</div>
+      {% if guide.permits.backcountry %}
+      <div class="permits-row">
+        <span>Backcountry permit:</span>
+        <span>{{ guide.permits.platform if guide.permits.platform else "Required" }}</span>
+      </div>
+      {% if guide.permits.window %}
+      <div class="permits-row">
+        <span>Booking window:</span>
+        <span>{{ guide.permits.window }}</span>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% if guide.permits.bear_canister %}
+      <div class="permits-row">
+        <span>Bear canister:</span>
+        <span>Encouraged{% if guide.permits.bear_canister_rental %} — rental available{% endif %}</span>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if guide.cell_service %}
+    <div class="cell-service-block">
+      <div class="cell-service-block__label">Cell Service</div>
+      <div class="cell-service-block__general">{{ guide.cell_service.general }}</div>
+      {% if guide.cell_service.with_signal %}
+      <div class="cell-service-row">
+        <span class="cell-service-row__label">Signal found at:</span>
+        <span>{{ guide.cell_service.with_signal | join(", ") }}</span>
+      </div>
+      {% endif %}
+      {% if guide.cell_service.without_signal %}
+      <div class="cell-service-row">
+        <span class="cell-service-row__label">Dead zones:</span>
+        <span>{{ guide.cell_service.without_signal | join(", ") }}</span>
+      </div>
+      {% endif %}
+      {% if guide.cell_service.offline_tools %}
+      <div class="cell-service-row">
+        <span class="cell-service-row__label">Offline tools:</span>
+        <span>{{ guide.cell_service.offline_tools | join(", ") }}</span>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+    {# Seasonal Matrix #}
+    {% if guide.seasonal %}
+    <div class="seasonal-matrix">
+      <div class="seasonal-matrix__header">
+        <span class="seasonal-matrix__kicker">Monthly Conditions</span>
+        <span class="seasonal-matrix__legend">Crowd scale: ● = 1/4 → ●●●● = 4/4</span>
+      </div>
+      <table class="seasonal-matrix__table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Access</th>
+            <th>Weather</th>
+            <th>Crowds</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in guide.seasonal %}
+          <tr class="seasonal-row{% if row.crowds == 4 %} seasonal-row--peak{% elif row.crowds == 1 %} seasonal-row--off{% endif %}">
+            <td class="seasonal-month">{{ row.month }}</td>
+            <td>{{ row.access }}</td>
+            <td>{{ row.weather }}</td>
+            <td class="seasonal-crowds">
+              {% for i in range(row.crowds | int) %}●{% endfor %}{% for i in range(4 - (row.crowds | int)) %}○{% endfor %}
+            </td>
+            <td>{{ row.note }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  {# ── Itineraries (02B) ────────────────────────────────────────────────── #}
+  {% elif section.section_type == 'itineraries' %}
+
+    {% if guide.itineraries %}
+    <div class="itinerary-plan">
+      <div class="itinerary-plan__label">Three Ways to Do This Park</div>
+      <div class="itinerary-plan__cards">
+        {% for tier, itin in guide.itineraries.items() %}
+        <div class="itinerary-card itinerary-card--{{ tier }}">
+          <div class="itinerary-card__tier">{{ tier | title }}</div>
+          <div class="itinerary-card__days">{{ itin.days }} day{% if itin.days != 1 %}s{% endif %}</div>
+          <p class="itinerary-card__theme">{{ itin.theme }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+  {# ── Where to Sleep (03) ──────────────────────────────────────────────── #}
+  {% elif section.section_type == 'where-to-sleep' %}
+
+    {% if section.prose_html %}
+    <div class="section-prose section-prose--intro">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+    {# Featured lodging cards (card: true) #}
+    {% for item in guide.lodging if item.get('card') %}
+    <article class="lodging-card {% if 'campground' in item.type | lower %}lodging-card--camp{% else %}lodging-card--lodge{% endif %}">
+      {% if item.image_uri %}
+      <img class="lodging-card__image" src="{{ item.image_uri }}" alt="{{ item.name }}">
+      {% endif %}
+      <div class="lodging-card__region">{{ item.region }}</div>
+      <h3 class="lodging-card__name">{{ item.name }}</h3>
+      <div class="lodging-card__type">{{ item.type }}</div>
+      {% if item.badges %}
+      <div class="lodging-card__badges">
+        {% for badge in item.badges %}
+        <span class="badge badge--{{ badge }}">{{ badge | replace("-", " ") | title }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <p class="lodging-card__take">{{ item.editorial_note if item.editorial_note else item.take }}</p>
+      <div class="lodging-card__meta">
+        {% if item.open %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Open</span>
+          <span>{{ item.open }}</span>
+        </div>
+        {% endif %}
+        {% if item.price_per_night %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Rate</span>
+          <span>{{ item.price_per_night }}</span>
+        </div>
+        {% endif %}
+        {% if item.reservations %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Book via</span>
+          <span>{{ item.reservations }}</span>
+        </div>
+        {% endif %}
+        {% if item.sites_total %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Sites / Rooms</span>
+          <span>{{ item.sites_total }}</span>
+        </div>
+        {% endif %}
+        {% if item.max_vehicle_length %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Max Length</span>
+          <span>{{ item.max_vehicle_length }}</span>
+        </div>
+        {% endif %}
+        {% if item.hookups %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Hookups</span>
+          <span>{{ item.hookups }}</span>
+        </div>
+        {% endif %}
+        {% if item.pets %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Pets</span>
+          <span>{% if item.pets.allowed %}Yes{% if item.pets.notes %} — {{ item.pets.notes }}{% endif %}{% else %}No{% endif %}</span>
+        </div>
+        {% endif %}
+        {% if item.showers %}
+        <div class="lodging-meta-row">
+          <span class="lodging-meta-label">Showers</span>
+          <span>{{ item.showers }}</span>
+        </div>
+        {% endif %}
+      </div>
+      {% if item.booking_url or item.website %}
+      <div class="link-actions">
+        {% if item.website %}<a class="link-pill" href="https://{{ item.website if not item.website.startswith('http') else item.website[8:] }}">Website</a>{% endif %}
+        {% if item.booking_url %}<a class="link-pill" href="{{ item.booking_url if item.booking_url.startswith('http') else 'https://' + item.booking_url }}">Book</a>{% endif %}
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+
+    {# Compact summary table for all lodging (the lodging count assertion row) #}
+    <div class="lodging-summary-table">
+      <div class="lodging-summary-table__label">Full Lodging Inventory</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Region</th>
+            <th>Open</th>
+            <th>Rate</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in guide.lodging %}
+          <tr data-lodging-row="1">
+            <td>
+              <strong>{{ item.name }}</strong>
+              {% if item.badges %}
+              <div class="lodging-summary-badges">
+                {% for badge in item.badges[:2] %}
+                <span class="badge badge--{{ badge }}" style="font-size:9px;padding:2px 6px;">{{ badge | replace("-", " ") | title }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.region }}</td>
+            <td>{{ item.open if item.open else "—" }}</td>
+            <td>{{ item.price_per_night if item.price_per_night else "—" }}</td>
+            <td>{{ item.take }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {# ── Zone sections (04A, 04B, 04C) ───────────────────────────────────── #}
+  {% elif section.section_type == 'zone' and section.zone %}
+
+    {% set zone = section.zone %}
+
+    {# Closure notice — always first if present #}
+    {% if zone.get('closure_notice') %}
+    {% set cn = zone.closure_notice %}
+    <div class="closure-notice">
+      <div class="closure-notice__status">{{ cn.status }}</div>
+      <div class="closure-notice__name">{{ cn.name }}</div>
+      <p class="closure-notice__detail">{{ cn.detail }}</p>
+      {% if cn.source %}
+      <div class="closure-notice__source">Source: {{ cn.source }}</div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {# Trail table #}
+    {% if zone.get('trails') %}
+    <div class="trail-table">
+      <div class="trail-table__header">
+        <span class="trail-table__kicker">Trails &amp; Routes — {{ zone.name }}</span>
+        <span class="trail-table__legend">
+          ✓ Consensus pick &nbsp;◆ Hidden gem &nbsp;▲ Heads-up &nbsp;◎ Reservable &nbsp;🐕 Dogs OK &nbsp;🚛 Big-rig access
+        </span>
+      </div>
+      <table class="trail-table__grid">
+        <thead>
+          <tr>
+            <th style="width:24%">Trail</th>
+            <th style="width:10%">Distance</th>
+            <th style="width:9%">Gain</th>
+            <th style="width:9%">Time</th>
+            <th style="width:9%">Level</th>
+            <th style="width:10%">Season</th>
+            <th style="width:9%">Crowds</th>
+            <th style="width:20%">The Take</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for trail in zone.trails %}
+          <tr class="trail-row trail-row--{{ trail.difficulty | lower | replace(' ', '-') }}">
+            <td class="trail-name-cell">
+              <div class="trail-name">{{ trail.name }}</div>
+              {% if trail.badges %}
+              <div class="trail-badges">
+                {% for badge in trail.badges %}
+                <span class="trail-badge trail-badge--{{ badge }}">
+                  {% if badge == 'consensus' %}✓{% elif badge == 'hidden-gem' %}◆{% elif badge == 'heads-up' %}▲{% elif badge == 'reservable' %}◎{% elif badge == 'dog-friendly' %}🐕{% elif badge == 'big-rig' %}🚛{% else %}{{ badge }}{% endif %}
+                </span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="trail-heads-up">{% if trail.heads_up %}⚠ {{ trail.heads_up }}{% endif %}</div>
+            </td>
+            <td class="trail-stat">{{ trail.distance }}</td>
+            <td class="trail-stat">{{ trail.elevation_gain }}</td>
+            <td class="trail-stat">{{ trail.time }}</td>
+            <td>
+              <span class="difficulty-badge difficulty-badge--{{ trail.difficulty | lower | replace(' ', '-') }}">
+                {{ trail.difficulty }}
+              </span>
+              {% if trail.dogs %}<span class="trail-icon" title="Dogs permitted">🐕</span>{% endif %}
+              {% if trail.big_rig_accessible == true %}<span class="trail-icon" title="Big rig trailhead access">🚛</span>{% endif %}
+            </td>
+            <td class="trail-season">{{ trail.best_season }}</td>
+            <td class="trail-crowds">
+              {% if trail.crowds == 'Heavy' %}●●●●
+              {% elif trail.crowds == 'Moderate' %}●●●○
+              {% elif trail.crowds == 'Light' %}●○○○
+              {% else %}{{ trail.crowds }}{% endif %}
+            </td>
+            <td class="trail-take">{{ trail.take }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+  {# ── What To Do (05) ──────────────────────────────────────────────────── #}
+  {% elif section.section_type == 'what-to-do' %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+  {# ── Eat & Resupply (06) ──────────────────────────────────────────────── #}
+  {% elif section.section_type == 'eat-resupply' %}
+
+    {% if guide.businesses %}
+    {% for biz in guide.businesses %}
+    <div class="business-card{% if biz.get('card') %} business-card--featured{% endif %}">
+      <div>
+        <div class="business-card__name">{{ biz.name }}</div>
+        <div class="business-card__type">{{ biz.type }} — {{ biz.location }}</div>
+        {% if biz.badges %}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;">
+          {% for badge in biz.badges %}
+          <span class="badge badge--{{ badge }}" style="font-size:10px;">{{ badge | replace("-", " ") | title }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <p class="business-card__description">{{ biz.editorial_note if biz.editorial_note else biz.take }}</p>
+        <div class="link-actions">
+          {% if biz.website %}<a class="link-pill" href="{{ biz.website if biz.website.startswith('http') else 'https://' + biz.website }}">Website</a>{% endif %}
+        </div>
+      </div>
+      <div class="business-card__meta">
+        {% if biz.phone %}<div>{{ biz.phone }}</div>{% endif %}
+        {% if biz.hours %}<div>{{ biz.hours }}</div>{% endif %}
+        {% if biz.price_range %}<div>{{ biz.price_range }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+  {# ── Field Notes (07) ─────────────────────────────────────────────────── #}
+  {% elif section.section_type == 'field-notes' %}
+
+    {% if guide.drive_times %}
+    <div class="drive-times-table">
+      <div class="drive-times-table__label">Key Drive Times</div>
+      <table class="drive-times-table__grid">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Time</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dt in guide.drive_times %}
+          <tr>
+            <td>{{ dt.from }}</td>
+            <td>{{ dt.to }}</td>
+            <td class="drive-time-cell">{{ dt.time }}</td>
+            <td>{{ dt.note }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+    {% if guide.resources %}
+    <div class="resources-list">
+      <div class="resources-list__label">Key Resources</div>
+      {% for res in guide.resources %}
+      <div class="resource-item">
+        <div class="resource-item__name">{{ res.name }}</div>
+        <div class="resource-item__purpose">{{ res.purpose }}</div>
+        <div class="resource-item__when"><span class="resource-item__when-label">When:</span> {{ res.when }}</div>
+        <a class="link-pill" href="{{ res.url }}">Open Resource</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if guide.links or guide.zones %}
+    <div class="links-qr-grid">
+      <div class="links-qr-grid__label">Quick-Scan Links</div>
+      <div class="links-qr-grid__items">
+        {% for link in guide.links %}
+        <div class="qr-link-item">
+          {% if link.qr_uri %}
+          <img class="qr-link-item__code" src="{{ link.qr_uri }}" alt="QR: {{ link.entity }}">
+          {% else %}
+          <div class="qr-link-item__placeholder">QR</div>
+          {% endif %}
+          <div class="qr-link-item__entity">{{ link.entity }}</div>
+          <div class="qr-link-item__slug">road.advntr.io/r/{{ link.slug }}</div>
+        </div>
+        {% endfor %}
+        {% if guide.zones %}
+        {% for zone in guide.zones %}
+        {% for trail in zone.get('trails', []) if trail.get('qr_uri') and trail.get('link_slug') %}
+        <div class="qr-link-item qr-link-item--trail">
+          <img class="qr-link-item__code" src="{{ trail.qr_uri }}" alt="QR: {{ trail.name }}">
+          <div class="qr-link-item__entity">{{ trail.name }}</div>
+          <div class="qr-link-item__slug">road.advntr.io/r/{{ trail.link_slug }}</div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+  {# ── Before You Leave (08) ────────────────────────────────────────────── #}
+  {% elif section.section_type == 'before-you-leave' %}
+
+    {% if guide.checklist %}
+    <div class="checklist-block">
+      <div class="checklist-block__label">Pre-Departure Checklist</div>
+      <ul class="checklist-block__list">
+        {% for item in guide.checklist %}
+        <li class="check-item">{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+  {# ── Generic / v1 section fallback ────────────────────────────────────── #}
+  {% else %}
+
+    {% if section.get('map_key') and guide.get('maps') and guide.maps.get(section.map_key) %}
+    {% set m = guide.maps[section.map_key] %}
+    <div class="map-panel">
+      <div class="map-panel__header">
+        <div>
+          <div class="map-panel__kicker">{{ section.eyebrow }} / Map Reference</div>
+          <h3>{{ section.get('map_title', section.title + ' Map') }}</h3>
+          {% if section.get('map_deck') %}<p>{{ section.map_deck }}</p>{% endif %}
+        </div>
+        {% if section.get('map_meta') %}
+        <div class="map-panel__meta">
+          {% for item in section.map_meta %}<span>{{ item }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="map-container">
+        {% if m.image_uri %}
+        <img src="{{ m.image_uri }}" style="display:block;width:100%;height:auto;">
+        {% else %}
+        <div class="map-placeholder">{{ section.eyebrow }} Map Placeholder</div>
+        {% endif %}
+        {% if m.overlay_svg %}
+        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;" viewBox="0 0 {{ m.size.split('x')[0] }} {{ m.size.split('x')[1] }}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          {{ m.overlay_svg | safe }}
+        </svg>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if section.get('callouts') %}
+    <div class="callout-grid">
+      {% for callout in section.callouts %}
+      <aside class="guide-callout guide-callout--{{ callout.get('type', 'tip') }}">
+        <div class="guide-callout__label">{{ callout.get('label', 'Field Note') }}</div>
+        <div class="guide-callout__title">{{ callout.title }}</div>
+        <p>{{ callout.body }}</p>
+      </aside>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if section.get('highlights') %}
+    <div class="callout-grid">
+      {% for h in section.highlights %}
+      <aside class="guide-callout guide-callout--{{ 'warning' if h.tags and 'heads-up' in h.tags else 'tip' }}">
+        <div class="guide-callout__label">{{ h.tags[0] | replace('-', ' ') | title if h.tags else 'Zone Note' }}</div>
+        <div class="guide-callout__title">{{ h.label }}</div>
+        <p>{{ h.note }}</p>
+      </aside>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if section.get('image_plates') %}
+    <div class="image-plate-grid image-plate-grid--{{ section.image_plates | length }}" data-word="{{ section.visual_word }}">
+      {% for plate in section.image_plates %}
+      <figure class="image-plate">
+        <img src="{{ plate.src }}" alt="{{ plate.alt }}">
+        <figcaption>
+          <span>{{ plate.caption }}</span>
+          {% if plate.credit %}<small>{{ plate.credit }}</small>{% endif %}
+        </figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if section.prose_html %}
+    <div class="section-prose">{{ section.prose_html | safe }}</div>
+    {% endif %}
+
+    {# v1 campground cards #}
+    {% if section.get('show_campgrounds') and guide.get('campgrounds') %}
+    {% for camp in guide.campgrounds %}
+    <article class="camp-card {% if camp.get('featured') %}camp-card--featured{% endif %}">
+      {% if camp.get('image') %}
+      <img class="camp-card__image" src="{{ camp.image }}" alt="{{ camp.name }}">
+      {% endif %}
+      <div class="camp-card__region">{{ camp.region }}</div>
+      <h3 class="camp-card__name">{{ camp.name }}</h3>
+      {% if camp.get('badges') %}
+      <div class="camp-card__badges">
+        {% for badge in camp.badges %}
+        <span class="badge badge--{{ badge }}">{{ badge | replace("-", " ") | title }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <hr class="camp-card__divider">
+      <p class="camp-card__description">{{ camp.editorial }}</p>
+      <div class="camp-card__meta">
+        <div><span class="camp-card__meta-label">Reservations</span><span class="camp-card__meta-value">{{ camp.reservations.method }}</span></div>
+        <div><span class="camp-card__meta-label">Hookups</span><span class="camp-card__meta-value">{{ camp.hookups | title }}</span></div>
+        <div><span class="camp-card__meta-label">Max Length</span><span class="camp-card__meta-value">{{ camp.max_length }}</span></div>
+        <div><span class="camp-card__meta-label">Pets</span><span class="camp-card__meta-value">{{ "Yes" if camp.pets.allowed else "No" }}</span></div>
+        <div><span class="camp-card__meta-label">Verified</span><span class="camp-card__meta-value">{{ camp.verified_date }}</span></div>
+      </div>
+      <div class="link-actions">
+        {% if camp.get('website') %}<a class="link-pill" href="{{ camp.website }}">Website</a>{% endif %}
+        {% if camp.reservations.url %}<a class="link-pill" href="{{ camp.reservations.url }}">Book</a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+    {% endif %}
+
+    {# v1 business cards #}
+    {% if section.get('show_businesses') and guide.get('businesses') %}
+    {% for biz in guide.businesses %}
+    <div class="business-card">
+      <div>
+        <div class="business-card__name">{{ biz.name }}</div>
+        <div class="business-card__type">{{ biz.type }}</div>
+        <p class="business-card__description">{{ biz.editorial }}</p>
+        <div class="link-actions">
+          {% if biz.get('website') %}<a class="link-pill" href="{{ biz.website }}">Website</a>{% endif %}
+        </div>
+      </div>
+      <div class="business-card__meta">{% if biz.phone %}<div>{{ biz.phone }}</div>{% endif %}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+  {% endif %}{# end section_type dispatch #}
+
+  <div class="section-close">
+    <span>{{ section.display_number }} — {{ section.title }}</span>
+    <span>{{ guide.title }}</span>
   </div>
-  {% endfor %}
-  {% endif %}
-</div>
+
+</div>{# end .section #}
 {% endfor %}
 
+{# ── Back Cover ──────────────────────────────────────────────────────────── #}
 <div class="page-back-cover" style="page:back-cover;background:var(--color-brunswick);width:8.5in;height:11in;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
   <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;">
     {% include 'assets/topo-lines.svg' %}
   </div>
   <div style="position:relative;z-index:1;text-align:center;">
     <img class="brand-logo brand-logo--back" src="{{ guide.logos.white }}" alt="ADVNTR Road">
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);"><a href="{{ guide.url_href }}" style="color:inherit;text-decoration:none;">{{ guide.url }}</a> · {{ guide.edition }}</div>
+    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(249,228,197,0.40);">
+      <a href="{{ guide.url_href }}" style="color:inherit;text-decoration:none;">{{ guide.url }}</a> · {{ guide.edition }}
+    </div>
   </div>
   {% if guide.other_guides %}
   <div style="position:absolute;left:0.875in;right:0.875in;bottom:0.95in;z-index:1;">

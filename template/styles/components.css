@@ -137,9 +137,9 @@
 
 .poster-cover__word {
   position: static;
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-size: 118px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.79;
   letter-spacing: -0.075em;
   text-transform: uppercase;
@@ -1199,6 +1199,8 @@
   border: 1px solid var(--border-card);
   background: var(--surface-card);
   box-shadow: var(--shadow-xs);
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .guide-callout--warning {

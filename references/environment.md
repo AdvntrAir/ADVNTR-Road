@@ -2,6 +2,14 @@
 
 Read this before debugging any font, layout, or render issue in WeasyPrint.
 
+## Contents
+
+- [WeasyPrint Known Failure Modes](#weasyprint-known-failure-modes)
+- [Python Environment](#python-environment)
+- [API Keys](#api-keys)
+- [Output Artifacts](#output-artifacts)
+- [An `<hr>` can force an implicit page break](#an-hr-can-force-an-implicit-page-break)
+
 ## WeasyPrint Known Failure Modes
 
 **Silent failures** — WeasyPrint exits 0 but the output is wrong:
@@ -52,3 +60,21 @@ source .venv/bin/activate
 | `output/voice_risk_report.md` | Voice risk subagent findings |
 | `output/qr/` | QR code PNGs (one per link slug + trail slugs) |
 | `output/_redirects_fragment.txt` | Netlify redirect entries for road.advntr.io/r/[slug] |
+
+---
+
+## An `<hr>` can force an implicit page break
+
+**Symptom:** A short paragraph or callout block consistently lands on its own near-empty page regardless of how much content is trimmed above or below it. `break-inside: avoid` on the element has no effect. Prose trimming relocates which page the content strands on but never eliminates the stranding. The offending content always follows a `---` separator in the markdown source.
+
+---
+
+**Why it wastes time:** WeasyPrint treats `<hr>` elements as natural page-break candidates, especially when they fall in the lower third of a page. The renderer pushes following content to a fresh page as a discrete unit, independently of that content's length. Multiple prose-trim iterations can't fix a pagination rule — they only shift which page the orphan lands on, and can create new near-empty pages upstream. `break-inside: avoid` and `orphans`/`widows` rules on the stranded `<p>` are both ignored because the `<hr>` triggers the break before those rules apply.
+
+---
+
+**Diagnostic:** The stranded content always has a `---` immediately before it in the markdown source. The section trailing blank is consistently high (>60%) and doesn't improve with content additions, CSS `break-inside` rules, or prose trimming. Adding content above the `---` causes the orphaned block to shift pages but remain orphaned.
+
+---
+
+**Fix:** Remove the `---` separator so the paragraph flows inline with the preceding content. With no `<hr>` to trigger a soft break, WeasyPrint treats the content as continuous and the paragraph shares the page naturally. If visual separation is required, use a styled heading or a CSS `<div>` with `margin-top` rather than `<hr>`.
