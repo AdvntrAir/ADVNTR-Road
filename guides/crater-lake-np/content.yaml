@@ -1,0 +1,414 @@
+guide:
+  id: crater-lake-np
+  format: Park
+  title: Crater Lake National Park
+  subtitle: A deep, sapphire volcanic caldera crowning the high Cascade peaks
+  region: Pacific Northwest / Southern Oregon Cascades
+  edition: 2026 Field Edition
+  url: road.advntr.io/crater-lake-np
+  published: July 2026
+  verified_date: July 2026
+  anchor:
+    name: Steel Information Center (Park Headquarters)
+    lat: 42.8903
+    lng: -122.1344
+  stats:
+    - "SOUTHERN OREGON CASCADES"
+    - "183,224 ACRES"
+    - "1,943 FT DEEP CALDERA"
+    - "CLEETWOOD COVE CLOSED THROUGH 2028"
+  map_bounds:
+    north: 43.0500
+    south: 42.7500
+    east: -121.9000
+    west: -122.3000
+  cover_photo: null  # FLAGGED — no photos supplied, see build report
+
+zones:
+  - slug: rim-caldera-route
+    name: The Rim & Caldera Route
+    one_line: The 33-mile alpine ring tracing the sheer volcanic edge of Mount Mazama.
+    subhead: Where the road climbs out of the forest and drops down to the deepest water in America.
+    map_markers:
+      - {name: Rim Village Center, type: visitor_center, lat: 42.9115, lng: -122.1420}
+      - {name: Discovery Point Trailhead, type: trailhead, lat: 42.9140, lng: -122.1522}
+      - {name: Watchman Overlook, type: viewpoint, lat: 42.9442, lng: -122.1678}
+      - {name: Cloudcap Overlook, type: viewpoint, lat: 42.9298, lng: -122.0520}
+    closure_notice:
+      name: Cleetwood Cove Trail & Marina
+      status: CLOSED 2026-2028
+      detail: Trail and marina rehabilitation. No lake access, no swimming, no boat tours. Targeted reopening summer 2029.
+      source: nps.gov/crla/planyourvisit/cleetwood-cove-trail-and-marina-rehabilitation.htm
+    trails:
+      - name: Discovery Point Trail
+        distance: 2.2 mi RT
+        elevation_gain: 100 ft
+        time: 1-1.5 hrs
+        difficulty: Easy
+        dogs: true
+        big_rig_accessible: true
+        best_season: June-October
+        best_time: Morning
+        crowds: Moderate
+        heads_up: No railings along rim edge sections -- stay on trail.
+        take: "The spot where prospectors first saw this lake in 1853 -- an easy rim walk with real lake exposure and no crowds."
+        badges: [consensus, dog-friendly]
+        link_slug: crater-lake-np-discovery-point-trail-info
+      - name: Watchman Peak Trail
+        distance: 1.6 mi RT
+        elevation_gain: 420 ft
+        time: 1 hr
+        difficulty: Moderate
+        dogs: false
+        big_rig_accessible: trailhead-drop-off-only
+        best_season: July-October
+        best_time: Sunset
+        crowds: Heavy
+        heads_up: Steep switchbacks at altitude -- shortness of breath is common.
+        take: "Short, steep, ends at a working 1932 fire lookout staring straight down onto Wizard Island."
+        badges: [consensus, hidden-gem]
+        link_slug: crater-lake-np-watchman-peak-trail-info
+      - name: Garfield Peak Trail
+        distance: 3.4 mi RT
+        elevation_gain: 1000 ft
+        time: 2 hrs
+        difficulty: Strenuous
+        dogs: false
+        big_rig_accessible: true
+        best_season: July-October
+        best_time: Early morning
+        crowds: Heavy
+        heads_up: Steep rocky drop-offs and loose volcanic pumice underfoot.
+        take: "The park's headline hike while Cleetwood is closed -- starts behind the Lodge, ends at a 360 caldera view at 8,060 ft."
+        badges: [consensus, heads-up]
+        link_slug: crater-lake-np-garfield-peak-trail-info
+
+  - slug: mazama-forest-south-corridor
+    name: Mazama Forest & South Corridor
+    one_line: Dense lodgepole pine floors, canyon trails, and the park's operational nerve center.
+    subhead: The structural baseline where old-growth canopy meets modern camp infrastructure.
+    map_markers:
+      - {name: Mazama Village Camper Store, type: general_store, lat: 42.8685, lng: -122.1668}
+      - {name: Godfrey Glen Trailhead, type: trailhead, lat: 42.8790, lng: -122.1411}
+      - {name: Steel Information Center, type: visitor_center, lat: 42.8903, lng: -122.1344}
+    trails:
+      - name: Godfrey Glen Nature Trail
+        distance: 1.0 mi loop
+        elevation_gain: 50 ft
+        time: 30 mins
+        difficulty: Easy
+        dogs: false
+        big_rig_accessible: true
+        best_season: June-October
+        best_time: Any
+        crowds: Light
+        heads_up: Stay back from crumbly cliff edges overlooking Annie Creek Canyon.
+        take: "Flat, shaded, and the easiest way to see carved volcanic ash columns without earning them."
+        badges: []
+        link_slug: crater-lake-np-godfrey-glen-trail-info
+
+  - slug: volcanic-outskirts-pinnacles
+    name: The Volcanic Outskirts & Pinnacles
+    one_line: Jagged ash chimneys, volcanic spires, and subalpine peaks along the quieter margins.
+    subhead: Exploring the scarred landscape left behind by the ancient fury of Mount Mazama.
+    map_markers:
+      - {name: Pinnacles Overlook Trailhead, type: trailhead, lat: 42.8690, lng: -122.0280}
+      - {name: Mount Scott Trailhead, type: trailhead, lat: 42.9242, lng: -122.0515}
+      - {name: Plaikni Falls Parking, type: trailhead, lat: 42.8871, lng: -122.0621}
+    trails:
+      - name: The Pinnacles Trail
+        distance: 0.8 mi RT
+        elevation_gain: 0 ft
+        time: 20 mins
+        difficulty: Easy
+        dogs: false
+        big_rig_accessible: true
+        best_season: June-October
+        best_time: Morning
+        crowds: Light
+        heads_up: Fine pumice dust gets into camera gear and clothes.
+        take: "Flat gravel walk to hollow volcanic spires -- a completely different geological story from anything on the rim."
+        badges: [consensus, big-rig]
+        link_slug: crater-lake-np-pinnacles-trail-info
+      - name: Plaikni Falls Trail
+        distance: 2.0 mi RT
+        elevation_gain: 100 ft
+        time: 45 mins
+        difficulty: Easy
+        dogs: false
+        big_rig_accessible: false
+        best_season: July-September
+        best_time: Late morning
+        crowds: Moderate
+        heads_up: Parking lot is tight with no trailer turnaround space.
+        take: "The park's one real waterfall -- quiet, shaded, and skipped by most rim-focused visitors."
+        badges: [hidden-gem]
+        link_slug: crater-lake-np-plaikni-falls-trail-info
+      - name: Mount Scott Trail
+        distance: 4.4 mi RT
+        elevation_gain: 1300 ft
+        time: 2.5-3 hrs
+        difficulty: Strenuous
+        dogs: false
+        big_rig_accessible: false
+        best_season: Late July-October
+        best_time: Morning
+        crowds: Moderate
+        heads_up: Three hours of hard alpine walking -- skip on short trips.
+        take: "The park's highest point and the only place the entire lake fits in one camera frame."
+        badges: [consensus]
+        link_slug: crater-lake-np-mount-scott-trail-info
+
+itineraries:
+  short:
+    days: 2
+    theme: Rim drive and the two best rim hikes -- no water access needed
+  standard:
+    days: 4
+    theme: All three zones -- rim, forest corridor, and volcanic outskirts
+  full:
+    days: 7
+    theme: The unhurried version -- everything above plus slow mornings and the Prospect corridor
+
+seasonal:
+  - {month: January, access: South Entrance only, weather: Severe sub-zero snowpack, crowds: 1, note: Rim Drive completely buried -- open exclusively to cross-country skiers.}
+  - {month: February, access: South Entrance only, weather: Extreme freezing weather, crowds: 1, note: Steel Information Center open for winter safety maps and snow checks.}
+  - {month: March, access: South Entrance only, weather: Heavy late-winter snow storms, crowds: 1, note: Winter photography is stellar but requires snowshoes.}
+  - {month: April, access: South Entrance only, weather: Thick snow cover, crowds: 1, note: Plowing crews begin clearing lower highway corridors.}
+  - {month: May, access: Highly restricted, weather: Wet slush and cold rain, crowds: 2, note: Mazama Village commissioning underway -- roads blocked by snowbanks.}
+  - {month: June, access: Partial rim openings, weather: Cool alpine spring, crowds: 2, note: West Rim Drive opens late month; North Entrance opens late June.}
+  - {month: July, access: Full park openings, weather: Warm clear alpine days, crowds: 4, note: Peak season -- all trails except Cleetwood Cove are open. Overlooks fill by 10:30 AM.}
+  - {month: August, access: Full park openings, weather: Hot dry dusty conditions, crowds: 4, note: Wildfire smoke possible -- lake color varies with wind direction.}
+  - {month: September, access: Full park openings, weather: Mild afternoons cold nights, crowds: 3, note: The best month -- crowd-free rim driving and comfortable hiking temperatures.}
+  - {month: October, access: Rapidly closing, weather: Sudden blizzards early black ice, crowds: 2, note: East Rim Drive closes at the first heavy snow.}
+  - {month: November, access: South Entrance only, weather: Heavy winter conversion, crowds: 1, note: North Entrance closes officially for the season.}
+  - {month: December, access: South Entrance only, weather: Deep snow drifts, crowds: 1, note: Snow chains or approved traction tires required to ascend.}
+
+drive_times:
+  - {from: Klamath Falls, to: Steel Information Center, time: 0h 55m, note: Wide US-97 climb transitioning to Highway 62 switchbacks.}
+  - {from: Mazama Village, to: Rim Village, time: 0h 15m, note: Steep switchback climb gaining over 1,000 vertical feet.}
+  - {from: North Junction, to: Rim Village, time: 0h 25m, note: Winding cliff-side path along western caldera edge.}
+  - {from: Rim Village, to: The Pinnacles Overlook, time: 0h 35m, note: East Rim spur -- budget extra time for 2026 construction delays.}
+
+lodging:
+  - name: Mazama Campground
+    type: campground
+    region: Mazama Village (South Entrance Corridor)
+    card: true
+    open: June 12 - October 4, 2026
+    reservations: Recreation.gov
+    reservation_window: Up to 6 months in advance
+    sites_total: 214
+    price_per_night: "$35 (dry/tent) / $48 (electric) / $57 (full hookups)"
+    hookups: Full hookups and electric-only loops
+    max_vehicle_length: 50 ft
+    dump_station: true
+    showers: "Yes -- Loop F"
+    pets: {allowed: true, notes: Leashed; banned from rim walking paths.}
+    website: explorecraterlake.com
+    booking_url: https://www.recreation.gov/camping/campgrounds/mazama-campground-crla
+    coordinates: {lat: 42.8681, lng: -122.1659}
+    verified_date: July 2026
+    verified_source: "NPS.gov / Recreation.gov / Explor Crater Lake"
+    badges: [consensus, reservable, big-rig]
+    take: "The definitive in-park basecamp -- pull-through sites to 50 ft, tall pine shade, Loop F coin showers after a dusty rim day."
+    editorial_note: The anchor for this park. Pull-throughs handle rigs to 50 feet, canopy delivers real shade, and staying inside eliminates morning gate lines entirely. Book July through October the moment your window opens -- these go in hours.
+
+  - name: Crater Lake Lodge
+    type: lodge
+    region: Rim Village (Inside Park)
+    card: true
+    open: May 15 - October 13, 2026
+    reservations: Explor Crater Lake -- explorecraterlake.com or 541-314-9777
+    reservation_window: Up to a year in advance
+    sites_total: "71 rooms (6 ADA accessible)"
+    price_per_night: $302-$409+
+    pets: {allowed: false, notes: Service animals only.}
+    website: explorecraterlake.com
+    booking_url: explorecraterlake.com
+    coordinates: {lat: 42.9099, lng: -122.1438}
+    verified_date: July 2026
+    verified_source: "Explor Crater Lake / NPS.gov"
+    badges: [consensus, reservable]
+    take: "No air conditioning, no apology -- you came for the rocking chairs and the view that has been here since 1915."
+    editorial_note: Built in 1915 on the rim. Lake-view rooms book out a year in advance. Standard rooms more forgiving but still fill fast. No AC, no in-room cooking; fans and the dining room handle both.
+
+  - name: The Cabins at Mazama Village
+    type: lodge
+    region: Mazama Village
+    card: false
+    open: May 8 - October 4, 2026
+    reservations: Explor Crater Lake -- explorecraterlake.com
+    reservation_window: Up to a year in advance
+    sites_total: 40 rooms (10 fourplex buildings)
+    price_per_night: $200
+    pets: {allowed: false}
+    website: explorecraterlake.com
+    booking_url: explorecraterlake.com
+    coordinates: {lat: 42.8685, lng: -122.1668}
+    verified_date: July 2026
+    verified_source: Explor Crater Lake
+    badges: [reservable]
+    take: "Rustic pine-shaded cabin rooms -- a real bed without the Lodge's price or its view."
+
+  - name: Lost Creek Campground
+    type: campground
+    region: Pinnacles Road (Southeast Corner)
+    card: false
+    open: "CLOSED -- 2026 status unconfirmed; closed in 2024 and 2025 per NPS/Recreation.gov"
+    sites_total: 16 tent sites
+    hookups: none
+    max_vehicle_length: Tent only -- RVs, buses, trailers banned
+    dump_station: false
+    showers: false
+    pets: {allowed: false}
+    verified_date: July 2026
+    verified_source: "NPS.gov (last updated May 2025) / Recreation.gov"
+    badges: [heads-up]
+    take: "Closed multiple consecutive seasons -- verify at nps.gov before planning around it."
+    correction_note: Source file states permanently closed for fire crews. NPS.gov supports only year-specific closures. Fire-crew claim is unverified secondhand. Carried as closed/unconfirmed.
+
+  - name: Diamond Lake RV Park
+    type: campground
+    region: Diamond Lake (25 miles north of park rim)
+    card: false
+    open: May-October
+    reservations: Direct via diamondlake.net/rv-park
+    sites_total: 110 full-hookup sites
+    hookups: Full (30 and 50 amp, water, sewer)
+    max_vehicle_length: No stated limit -- pull-throughs available
+    dump_station: true
+    showers: true
+    pets: {allowed: true, notes: Leashed.}
+    website: diamondlake.net/rv-park
+    booking_url: diamondlake.net/rv-park
+    coordinates: {lat: 43.1555, lng: -122.1411}
+    verified_date: July 2026
+    verified_source: Diamond Lake Resort site
+    badges: [consensus, big-rig]
+    take: "The closest full-hookup big-rig alternative to Mazama -- 25 miles north, 40 minutes from the rim."
+
+businesses:
+  - name: Mazama Village Camper Store
+    type: General Store & Fuel Station
+    location: Mazama Village (Inside Park)
+    phone: 541-594-2255
+    website: explorecraterlake.com
+    hours: "Summer 7:00 AM - 9:00 PM"
+    price_range: "$$"
+    good_for: All
+    badges: [consensus]
+    take: "The only store inside the park -- essential for ice and emergency propane, expensive for everything else."
+    editorial_note: Premium mountain pricing on everything. Stock up in Klamath Falls before the climb.
+
+  - name: Annie Creek Restaurant
+    type: Restaurant
+    location: Mazama Village (Inside Park)
+    phone: 541-594-2255
+    website: explorecraterlake.com
+    hours: "11:30 AM - 8:00 PM Seasonal"
+    price_range: "$$"
+    good_for: All
+    badges: [consensus]
+    take: "Casual, reliable, and exactly the right place to eat after a long day on the rim."
+    editorial_note: Mountain pizzas, big burgers, Oregon microbrews. Does its job well.
+
+  - name: Prospect Historic Hotel Dinner House
+    type: Restaurant
+    location: Prospect, OR
+    phone: 541-560-3664
+    website: prospecthotel.com
+    hours: "5:00 PM - 9:00 PM, May-October"
+    price_range: "$$$"
+    good_for: Hotel-based and lodge travelers
+    badges: [hidden-gem]
+    card: true
+    take: "A restored stagecoach dining room 28 miles out -- the best meal within range of this park."
+    editorial_note: Once praised by Sunset Magazine. Hand-carved prime rib and house-made lasagna. Reserve ahead in summer.
+
+fees:
+  vehicle_summer: "$30.00 (May 22 - Oct 31)"
+  vehicle_winter: "$20.00 (Nov 1 - May 21)"
+  motorcycle_summer: "$25.00"
+  motorcycle_winter: "$15.00"
+  per_person: "$15.00"
+  annual_pass: "$55.00"
+  atb_accepted: true
+  cashless: true
+  campground_range: "$35-$57/night"
+  backcountry: Free
+
+permits:
+  backcountry: true
+  platform: Self-register at Steel Information Center Ranger Station
+  window: Walk-up only, day of departure
+  bear_canister: Encouraged; counter-balance hang permitted in designated zones
+  bear_canister_rental: false
+
+cell_service:
+  general: Spotty to none
+  with_signal: [Rim Village parking areas, Crater Lake Lodge porch]
+  without_signal: [Canyon basins, Pinnacles Road, Remote East Rim segments]
+  offline_tools: [Gaia GPS, AllTrails Pro, NPS app offline profile]
+
+checklist:
+  - Confirm your credit or debit card works -- entrance gates are cashless with no exceptions.
+  - Pre-download offline topo maps and campground layout -- cell service disappears past Rim Village.
+  - Check nps.gov/crla/planyourvisit/conditions.htm for East Rim Drive construction delays before you arrive.
+  - "The Cleetwood Cove Trail is closed through 2028 -- no lake access, no boat tours until at least summer 2029."
+  - Buy groceries and tow-vehicle fuel in Klamath Falls or Medford -- the in-park store carries mountain markups.
+  - Book an America the Beautiful Pass in advance to skip the entrance-lane transaction.
+  - Pack wool base layers and windproof outerwear even for high summer -- the rim sits at 7,000-8,000 ft.
+  - Reserve Mazama Campground the moment your booking window opens -- July-October slots go in hours.
+
+resources:
+  - name: Crater Lake NPS Current Conditions
+    url: https://www.nps.gov/crla/planyourvisit/conditions.htm
+    purpose: Road status, construction delays, wildfire smoke, facility changes.
+    when: Weekly two months out; daily on final approach.
+  - name: Explor Crater Lake Concessionaire
+    url: https://explorecraterlake.com
+    purpose: Campground and lodge/cabin bookings, camper store hours.
+    when: Book the moment your reservation window opens.
+  - name: Cleetwood Cove Rehabilitation Project
+    url: https://www.nps.gov/crla/planyourvisit/cleetwood-cove-trail-and-marina-rehabilitation.htm
+    purpose: Official closure status and 2029 reopening timeline.
+    when: Check if planning a 2028-2029 visit.
+
+links:
+  - {slug: crater-lake-np-nps-site, entity: Crater Lake Official NPS Site, url: "https://www.nps.gov/crla", type: site, status: URL VERIFIED}
+  - {slug: crater-lake-np-recreation-gov, entity: Recreation.gov Camp Bookings, url: "https://www.recreation.gov", type: book, status: URL VERIFIED}
+  - {slug: crater-lake-np-explorcraterlake, entity: Explor Crater Lake Concessionaire, url: "https://explorecraterlake.com", type: site, status: URL VERIFIED}
+  - {slug: crater-lake-np-mazama-booking, entity: Mazama Campground Recreation.gov, url: "https://www.recreation.gov/camping/campgrounds/mazama-campground-crla", type: book, status: URL VERIFIED}
+  - {slug: crater-lake-np-diamond-lake-rv, entity: Diamond Lake RV Park, url: "https://www.diamondlake.net/rv-park", type: book, status: URL VERIFIED}
+
+photos:
+  - file: assets/photos/crater-lake-np-nps-01.jpg
+    title: "Wizard Island"
+    credit: "NPS Photo"
+    license: "Public Domain (NPS)"
+    source: "NPS Media API"
+  - file: assets/photos/crater-lake-np-nps-02.jpg
+    title: "Chaski Bay"
+    credit: "NPS Photo"
+    license: "Public Domain (NPS)"
+    source: "NPS Media API"
+  - file: assets/photos/crater-lake-np-nps-03.jpg
+    title: "Crater Lake"
+    credit: "NPS Photot"
+    license: "Public Domain (NPS)"
+    source: "NPS Media API"
+  - file: assets/photos/crater-lake-np-nps-04.jpg
+    title: "Crater Lake from Mount Scott"
+    credit: "NPS Photo"
+    license: "Public Domain (NPS)"
+    source: "NPS Media API"
+  - file: assets/photos/crater-lake-np-nps-05.jpg
+    title: "Vidae Falls"
+    credit: "NPS Photo"
+    license: "Public Domain (NPS)"
+    source: "NPS Media API"
+visual_moments:
+  - {location: Watchman Peak Lookout, moment: The late-evening shadow of the western caldera rim stretching like a dark expanding blue wedge across the glassy water.}
+  - {location: The Pinnacles Overlook, moment: Early morning sun raking across jagged grey ash chimneys casting long gothic shadows down the canyon floor.}
+  - {location: Garfield Peak Ridge, moment: Standing above the cliffs at sunrise the deep blue water mirroring the steep caldera walls like an infinite void.}

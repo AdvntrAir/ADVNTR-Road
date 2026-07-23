@@ -1,0 +1,47 @@
+[
+  {
+    "file": "assets/photos/crater-lake-np-nps-01.jpg",
+    "title": "Wizard Island",
+    "alt": "A view of Crater Lake and Wizard Island",
+    "credit": "NPS Photo",
+    "license": "Public Domain (NPS)",
+    "source": "NPS Media API",
+    "source_url": "https://www.nps.gov/common/uploads/structured_data/3C7B227E-1DD8-B71B-0BEECDD24771C381.jpg"
+  },
+  {
+    "file": "assets/photos/crater-lake-np-nps-02.jpg",
+    "title": "Chaski Bay",
+    "alt": "a view of Phantom Ship and Chaski Bay",
+    "credit": "NPS Photo",
+    "license": "Public Domain (NPS)",
+    "source": "NPS Media API",
+    "source_url": "https://www.nps.gov/common/uploads/structured_data/3C7B23C5-1DD8-B71B-0B4F2400855714FA.jpg"
+  },
+  {
+    "file": "assets/photos/crater-lake-np-nps-03.jpg",
+    "title": "Crater Lake",
+    "alt": "a view of Crater Lake from the lakeshore",
+    "credit": "NPS Photot",
+    "license": "Public Domain (NPS)",
+    "source": "NPS Media API",
+    "source_url": "https://www.nps.gov/common/uploads/structured_data/3C7B2524-1DD8-B71B-0B84C60FF964D102.jpg"
+  },
+  {
+    "file": "assets/photos/crater-lake-np-nps-04.jpg",
+    "title": "Crater Lake from Mount Scott",
+    "alt": "Crater Lake as seen from the summit of Mt. Scott",
+    "credit": "NPS Photo",
+    "license": "Public Domain (NPS)",
+    "source": "NPS Media API",
+    "source_url": "https://www.nps.gov/common/uploads/structured_data/3C7B26D3-1DD8-B71B-0B939039D597B9A3.jpg"
+  },
+  {
+    "file": "assets/photos/crater-lake-np-nps-05.jpg",
+    "title": "Vidae Falls",
+    "alt": "water flowing over Vidae Falls",
+    "credit": "NPS Photo",
+    "license": "Public Domain (NPS)",
+    "source": "NPS Media API",
+    "source_url": "https://www.nps.gov/common/uploads/structured_data/3C7B28BD-1DD8-B71B-0B3EA88108473DEA.jpg"
+  }
+]
