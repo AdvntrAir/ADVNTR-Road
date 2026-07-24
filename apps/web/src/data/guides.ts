@@ -134,6 +134,23 @@ export const guides: Guide[] = [
     launchOrder: 6,
     coordinates: '45.5762° N, 122.1158° W',
   },
+  {
+    slug: 'crater-lake-np',
+    title: 'Crater Lake National Park',
+    region: 'Pacific Northwest, Southern Oregon Cascades',
+    format: 'Park Guide',
+    status: 'paid-guide-coming',
+    statusLabel: 'Paid Guide Coming',
+    teaser: 'A deep, sapphire volcanic caldera crowning the high Cascade peaks.',
+    description:
+      'The 33-mile rim drive around the deepest lake in America, plus the forest corridor and volcanic outskirts most visitors never see. Built, verified, and ready — the purchase link goes live with the rest of the paid library.',
+    coverImage: '/images/guides/crater-lake-np.jpg',
+    ctaLabel: 'Purchase link coming soon',
+    ctaHref: '#subscribe',
+    ctaExternal: false,
+    launchOrder: 7,
+    coordinates: '42.8903° N, 122.1344° W',
+  },
 ];
 
 export const freeGuides = guides.filter((g) => g.status === 'free');
