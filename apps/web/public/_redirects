@@ -4,9 +4,9 @@
 # All redirects here are 302 (temporary) per the launch spec — these are living
 # pointers, not permanent URL moves.
 
-# Live — confirmed public Google Drive links (Stage 3 folder), 2026-07-03.
-/r/olympic-np-free-guide       https://drive.google.com/file/d/18W4_o3vpQpiyCQppZNtpNOsyRAmkHpHl/view  302
-/r/oregon-coast-free-guide     https://drive.google.com/file/d/17r07KEwe7wf_ljZXj1uAa_aJw38HeZnJ/view  302
+# Live — hosted on Netlify as static assets, moved off Google Drive 2026-07-24.
+/r/olympic-np-free-guide       /downloads/olympic-np-2026.pdf     302
+/r/oregon-coast-free-guide     /downloads/oregon-coast-2026.pdf   302
 
 # Internal anchors — point at homepage sections until dedicated pages exist.
 /r/guide-library               /#guides           302
